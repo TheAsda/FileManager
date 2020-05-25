@@ -1,7 +1,5 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import { render } from 'react-dom';
+import { Window } from './components/window';
 
-ReactDOM.render(
-  <div>hello world from React! </div>,
-  document.getElementById('root')
-);
+render(<Window />, document.getElementById('root'));
