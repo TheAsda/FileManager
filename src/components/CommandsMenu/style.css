@@ -1,0 +1,10 @@
+.commands-menu {
+  position: fixed;
+  margin: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  background-color: black;
+  color: white;
+  width: 100%;
+}

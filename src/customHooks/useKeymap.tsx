@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { reset, bind } from 'mousetrap';
+import { unionBy } from 'lodash';
 
 interface KeyBinding {
   key: string;
@@ -21,12 +22,16 @@ const useKeymap = () => useContext(KeymapContext);
 const KeymapProvider = ({ children }: { children: any }) => {
   const [keymap, setKeymap] = useState<KeyBinding[]>([]);
   const setKeybindings = (bindings: KeyBinding[]) => {
-    setKeymap([...keymap, ...bindings]);
+    setKeymap(unionBy(bindings, keymap, 'key'));
   };
   const unsetKeybindings = (keys: string[]) => {
     setKeymap(keymap.filter((item) => !keys.includes(item.key)));
   };
   useEffect(() => {
+    console.log(
+      'Keymap: ',
+      keymap.reduce((acc, cur) => acc + cur.key + ', ', '')
+    );
     reset();
     keymap.forEach((item) => bind(item.key, item.Action));
   }, [keymap]);
