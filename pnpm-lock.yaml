@@ -1,7 +1,6 @@
 dependencies:
-  '@types/react': 16.9.35
-  '@types/react-dom': 16.9.8
   electron-squirrel-startup: 1.0.0
+  lodash: 4.17.15
   react: 16.13.1
   react-dom: 16.13.1_react@16.13.1
 devDependencies:
@@ -13,6 +12,8 @@ devDependencies:
   '@electron-forge/plugin-webpack': 6.0.0-beta.51
   '@marshallofsound/webpack-asset-relocator-loader': 0.5.0
   '@types/jest': 25.2.3
+  '@types/react': 16.9.35
+  '@types/react-dom': 16.9.8
   css-loader: 3.5.3
   debug: 4.1.1
   electron: 9.0.0
@@ -976,20 +977,20 @@ packages:
     resolution:
       integrity: sha512-boy4xPNEtiw6N3abRhBi/e7hNvy3Tt8E9ZRAQrwAGzoCGZS/1wjo9KY7JHhnfnEsG5wSjDbymCozUM9a3ea7OQ==
   /@types/prop-types/15.7.3:
-    dev: false
+    dev: true
     resolution:
       integrity: sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
   /@types/react-dom/16.9.8:
     dependencies:
       '@types/react': 16.9.35
-    dev: false
+    dev: true
     resolution:
       integrity: sha512-ykkPQ+5nFknnlU6lDd947WbQ6TE3NNzbQAkInC2EKY1qeYdTKp7onFusmYZb+ityzx2YviqT6BXSu+LyWWJwcA==
   /@types/react/16.9.35:
     dependencies:
       '@types/prop-types': 15.7.3
       csstype: 2.6.10
-    dev: false
+    dev: true
     resolution:
       integrity: sha512-q0n0SsWcGc8nDqH2GJfWQWUOmZSJhXV64CjVN5SvcNti3TdEaA3AH0D8DwNmMdzjMAC/78tB8nAZIlV8yTz+zQ==
   /@types/source-list-map/0.1.2:
@@ -2357,7 +2358,7 @@ packages:
     resolution:
       integrity: sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==
   /csstype/2.6.10:
-    dev: false
+    dev: true
     resolution:
       integrity: sha512-D34BqZU4cIlMCY93rZHbrq9pjTAQJ3U8S8rfBqjwHxkGPThWFjzZDQpgMJY0QViLxth6ZKYiwFBo14RdN44U/w==
   /cuint/0.2.2:
@@ -5108,7 +5109,6 @@ packages:
     resolution:
       integrity: sha512-stgLz+i3Aa9mZgnjr/O+v9ruKZsPsndy7qPZOchbqk2cnTU1ZaldKK+v7m54WoKIyxiuMZTKT2H81F8BeAc3ZQ==
   /lodash/4.17.15:
-    dev: true
     resolution:
       integrity: sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
   /log-symbols/2.2.0:
@@ -8549,6 +8549,7 @@ specifiers:
   fork-ts-checker-webpack-plugin: ^4.1.5
   is-glob: ^4.0.1
   jest: ^26.0.1
+  lodash: ^4.17.15
   node-loader: ^0.6.0
   react: ^16.13.1
   react-dom: ^16.13.1

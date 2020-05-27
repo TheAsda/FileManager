@@ -1,10 +1,10 @@
 import React from 'react';
-import { IFile } from '@fm/explorer';
+import { FileInfo } from '@fm/explorer';
 import { DetailViewItem } from './DetailViewItem';
 import './style.css';
 
 interface DetailViewProps {
-  data: IFile[];
+  data: FileInfo[];
   selectedIndex?: number;
 }
 

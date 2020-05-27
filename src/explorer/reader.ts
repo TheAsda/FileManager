@@ -1,18 +1,14 @@
-import { readdirSync, statSync, Stats } from 'fs';
-import { IFile } from './interfaces';
+import { readdirSync, statSync } from 'fs';
+import { FileInfo } from './interfaces';
 
 class Reader {
-  constructor(private path: string = 'D:/') {}
-
-  getCurrentDir(path: string = this.path): IFile[] {
-    console.log('Reader -> constructor -> path', path);
+  static getCurrentDir(path: string): FileInfo[] {
     const dirs = readdirSync(path);
-    console.log('Reader -> constructor -> dirs', dirs);
-    const result: IFile[] = [];
+    const result: FileInfo[] = [];
 
     for (const item of dirs) {
       try {
-        const stats = statSync(path + '/' + item);
+        const stats = statSync(path + item);
         result.push({
           name: item,
           fullPath: path + item,

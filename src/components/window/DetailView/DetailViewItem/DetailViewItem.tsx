@@ -1,9 +1,9 @@
 import React from 'react';
-import { IFile } from '@fm/explorer';
+import { FileInfo } from '@fm/explorer';
 import './style.css';
 
 interface DetailViewItemProps {
-  data: IFile;
+  data: FileInfo;
   selected?: boolean;
 }
 

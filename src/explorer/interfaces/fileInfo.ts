@@ -1,4 +1,4 @@
-interface IFile {
+interface FileInfo {
   name: string;
   fullPath: string;
   creationDate: Date;
@@ -7,4 +7,4 @@ interface IFile {
   parentName?: string;
 }
 
-export { IFile };
+export { FileInfo };
