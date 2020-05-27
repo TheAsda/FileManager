@@ -1,4 +1,5 @@
 dependencies:
+  '@types/testing-library__react-hooks': 3.2.0
   electron-squirrel-startup: 1.0.0
   lodash: 4.17.15
   react: 16.13.1
@@ -11,6 +12,7 @@ devDependencies:
   '@electron-forge/maker-zip': 6.0.0-beta.51
   '@electron-forge/plugin-webpack': 6.0.0-beta.51
   '@marshallofsound/webpack-asset-relocator-loader': 0.5.0
+  '@testing-library/react-hooks': 3.2.1_1fb72ba09e79ce5bfd91e4d67e1015b7
   '@types/jest': 25.2.3
   '@types/react': 16.9.35
   '@types/react-dom': 16.9.8
@@ -21,6 +23,7 @@ devDependencies:
   is-glob: 4.0.1
   jest: 26.0.1
   node-loader: 0.6.0
+  react-test-renderer: 16.13.1_react@16.13.1
   style-loader: 0.23.1
   ts-jest: 26.0.0_jest@26.0.1+typescript@3.9.3
   ts-loader: 7.0.5_typescript@3.9.3
@@ -252,6 +255,12 @@ packages:
       '@babel/core': ^7.0.0-0
     resolution:
       integrity: sha512-KoK9ErH1MBlCPxV0VANkXW2/dw4vlbGDrFgz8bmUsBGYkFRcbRwMh6cIJubdPrkxRwuGdtCk0v/wPTKbQgBjkg==
+  /@babel/runtime/7.10.0:
+    dependencies:
+      regenerator-runtime: 0.13.5
+    dev: true
+    resolution:
+      integrity: sha512-tgYb3zVApHbLHYOPWtVwg25sBqHhfBXRKeKoTIyoheIxln1nA7oBl7SfHfiTG2GhDPI8EUBkOD/0wJCP/3HN4Q==
   /@babel/template/7.8.6:
     dependencies:
       '@babel/code-frame': 7.8.3
@@ -861,6 +870,18 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
+  /@testing-library/react-hooks/3.2.1_1fb72ba09e79ce5bfd91e4d67e1015b7:
+    dependencies:
+      '@babel/runtime': 7.10.0
+      '@types/testing-library__react-hooks': 3.2.0
+      react: 16.13.1
+      react-test-renderer: 16.13.1_react@16.13.1
+    dev: true
+    peerDependencies:
+      react: '>=16.9.0'
+      react-test-renderer: '>=16.9.0'
+    resolution:
+      integrity: sha512-1OB6Ksvlk6BCJA1xpj8/WWz0XVd1qRcgqdaFAq+xeC6l61Ucj0P6QpA5u+Db/x9gU4DCX8ziR5b66Mlfg0M2RA==
   /@types/anymatch/1.3.1:
     dev: true
     resolution:
@@ -977,7 +998,6 @@ packages:
     resolution:
       integrity: sha512-boy4xPNEtiw6N3abRhBi/e7hNvy3Tt8E9ZRAQrwAGzoCGZS/1wjo9KY7JHhnfnEsG5wSjDbymCozUM9a3ea7OQ==
   /@types/prop-types/15.7.3:
-    dev: true
     resolution:
       integrity: sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
   /@types/react-dom/16.9.8:
@@ -986,11 +1006,15 @@ packages:
     dev: true
     resolution:
       integrity: sha512-ykkPQ+5nFknnlU6lDd947WbQ6TE3NNzbQAkInC2EKY1qeYdTKp7onFusmYZb+ityzx2YviqT6BXSu+LyWWJwcA==
+  /@types/react-test-renderer/16.9.2:
+    dependencies:
+      '@types/react': 16.9.35
+    resolution:
+      integrity: sha512-4eJr1JFLIAlWhzDkBCkhrOIWOvOxcCAfQh+jiKg7l/nNZcCIL2MHl2dZhogIFKyHzedVWHaVP1Yydq/Ruu4agw==
   /@types/react/16.9.35:
     dependencies:
       '@types/prop-types': 15.7.3
       csstype: 2.6.10
-    dev: true
     resolution:
       integrity: sha512-q0n0SsWcGc8nDqH2GJfWQWUOmZSJhXV64CjVN5SvcNti3TdEaA3AH0D8DwNmMdzjMAC/78tB8nAZIlV8yTz+zQ==
   /@types/source-list-map/0.1.2:
@@ -1005,6 +1029,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-/gG2M/Imw7cQFp8PGvz/SwocNrmKFjFsm5Pb8HdbHkZ1K8pmuPzOX4VeVoiEecFCVf4CsN1r3/BRvx+6sNqwtQ==
+  /@types/testing-library__react-hooks/3.2.0:
+    dependencies:
+      '@types/react': 16.9.35
+      '@types/react-test-renderer': 16.9.2
+    resolution:
+      integrity: sha512-dE8iMTuR5lzB+MqnxlzORlXzXyCL0EKfzH0w/lau20OpkHD37EaWjZDz0iNG8b71iEtxT4XKGmSKAGVEqk46mw==
   /@types/uglify-js/3.9.2:
     dependencies:
       source-map: 0.6.1
@@ -2358,7 +2388,6 @@ packages:
     resolution:
       integrity: sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==
   /csstype/2.6.10:
-    dev: true
     resolution:
       integrity: sha512-D34BqZU4cIlMCY93rZHbrq9pjTAQJ3U8S8rfBqjwHxkGPThWFjzZDQpgMJY0QViLxth6ZKYiwFBo14RdN44U/w==
   /cuint/0.2.2:
@@ -2560,13 +2589,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-gd3ypIPfOMr9h5jIKq8E3sHOTCjeirnl0WK5ZdS1AW0Odt0b1PaWaHdJ4Qk4klv+YB9aJBS7mESXjFoDQPu6DA==
-  /dom-serializer/0.2.2:
+  /dom-serializer/0.1.1:
     dependencies:
-      domelementtype: 2.0.1
-      entities: 2.0.2
+      domelementtype: 1.3.1
+      entities: 1.1.2
     dev: true
     resolution:
-      integrity: sha512-2/xPb3ORsQ42nHYiSunXkDjPLBaEj/xTwUO4B7XCZQTRk7EBtTOPaygh10YAAh2OI1Qrp6NWfpAhzswj0ydt9g==
+      integrity: sha512-l0IU0pPzLWSHBcieZbpOKgkIn3ts3vAh7ZuFyXNwJxJXk/c4Gwj9xaTJwIDVQCXawWD0qb3IzMGH5rglQaO0XA==
   /dom-walk/0.1.2:
     dev: true
     resolution:
@@ -2582,10 +2611,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-BSKB+TSpMpFI/HOxCNr1O8aMOTZ8hT3pM3GQ0w/mWRmkhEDSFJkkyzz4XQsBV44BChwGkrDfMyjVD0eA2aFV3w==
-  /domelementtype/2.0.1:
-    dev: true
-    resolution:
-      integrity: sha512-5HOHUDsYZWV8FGWN0Njbr/Rn7f/eWSQi1v7+HsUVwXgn8nWWlL64zKDkS0n8ZmQ3mlWOMuXOnR+7Nx/5tMO5AQ==
   /domexception/2.0.1:
     dependencies:
       webidl-conversions: 5.0.0
@@ -2602,14 +2627,14 @@ packages:
       integrity: sha512-JiK04h0Ht5u/80fdLMCEmV4zkNh2BcoMFBmZ/91WtYZ8qVXSKjiw7fXMgFPnHcSZgOo3XdinHvmnDUeMf5R4wA==
   /domutils/1.5.1:
     dependencies:
-      dom-serializer: 0.2.2
+      dom-serializer: 0.1.1
       domelementtype: 1.3.1
     dev: true
     resolution:
       integrity: sha1-3NhIiib1Y9YQeeSMn3t+Mjc2gs8=
   /domutils/1.7.0:
     dependencies:
-      dom-serializer: 0.2.2
+      dom-serializer: 0.1.1
       domelementtype: 1.3.1
     dev: true
     resolution:
@@ -2852,10 +2877,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-f2LZMYl1Fzu7YSBKg+RoROelpOaNrcGmE9AZubeDfrCEia483oW4MI4VyFd5VNHIgQ/7qm1I0wUHK1eJnn2y2w==
-  /entities/2.0.2:
-    dev: true
-    resolution:
-      integrity: sha512-dmD3AvJQBUjKpcNkoqr+x+IF0SdRtPz9Vk0uTy4yWqga9ibB6s4v++QFWNohjiUGoMlF552ZvNyXDxz5iW0qmw==
   /env-paths/2.2.0:
     dev: true
     engines:
@@ -5138,7 +5159,6 @@ packages:
   /loose-envify/1.4.0:
     dependencies:
       js-tokens: 4.0.0
-    dev: false
     hasBin: true
     resolution:
       integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -6411,7 +6431,6 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
-    dev: false
     resolution:
       integrity: sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
   /proto-list/1.2.4:
@@ -6558,12 +6577,23 @@ packages:
   /react-is/16.13.1:
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+  /react-test-renderer/16.13.1_react@16.13.1:
+    dependencies:
+      object-assign: 4.1.1
+      prop-types: 15.7.2
+      react: 16.13.1
+      react-is: 16.13.1
+      scheduler: 0.19.1
+    dev: true
+    peerDependencies:
+      react: ^16.13.1
+    resolution:
+      integrity: sha512-Sn2VRyOK2YJJldOqoh8Tn/lWQ+ZiKhyZTPtaO0Q6yNj+QDbmRkVFap6pZPy3YQk8DScRDfyqm/KxKYP9gCMRiQ==
   /react/16.13.1:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       prop-types: 15.7.2
-    dev: false
     engines:
       node: '>=0.10.0'
     resolution:
@@ -6687,6 +6717,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-z5Fqsf1fHxbfsggi3W7H9zDCr94=
+  /regenerator-runtime/0.13.5:
+    dev: true
+    resolution:
+      integrity: sha512-ZS5w8CpKFinUzOwW3c83oPeVXoNsrLsaCoLtJvAClH135j/R77RuymhiSErhm2lKcwSCIpmvIWSbDkIfAqKQlA==
   /regex-not/1.0.2:
     dependencies:
       extend-shallow: 3.0.2
@@ -6991,7 +7025,6 @@ packages:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-    dev: false
     resolution:
       integrity: sha512-n/zwRWRYSUj0/3g/otKDRPMh6qv2SYMWNq85IEa8iZyAv8od9zDYpGSnpBEjNgcMNq6Scbu5KfIPxNF72R/2EA==
   /schema-utils/1.0.0:
@@ -8539,9 +8572,11 @@ specifiers:
   '@electron-forge/maker-zip': ^6.0.0-beta.51
   '@electron-forge/plugin-webpack': ^6.0.0-beta.51
   '@marshallofsound/webpack-asset-relocator-loader': ^0.5.0
+  '@testing-library/react-hooks': ^3.2.1
   '@types/jest': ^25.2.3
   '@types/react': ^16.9.35
   '@types/react-dom': ^16.9.8
+  '@types/testing-library__react-hooks': ^3.2.0
   css-loader: ^3.5.3
   debug: ^4.1.1
   electron: 9.0.0
@@ -8553,6 +8588,7 @@ specifiers:
   node-loader: ^0.6.0
   react: ^16.13.1
   react-dom: ^16.13.1
+  react-test-renderer: ^16.13.1
   style-loader: ^0.23.1
   ts-jest: ^26.0.0
   ts-loader: ^7.0.5
