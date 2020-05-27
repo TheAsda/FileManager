@@ -15,6 +15,7 @@ devDependencies:
   '@marshallofsound/webpack-asset-relocator-loader': 0.5.0
   '@testing-library/react-hooks': 3.2.1_1fb72ba09e79ce5bfd91e4d67e1015b7
   '@types/jest': 25.2.3
+  '@types/lodash': 4.14.153
   '@types/mousetrap': 1.6.3
   '@types/react': 16.9.35
   '@types/react-dom': 16.9.8
@@ -978,6 +979,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-JXc1nK/tXHiDhV55dvfzqtmP4S3sy3T3ouV2tkViZgxY/zeUkcpQcQPGRlgF4KmWzWW5oiWYSZwtCB+2RsE4Fw==
+  /@types/lodash/4.14.153:
+    dev: true
+    resolution:
+      integrity: sha512-lYniGRiRfZf2gGAR9cfRC3Pi5+Q1ziJCKqPmjZocigrSJUVPWf7st1BtSJ8JOeK0FLXVndQ1IjUjTco9CXGo/Q==
   /@types/minimatch/3.0.3:
     dev: true
     optional: true
@@ -8584,6 +8589,7 @@ specifiers:
   '@marshallofsound/webpack-asset-relocator-loader': ^0.5.0
   '@testing-library/react-hooks': ^3.2.1
   '@types/jest': ^25.2.3
+  '@types/lodash': ^4.14.153
   '@types/mousetrap': ^1.6.3
   '@types/react': ^16.9.35
   '@types/react-dom': ^16.9.8

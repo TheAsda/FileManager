@@ -1,3 +1,5 @@
+import { FileFilter } from 'electron';
+
 interface FileInfo {
   name: string;
   fullPath: string;

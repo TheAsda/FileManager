@@ -4,6 +4,8 @@ import { Reader, FileInfo } from '@fm/explorer';
 import { DetailView } from './DetailView';
 import { PathLine } from './PathLine';
 import { useCache, useKeymap } from '@fm/hooks';
+import { StateLine } from './StateLine';
+import { clamp } from 'lodash';
 
 const Window = () => {
   const { setKeybindings, unsetKeybindings } = useKeymap();
@@ -13,18 +15,20 @@ const Window = () => {
   const [dir, setDir] = useState<string[]>(['D:', 'FileManagerTest']);
   const dirString = dir.reduce((acc, cur) => acc + cur + '/', '');
 
-  // let cachedFolder
-  // useMemo(() => {
-  //   return getCached(dirString);
-  // }, [dirString]);
-  let dirState: FileInfo[] = Reader.getCurrentDir(dirString);
+  let cachedFolder = useMemo(() => {
+    console.log('Memo');
+    return getCached(dirString);
+  }, [dirString]);
+  let dirState: FileInfo[];
 
-  // if (cachedFolder === null) {
-  //   dirState = ;
-  //   updateStorage(dirString, dirState);
-  // } else {
-  //   dirState = cachedFolder;
-  // }
+  if (cachedFolder === null) {
+    console.log('No cached');
+    dirState = Reader.getCurrentDir(dirString);
+    updateStorage(dirString, dirState);
+  } else {
+    console.log('Cached');
+    dirState = cachedFolder;
+  }
 
   useEffect(() => {
     console.log('Effect triggered');
@@ -65,6 +69,18 @@ const Window = () => {
           }
         },
       },
+      {
+        key: 'ctrl+down',
+        Action: () => {
+          setSelected(clamp(selected + 10, 0, dirState.length));
+        },
+      },
+      {
+        key: 'ctrl+up',
+        Action: () => {
+          setSelected(clamp(selected - 10, 0, dirState.length));
+        },
+      },
     ]);
     return () => {
       unsetKeybindings(['down', 'up', 'enter', 'backspace']);
@@ -77,6 +93,7 @@ const Window = () => {
       {view === 'detail' ? (
         <DetailView data={dirState} selectedIndex={selected} />
       ) : null}
+      <StateLine count={dirState.length} />
     </div>
   );
 };
