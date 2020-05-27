@@ -4,11 +4,10 @@ import { CacheProvider, useCache, Cache } from '../useCache';
 import { FileInfo } from '@fm/explorer';
 
 describe('Cache test', () => {
+  const wrapper = ({ children }: { children?: any }) => (
+    <CacheProvider>{children}</CacheProvider>
+  );
   test('Add one item to new cache', () => {
-    const wrapper = ({ children }: { children?: any }) => (
-      <CacheProvider>{children}</CacheProvider>
-    );
-
     const { result } = renderHook(() => useCache(), { wrapper });
     const newPath = 'D:/';
     const folderInfo: FileInfo[] = [
@@ -34,10 +33,6 @@ describe('Cache test', () => {
   });
 
   test('Add one item and check existence', () => {
-    const wrapper = ({ children }: { children?: any }) => (
-      <CacheProvider>{children}</CacheProvider>
-    );
-
     const { result } = renderHook(() => useCache(), { wrapper });
     const newPath = 'D:/';
     const folderInfo: FileInfo[] = [
@@ -60,10 +55,6 @@ describe('Cache test', () => {
   });
 
   test('Add multiple items at once and check existence', () => {
-    const wrapper = ({ children }: { children?: any }) => (
-      <CacheProvider>{children}</CacheProvider>
-    );
-
     const { result } = renderHook(() => useCache(), { wrapper });
     const newPath1 = 'D:/';
     const folderInfo1: FileInfo[] = [

@@ -2,6 +2,7 @@ dependencies:
   '@types/testing-library__react-hooks': 3.2.0
   electron-squirrel-startup: 1.0.0
   lodash: 4.17.15
+  mousetrap: 1.6.5
   react: 16.13.1
   react-dom: 16.13.1_react@16.13.1
 devDependencies:
@@ -14,6 +15,7 @@ devDependencies:
   '@marshallofsound/webpack-asset-relocator-loader': 0.5.0
   '@testing-library/react-hooks': 3.2.1_1fb72ba09e79ce5bfd91e4d67e1015b7
   '@types/jest': 25.2.3
+  '@types/mousetrap': 1.6.3
   '@types/react': 16.9.35
   '@types/react-dom': 16.9.8
   css-loader: 3.5.3
@@ -981,6 +983,10 @@ packages:
     optional: true
     resolution:
       integrity: sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
+  /@types/mousetrap/1.6.3:
+    dev: true
+    resolution:
+      integrity: sha512-13gmo3M2qVvjQrWNseqM3+cR6S2Ss3grbR2NZltgMq94wOwqJYQdgn8qzwDshzgXqMlSUtyPZjysImmktu22ew==
   /@types/node/12.12.42:
     dev: true
     resolution:
@@ -5494,6 +5500,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
+  /mousetrap/1.6.5:
+    dev: false
+    resolution:
+      integrity: sha512-QNo4kEepaIBwiT8CDhP98umTetp+JNfQYBWvC1pc6/OAibuXtRcxZ58Qz8skvEHYvURne/7R8T5VoOI7rDsEUA==
   /move-concurrently/1.0.1:
     dependencies:
       aproba: 1.2.0
@@ -8574,6 +8584,7 @@ specifiers:
   '@marshallofsound/webpack-asset-relocator-loader': ^0.5.0
   '@testing-library/react-hooks': ^3.2.1
   '@types/jest': ^25.2.3
+  '@types/mousetrap': ^1.6.3
   '@types/react': ^16.9.35
   '@types/react-dom': ^16.9.8
   '@types/testing-library__react-hooks': ^3.2.0
@@ -8585,6 +8596,7 @@ specifiers:
   is-glob: ^4.0.1
   jest: ^26.0.1
   lodash: ^4.17.15
+  mousetrap: ^1.6.5
   node-loader: ^0.6.0
   react: ^16.13.1
   react-dom: ^16.13.1

@@ -16,7 +16,6 @@ const useCache = () => useContext(CacheContext);
 const CacheProvider = ({ children }: { children: any }) => {
   const [cache, setCache] = useState<Cache>({});
   const updateStorage = (path: string, data: FileInfo[]) => {
-    console.log('updateStorage -> cache[path]', cache[path]);
     if (cache[path] === undefined) {
       setCache({ ...cache, [path]: data });
     }
