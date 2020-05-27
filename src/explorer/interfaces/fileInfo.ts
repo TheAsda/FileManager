@@ -4,6 +4,7 @@ interface IFile {
   creationDate: Date;
   size: number;
   type: 'folder' | 'file';
+  parentName?: string;
 }
 
 export { IFile };

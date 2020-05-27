@@ -1,0 +1,19 @@
+.detail-view {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  column-rule: 3px solid black;
+}
+
+.detail-view__header th {
+  border: 1px solid black;
+}
+
+.detail-view__body {
+  border-bottom: 1px solid black;
+}
+
+.detail-view__body td {
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+}
