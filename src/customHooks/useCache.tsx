@@ -15,11 +15,13 @@ const useCache = () => useContext(CacheContext);
 
 const CacheProvider = ({ children }: { children: any }) => {
   const [cache, setCache] = useState<Cache>({});
+
   const updateStorage = (path: string, data: FileInfo[]) => {
     if (cache[path] === undefined) {
       setCache({ ...cache, [path]: data });
     }
   };
+
   const getCached = (path: string): FileInfo[] | null => {
     if (cache[path]) {
       return cache[path];

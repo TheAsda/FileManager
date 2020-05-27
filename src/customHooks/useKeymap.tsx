@@ -3,28 +3,28 @@ import { reset, bind } from 'mousetrap';
 
 interface KeyBinding {
   key: string;
-  Action: () => void;
+  Action: (e: ExtendedKeyboardEvent, combo: string) => void;
 }
 
 const KeymapContext = createContext<{
   keymap: KeyBinding[];
-  setKeybinding: (binding: KeyBinding) => void;
-  unsetKeybinding: (key: string) => void;
+  setKeybindings: (bindings: KeyBinding[]) => void;
+  unsetKeybindings: (keys: string[]) => void;
 }>({
   keymap: [],
-  setKeybinding: () => {},
-  unsetKeybinding: () => {},
+  setKeybindings: () => {},
+  unsetKeybindings: () => {},
 });
 
 const useKeymap = () => useContext(KeymapContext);
 
 const KeymapProvider = ({ children }: { children: any }) => {
   const [keymap, setKeymap] = useState<KeyBinding[]>([]);
-  const setKeybinding = (binding: KeyBinding) => {
-    setKeymap([...keymap, binding]);
+  const setKeybindings = (bindings: KeyBinding[]) => {
+    setKeymap([...keymap, ...bindings]);
   };
-  const unsetKeybinding = (key: string) => {
-    setKeymap(keymap.filter((item) => item.key !== key));
+  const unsetKeybindings = (keys: string[]) => {
+    setKeymap(keymap.filter((item) => !keys.includes(item.key)));
   };
   useEffect(() => {
     reset();
@@ -35,8 +35,8 @@ const KeymapProvider = ({ children }: { children: any }) => {
     <KeymapContext.Provider
       value={{
         keymap,
-        setKeybinding,
-        unsetKeybinding,
+        setKeybindings,
+        unsetKeybindings,
       }}
     >
       {children}

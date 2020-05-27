@@ -21,7 +21,7 @@ describe('Keymap test', () => {
     const newKeymap: KeyBinding = { key: newKey, Action: newAction };
 
     act(() => {
-      result.current.setKeybinding(newKeymap);
+      result.current.setKeybindings([newKeymap]);
     });
 
     expect(result.current.keymap.length).toBe(1);
@@ -36,11 +36,11 @@ describe('Keymap test', () => {
     const newKeymap: KeyBinding = { key: newKey, Action: newAction };
 
     act(() => {
-      result.current.setKeybinding(newKeymap);
+      result.current.setKeybindings([newKeymap]);
     });
 
     act(() => {
-      result.current.unsetKeybinding(newKey);
+      result.current.unsetKeybindings([newKey]);
     });
 
     expect(result.current.keymap.length).toBe(0);
