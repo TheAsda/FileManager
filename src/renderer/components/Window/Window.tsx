@@ -1,8 +1,8 @@
 import React from 'react';
-import { Explorer, Console } from '../panels';
+import { Explorer, Terminal } from '../panels';
 
 const Window = () => {
-  return <Console />;
+  return <Terminal />;
 };
 
 export { Window };

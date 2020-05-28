@@ -1,20 +1,20 @@
 import React, { Component, RefObject, createRef } from 'react';
 import { remote } from 'electron';
-// import { spawn, IPty } from 'node-pty';
-import { Terminal } from 'xterm';
+import { IPty } from 'node-pty';
+import { Terminal as Term } from 'xterm';
 import { platform, homedir } from 'os';
 import 'xterm/css/xterm.css';
 
-class Console extends Component {
+class Terminal extends Component {
   private containerRef: RefObject<HTMLDivElement>;
-  private terminal: Terminal;
-  private process?: any;
+  private terminal: Term;
+  private process?: IPty;
 
   constructor(props: {}) {
     super(props);
 
     this.containerRef = createRef<HTMLDivElement>();
-    this.terminal = new Terminal();
+    this.terminal = new Term();
   }
 
   attach = () => {
@@ -51,4 +51,4 @@ class Console extends Component {
   }
 }
 
-export { Console };
+export { Terminal };
