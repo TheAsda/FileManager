@@ -1,9 +1,8 @@
 dependencies:
-  '@dash4/react-xterm': 0.8.4
-  '@types/testing-library__react-hooks': 3.2.0
   electron-squirrel-startup: 1.0.0
   lodash: 4.17.15
   mousetrap: 1.6.5
+  node-pty: 0.9.0-beta27
   react: 16.13.1
   react-dom: 16.13.1_react@16.13.1
   xterm: 4.6.0
@@ -21,6 +20,7 @@ devDependencies:
   '@types/mousetrap': 1.6.3
   '@types/react': 16.9.35
   '@types/react-dom': 16.9.8
+  '@types/testing-library__react-hooks': 3.2.0
   css-loader: 3.5.3
   debug: 4.1.1
   electron: 9.0.0
@@ -310,13 +310,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==
-  /@dash4/react-xterm/0.8.4:
-    dependencies:
-      resize-observer-polyfill: 1.5.1
-      xterm: 3.12.2
-    dev: false
-    resolution:
-      integrity: sha512-D3P9BjWJN2zwZ7V/qGNmapgoonPEQQBVMQwDNSm2w/jWIKwVF3po/71YrA8eOtPbxbAXUDZFUrz788DaPKnWFg==
   /@electron-forge/async-ora/6.0.0-beta.51:
     dependencies:
       colors: 1.4.0
@@ -1018,6 +1011,7 @@ packages:
     resolution:
       integrity: sha512-boy4xPNEtiw6N3abRhBi/e7hNvy3Tt8E9ZRAQrwAGzoCGZS/1wjo9KY7JHhnfnEsG5wSjDbymCozUM9a3ea7OQ==
   /@types/prop-types/15.7.3:
+    dev: true
     resolution:
       integrity: sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
   /@types/react-dom/16.9.8:
@@ -1029,12 +1023,14 @@ packages:
   /@types/react-test-renderer/16.9.2:
     dependencies:
       '@types/react': 16.9.35
+    dev: true
     resolution:
       integrity: sha512-4eJr1JFLIAlWhzDkBCkhrOIWOvOxcCAfQh+jiKg7l/nNZcCIL2MHl2dZhogIFKyHzedVWHaVP1Yydq/Ruu4agw==
   /@types/react/16.9.35:
     dependencies:
       '@types/prop-types': 15.7.3
       csstype: 2.6.10
+    dev: true
     resolution:
       integrity: sha512-q0n0SsWcGc8nDqH2GJfWQWUOmZSJhXV64CjVN5SvcNti3TdEaA3AH0D8DwNmMdzjMAC/78tB8nAZIlV8yTz+zQ==
   /@types/source-list-map/0.1.2:
@@ -1053,6 +1049,7 @@ packages:
     dependencies:
       '@types/react': 16.9.35
       '@types/react-test-renderer': 16.9.2
+    dev: true
     resolution:
       integrity: sha512-dE8iMTuR5lzB+MqnxlzORlXzXyCL0EKfzH0w/lau20OpkHD37EaWjZDz0iNG8b71iEtxT4XKGmSKAGVEqk46mw==
   /@types/uglify-js/3.9.2:
@@ -2408,6 +2405,7 @@ packages:
     resolution:
       integrity: sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==
   /csstype/2.6.10:
+    dev: true
     resolution:
       integrity: sha512-D34BqZU4cIlMCY93rZHbrq9pjTAQJ3U8S8rfBqjwHxkGPThWFjzZDQpgMJY0QViLxth6ZKYiwFBo14RdN44U/w==
   /cuint/0.2.2:
@@ -5545,8 +5543,6 @@ packages:
     resolution:
       integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
   /nan/2.14.1:
-    dev: true
-    optional: true
     resolution:
       integrity: sha512-isWHgVjnFjh2x2yuJ/tj3JbwoHu3UC2dX5G/88Cm24yB6YopVgxvBObDY7n5xW6ExmFhJpSEQqFPvq9zaXc8Jw==
   /nanomatch/1.2.13:
@@ -5677,6 +5673,13 @@ packages:
     optional: true
     resolution:
       integrity: sha512-VkzhierE7DBmQEElhTGJIoiZa1oqRijOtgOlsXg32KrJRXsPy0NXFBqWGW/wTswnJlDCs5viRYaqWguqzsKcmg==
+  /node-pty/0.9.0-beta27:
+    dependencies:
+      nan: 2.14.1
+    dev: false
+    requiresBuild: true
+    resolution:
+      integrity: sha512-8s8rgAt5wTkpykEp6I+uOXQDLOvUVnwACsm8rkg5Hw17I70dPG+b7j6xjFranIq6liqdIDD0LRNe/MAZxbRFCw==
   /nopt/4.0.3:
     dependencies:
       abbrev: 1.1.1
@@ -6854,10 +6857,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-NKN5kMDylKuldxYLSUfrbo5Tuzh4hd+2E8NPPX02mZtn1VuREQToYe/ZdlJy+J3uCpfaiGF05e7B8W0iXbQHmg==
-  /resize-observer-polyfill/1.5.1:
-    dev: false
-    resolution:
-      integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
   /resolve-cwd/3.0.0:
     dependencies:
       resolve-from: 5.0.0
@@ -8506,10 +8505,6 @@ packages:
       xterm: ^4.0.0
     resolution:
       integrity: sha512-k3EsZzUptCXygHFP5rQuCBdWWkI/ZNuX3pDSOVdxPV9jB7U5Aha9guTIZoMP7FIjL8jce+ClQs6q7VINcRV1+w==
-  /xterm/3.12.2:
-    dev: false
-    resolution:
-      integrity: sha512-FSXovDdsqIKqoayC6+zFzhaHi+A3NSceM5rgTW88DH7sS96HdwMToB2p1rW+FyNsSqfAgFwlXDRQk+fh/aHvPQ==
   /xterm/4.6.0:
     resolution:
       integrity: sha512-98211RIDrAECqpsxs6gbilwMcxLtxSDIvtzZUIqP1xIByXtuccJ4pmMhHGJATZeEGe/reARPMqwPINK8T7jGZg==
@@ -8596,7 +8591,6 @@ packages:
     resolution:
       integrity: sha1-x+sXyT4RLLEIb6bY5R+wZnt5pfk=
 specifiers:
-  '@dash4/react-xterm': ^0.8.4
   '@electron-forge/cli': ^6.0.0-beta.51
   '@electron-forge/maker-deb': ^6.0.0-beta.51
   '@electron-forge/maker-rpm': ^6.0.0-beta.51
@@ -8621,6 +8615,7 @@ specifiers:
   lodash: ^4.17.15
   mousetrap: ^1.6.5
   node-loader: ^0.6.0
+  node-pty: 0.9.0-beta27
   react: ^16.13.1
   react-dom: ^16.13.1
   react-test-renderer: ^16.13.1
