@@ -5,6 +5,7 @@ dependencies:
   node-pty: 0.9.0-beta27
   react: 16.13.1
   react-dom: 16.13.1_react@16.13.1
+  react-hotkeys: 2.0.0_react@16.13.1
   xterm: 4.6.0
 devDependencies:
   '@electron-forge/cli': 6.0.0-beta.51
@@ -25,6 +26,7 @@ devDependencies:
   debug: 4.1.1
   electron: 9.0.0
   fork-ts-checker-webpack-plugin: 4.1.5
+  inversify: 5.0.1
   is-glob: 4.0.1
   jest: 26.0.1
   node-loader: 0.6.0
@@ -33,6 +35,7 @@ devDependencies:
   ts-jest: 26.0.0_jest@26.0.1+typescript@3.9.3
   ts-loader: 7.0.5_typescript@3.9.3
   typescript: 3.9.3
+  webpack-hot-middleware: 2.25.0
 lockfileVersion: 5.1
 packages:
   /@babel/code-frame/7.8.3:
@@ -4059,6 +4062,10 @@ packages:
       node: '>=6.0.0'
     resolution:
       integrity: sha512-5fJMWEmikSYu0nv/flMc475MhGbB7TSPd/2IpFV4I4rMklboCH2rQjYY5kKiYGHqUF9gvaambupcJFFG9dvReg==
+  /inversify/5.0.1:
+    dev: true
+    resolution:
+      integrity: sha512-Ieh06s48WnEYGcqHepdsJUIJUXpwH5o5vodAX+DK2JA/gjy4EbEcQZxw+uFfzysmKjiLXGYwNG3qDZsKVMcINQ==
   /ip-regex/2.1.0:
     dev: true
     engines:
@@ -6601,6 +6608,15 @@ packages:
       react: ^16.13.1
     resolution:
       integrity: sha512-81PIMmVLnCNLO/fFOQxdQkvEq/+Hfpv24XNJfpyZhTRfO0QcmQIF/PgCa1zCOj2w1hrn12MFLyaJ/G0+Mxtfag==
+  /react-hotkeys/2.0.0_react@16.13.1:
+    dependencies:
+      prop-types: 15.7.2
+      react: 16.13.1
+    dev: false
+    peerDependencies:
+      react: '>= 0.14.0'
+    resolution:
+      integrity: sha512-3n3OU8vLX/pfcJrR3xJ1zlww6KS1kEJt0Whxc4FiGV+MJrQ1mYSYI3qS/11d2MJDFm8IhOXMTFQirfu6AVOF6Q==
   /react-is/16.13.1:
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -8610,6 +8626,7 @@ specifiers:
   electron: 9.0.0
   electron-squirrel-startup: ^1.0.0
   fork-ts-checker-webpack-plugin: ^4.1.5
+  inversify: ^5.0.1
   is-glob: ^4.0.1
   jest: ^26.0.1
   lodash: ^4.17.15
@@ -8618,9 +8635,11 @@ specifiers:
   node-pty: 0.9.0-beta27
   react: ^16.13.1
   react-dom: ^16.13.1
+  react-hotkeys: ^2.0.0
   react-test-renderer: ^16.13.1
   style-loader: ^0.23.1
   ts-jest: ^26.0.0
   ts-loader: ^7.0.5
   typescript: ^3.9.3
+  webpack-hot-middleware: ^2.25.0
   xterm: ^4.6.0

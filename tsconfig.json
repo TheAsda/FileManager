@@ -15,9 +15,8 @@
     "jsx": "react",
     "baseUrl": "src",
     "paths": {
-      "@fm/explorer": ["explorer"],
-      "@fm/components": ["components"],
-      "@fm/hooks": ["customHooks"]
+      "@fm/common": ["common"],
+      "@fm/hooks": ["hooks"]
     },
     "sourceMap": true
   },

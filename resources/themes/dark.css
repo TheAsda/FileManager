@@ -1,0 +1,6 @@
+html {
+  --backround: rgb(39, 39, 39);
+  --additional-background: rgb(80, 80, 80);
+  --text: rgb(92, 92, 92);
+  --selected: rgb(102, 102, 102);
+}

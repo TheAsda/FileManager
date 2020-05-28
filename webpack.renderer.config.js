@@ -16,9 +16,8 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
     alias: {
-      '@fm/explorer': resolve(__dirname, 'src/explorer'),
-      '@fm/components': resolve(__dirname, 'src/components'),
-      '@fm/hooks': resolve(__dirname, 'src/customHooks'),
+      '@fm/common': resolve(__dirname, 'src/common'),
+      '@fm/hooks': resolve(__dirname, 'src/hooks'),
     },
   },
 };
