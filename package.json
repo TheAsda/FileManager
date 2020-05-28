@@ -92,11 +92,13 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
+    "@dash4/react-xterm": "^0.8.4",
     "@types/testing-library__react-hooks": "^3.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "lodash": "^4.17.15",
     "mousetrap": "^1.6.5",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "xterm": "^4.6.0"
   }
 }

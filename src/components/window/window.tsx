@@ -1,8 +1,8 @@
 import React from 'react';
-import { Explorer } from '@fm/components';
+import { Explorer, Console } from '@fm/components';
 
 const Window = () => {
-  return <Explorer />;
+  return <Console />;
 };
 
 export { Window };

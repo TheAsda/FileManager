@@ -1,10 +1,12 @@
 dependencies:
+  '@dash4/react-xterm': 0.8.4
   '@types/testing-library__react-hooks': 3.2.0
   electron-squirrel-startup: 1.0.0
   lodash: 4.17.15
   mousetrap: 1.6.5
   react: 16.13.1
   react-dom: 16.13.1_react@16.13.1
+  xterm: 4.6.0
 devDependencies:
   '@electron-forge/cli': 6.0.0-beta.51
   '@electron-forge/maker-deb': 6.0.0-beta.51
@@ -308,6 +310,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==
+  /@dash4/react-xterm/0.8.4:
+    dependencies:
+      resize-observer-polyfill: 1.5.1
+      xterm: 3.12.2
+    dev: false
+    resolution:
+      integrity: sha512-D3P9BjWJN2zwZ7V/qGNmapgoonPEQQBVMQwDNSm2w/jWIKwVF3po/71YrA8eOtPbxbAXUDZFUrz788DaPKnWFg==
   /@electron-forge/async-ora/6.0.0-beta.51:
     dependencies:
       colors: 1.4.0
@@ -6845,6 +6854,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-NKN5kMDylKuldxYLSUfrbo5Tuzh4hd+2E8NPPX02mZtn1VuREQToYe/ZdlJy+J3uCpfaiGF05e7B8W0iXbQHmg==
+  /resize-observer-polyfill/1.5.1:
+    dev: false
+    resolution:
+      integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
   /resolve-cwd/3.0.0:
     dependencies:
       resolve-from: 5.0.0
@@ -8493,8 +8506,11 @@ packages:
       xterm: ^4.0.0
     resolution:
       integrity: sha512-k3EsZzUptCXygHFP5rQuCBdWWkI/ZNuX3pDSOVdxPV9jB7U5Aha9guTIZoMP7FIjL8jce+ClQs6q7VINcRV1+w==
+  /xterm/3.12.2:
+    dev: false
+    resolution:
+      integrity: sha512-FSXovDdsqIKqoayC6+zFzhaHi+A3NSceM5rgTW88DH7sS96HdwMToB2p1rW+FyNsSqfAgFwlXDRQk+fh/aHvPQ==
   /xterm/4.6.0:
-    dev: true
     resolution:
       integrity: sha512-98211RIDrAECqpsxs6gbilwMcxLtxSDIvtzZUIqP1xIByXtuccJ4pmMhHGJATZeEGe/reARPMqwPINK8T7jGZg==
   /y18n/4.0.0:
@@ -8580,6 +8596,7 @@ packages:
     resolution:
       integrity: sha1-x+sXyT4RLLEIb6bY5R+wZnt5pfk=
 specifiers:
+  '@dash4/react-xterm': ^0.8.4
   '@electron-forge/cli': ^6.0.0-beta.51
   '@electron-forge/maker-deb': ^6.0.0-beta.51
   '@electron-forge/maker-rpm': ^6.0.0-beta.51
@@ -8611,3 +8628,4 @@ specifiers:
   ts-jest: ^26.0.0
   ts-loader: ^7.0.5
   typescript: ^3.9.3
+  xterm: ^4.6.0
