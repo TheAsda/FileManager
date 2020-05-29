@@ -8,19 +8,19 @@ describe('Reader', () => {
     const expectedResult: FileInfo[] = [
       {
         name: 'test.txt',
-        fullPath: 'D:/test.txt',
+        path: 'D:/',
         size: 11,
-        creationDate: new Date('2020-05-25T20:21:04.262Z'),
+        created: new Date('2020-05-25T20:21:04.262Z'),
         type: 'file',
-        parentName: 'D:/',
+        accessible: true,
       },
       {
         name: 'Folder',
-        fullPath: 'D:/Folder',
+        path: 'D:/',
         size: 0,
-        creationDate: new Date('2020-05-25T20:22:02.097Z'),
+        created: new Date('2020-05-25T20:22:02.097Z'),
         type: 'folder',
-        parentName: 'D:/',
+        accessible: true,
       },
     ];
 

@@ -74,6 +74,7 @@
     "@electron-forge/plugin-webpack": "^6.0.0-beta.51",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@testing-library/react-hooks": "^3.2.1",
+    "@types/bunyan": "^1.8.6",
     "@types/jest": "^25.2.3",
     "@types/lodash": "^4.14.153",
     "@types/mousetrap": "^1.6.3",
@@ -96,6 +97,7 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
+    "bunyan": "^1.8.12",
     "electron-squirrel-startup": "^1.0.0",
     "lodash": "^4.17.15",
     "mousetrap": "^1.6.5",
@@ -103,6 +105,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hotkeys": "^2.0.0",
+    "reflect-metadata": "^0.1.13",
+    "trash": "^6.1.1",
     "xterm": "^4.6.0"
   }
 }

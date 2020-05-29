@@ -13,11 +13,11 @@ describe('Cache test', () => {
     const folderInfo: FileInfo[] = [
       {
         name: 'test.txt',
-        creationDate: new Date(),
-        fullPath: 'D:/test.txt',
+        created: new Date(),
+        path: 'D:/',
         size: 10,
         type: 'file',
-        parentName: 'D:/',
+        accessible: true,
       },
     ];
 
@@ -38,11 +38,11 @@ describe('Cache test', () => {
     const folderInfo: FileInfo[] = [
       {
         name: 'test.txt',
-        creationDate: new Date(),
-        fullPath: 'D:/test.txt',
+        created: new Date(),
+        path: 'D:/',
         size: 10,
         type: 'file',
-        parentName: 'D:/',
+        accessible: true,
       },
     ];
 
