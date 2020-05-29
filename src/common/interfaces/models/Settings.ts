@@ -9,6 +9,9 @@ interface Settings {
   theme: string;
 
   terminal: TerminalSettings;
+
+  /** The log level that defines what types on messages to log */
+  logLevel: number | 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 }
 
 export { Settings };

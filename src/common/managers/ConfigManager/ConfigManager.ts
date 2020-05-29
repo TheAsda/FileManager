@@ -1,27 +1,36 @@
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 import electron from 'electron';
 import { readFileSync } from 'original-fs';
 import { join } from 'lodash';
+import { IDirectoryManager } from '../DirectoryManager';
+import { ILogManager } from '../LogManager';
 const app = electron.app || electron.remote.app;
 
 @injectable()
 abstract class ConfigManager {
   /** Path to config file */
-  protected fileName: string;
+  protected DirectotyManager: IDirectoryManager;
+  protected Logger: ILogManager;
 
-  constructor(fileName: string) {
-    this.fileName = fileName;
+  constructor(logger: ILogManager, directoryManager: IDirectoryManager) {
+    this.DirectotyManager = directoryManager;
+    this.Logger = logger;
   }
 
   /**
    * Get config if exists
    */
-  protected getFile(): string | null {
-    const fullPath = join(app.getPath('userData'), this.fileName);
+  protected parseFile<T>(fileName: string): T | null {
+    const fullPath = join(app.getPath('userData'), fileName);
+
     try {
-      const data = readFileSync(fullPath, { encoding: 'utf8' });
-      return data;
+      const userData = this.DirectotyManager.readFileSync(fullPath);
+      this.Logger.log(`Retrieving config from ${fullPath}`);
+
+      return JSON.parse(userData);
     } catch {
+      this.Logger.error(`Cannot parse config from ${fullPath}`);
+
       return null;
     }
   }
