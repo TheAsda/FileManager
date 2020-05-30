@@ -1,110 +1,43 @@
 {
-  "name": "new_file_manager",
-  "productName": "new file manager",
-  "version": "1.0.0",
-  "description": "My Electron application description",
-  "main": ".webpack/main",
+  "name": "electron_forge_govno",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src/main/main.ts",
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "build": "webpack --config ./webpack.config.js",
+    "start": "npm run build && electron dist/main.js"
   },
-  "keywords": [],
-  "author": {
-    "name": "Andrey Kiselev",
-    "email": "omega-faworit@yandex.ru"
-  },
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "new file manager"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ],
-      "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
-            "mainConfig": "./webpack.main.config.js",
-            "renderer": {
-              "config": "./webpack.renderer.config.js",
-              "entryPoints": [
-                {
-                  "html": "./app/index.html",
-                  "js": "./src/renderer/index.tsx",
-                  "name": "main_window"
-                }
-              ]
-            }
-          }
-        ]
-      ]
-    }
-  },
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.51",
-    "@electron-forge/maker-deb": "^6.0.0-beta.51",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.51",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.51",
-    "@electron-forge/maker-zip": "^6.0.0-beta.51",
-    "@electron-forge/plugin-webpack": "^6.0.0-beta.51",
-    "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@testing-library/react-hooks": "^3.2.1",
     "@types/bunyan": "^1.8.6",
     "@types/jest": "^25.2.3",
-    "@types/lodash": "^4.14.153",
-    "@types/mousetrap": "^1.6.3",
+    "@types/lodash": "^4.14.154",
+    "@types/node": "^14.0.6",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/testing-library__react-hooks": "^3.2.0",
     "css-loader": "^3.5.3",
-    "debug": "^4.1.1",
-    "electron": "9.0.0",
-    "fork-ts-checker-webpack-plugin": "^4.1.5",
-    "inversify": "^5.0.1",
-    "is-glob": "^4.0.1",
+    "electron": "^9.0.0",
+    "html-webpack-plugin": "^4.3.0",
     "jest": "^26.0.1",
-    "node-loader": "^0.6.0",
-    "react-test-renderer": "^16.13.1",
-    "style-loader": "^0.23.1",
+    "style-loader": "^1.2.1",
     "ts-jest": "^26.0.0",
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.3",
-    "webpack-hot-middleware": "^2.25.0"
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
   },
   "dependencies": {
     "bunyan": "^1.8.12",
-    "electron-squirrel-startup": "^1.0.0",
+    "inversify": "^5.0.1",
     "lodash": "^4.17.15",
-    "mousetrap": "^1.6.5",
-    "node-pty": "0.9.0-beta27",
+    "node-pty": "^0.9.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-hotkeys": "^2.0.0",
+    "react-hot-keys": "^2.5.2",
     "reflect-metadata": "^0.1.13",
     "trash": "^6.1.1",
     "xterm": "^4.6.0"
