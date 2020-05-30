@@ -1,13 +1,15 @@
 import React from 'react';
 import { Window } from './components';
-import { CacheProvider } from '@fm/hooks';
+import { CacheProvider, ManagersProvider } from '@fm/hooks';
 import './style.css';
 
 const App = () => {
   return (
-    <CacheProvider>
-      <Window />
-    </CacheProvider>
+    <ManagersProvider>
+      <CacheProvider>
+        <Window />
+      </CacheProvider>
+    </ManagersProvider>
   );
 };
 

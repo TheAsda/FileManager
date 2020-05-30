@@ -12,7 +12,7 @@ class SettingsManager extends ConfigManager implements ISettingsManager {
   private Settings?: Settings;
 
   constructor(
-    @inject(TYPES.ILogManger) logger: ILogManager,
+    @inject(TYPES.ILogManager) logger: ILogManager,
     @inject(TYPES.IDirectoryManager) directoryManager: IDirectoryManager
   ) {
     super(logger, directoryManager);

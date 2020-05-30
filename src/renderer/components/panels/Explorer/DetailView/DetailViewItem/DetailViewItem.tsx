@@ -12,7 +12,7 @@ const DetailViewItem = (props: DetailViewItemProps) => {
     <tr className={props.selected ? 'detail-view__item--selected' : ''}>
       <td>{props.data.name}</td>
       <td>{props.data.size}</td>
-      <td>{props.data.creationDate.toDateString()}</td>
+      <td>{props.data.created?.toDateString()}</td>
     </tr>
   );
 };

@@ -1,23 +1,26 @@
-import { injectable, inject } from 'inversify';
-import { IDirectoryManager } from './IDirectoryManager';
 import {
+  FileInfo,
+  FileType,
+  IDirectoryManager,
+  ILogManager,
+  TYPES,
+} from '@fm/common';
+import {
+  copyFileSync,
   FSWatcher,
+  lstatSync,
   mkdirSync,
-  writeFileSync,
+  readdirSync,
+  readFileSync,
   renameSync,
   rmdirSync,
-  unlinkSync,
-  copyFileSync,
-  readFileSync,
-  watch,
-  readdirSync,
   Stats,
-  lstatSync,
+  unlinkSync,
+  watch,
+  writeFileSync,
 } from 'fs';
-import { FileType, FileInfo } from '@fm/common';
-import { join, basename } from 'path';
-import { ILogManager } from '../LogManager/ILogManager';
-import { TYPES } from 'common/ioc';
+import { inject, injectable } from 'inversify';
+import { basename, join } from 'path';
 import trash from 'trash';
 
 @injectable()
@@ -27,7 +30,7 @@ class DirectoryManager implements IDirectoryManager {
 
   private logger: ILogManager;
 
-  constructor(@inject(TYPES.ILogManger) logger: ILogManager) {
+  constructor(@inject(TYPES.ILogManager) logger: ILogManager) {
     this.logger = logger;
   }
 

@@ -1,9 +1,7 @@
-import { injectable, inject } from 'inversify';
+import { injectable } from 'inversify';
 import electron from 'electron';
-import { readFileSync } from 'original-fs';
 import { join } from 'lodash';
-import { IDirectoryManager } from '../DirectoryManager';
-import { ILogManager } from '../LogManager';
+import { ILogManager, IDirectoryManager } from '@fm/common';
 const app = electron.app || electron.remote.app;
 
 @injectable()

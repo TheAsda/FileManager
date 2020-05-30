@@ -15,7 +15,7 @@ class ThemesManager extends ConfigManager implements IThemesManager {
   private SettingsManager: ISettingsManager;
 
   constructor(
-    @inject(TYPES.ILogManger) logger: ILogManager,
+    @inject(TYPES.ILogManager) logger: ILogManager,
     @inject(TYPES.IDirectoryManager) directoryManager: IDirectoryManager,
     @inject(TYPES.ISettingsManager) settingsManager: ISettingsManager
   ) {

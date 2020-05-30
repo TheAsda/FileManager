@@ -14,7 +14,7 @@ class KeysManager extends ConfigManager implements IKeysManager {
   private KeyMap?: KeyMap;
 
   constructor(
-    @inject(TYPES.ILogManger) logger: ILogManager,
+    @inject(TYPES.ILogManager) logger: ILogManager,
     @inject(TYPES.IDirectoryManager) directoryManager: IDirectoryManager
   ) {
     super(logger, directoryManager);

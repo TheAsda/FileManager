@@ -1,9 +1,11 @@
 const TYPES = {
-  ILogManger: Symbol.for('ILogManager'),
+  ILogManager: Symbol.for('ILogManager'),
   IDirectoryManager: Symbol.for('IDirectiryManager'),
   ISettingsManager: Symbol.for('ISettingsManager'),
   IKeysManager: Symbol.for('IKeysManager'),
   IThemesManager: Symbol.for('IThemesManager'),
 };
+
+console.log(TYPES);
 
 export { TYPES };

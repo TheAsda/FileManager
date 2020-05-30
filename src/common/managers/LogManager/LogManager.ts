@@ -1,7 +1,6 @@
-import { ILogManager } from './ILogManager';
+import { ILogManager, TYPES } from '@fm/common';
 import { injectable, inject } from 'inversify';
 import Logger, { createLogger, LoggerOptions } from 'bunyan';
-import { TYPES } from 'common/ioc';
 
 const loggerOptions: LoggerOptions = {
   name: 'Logger',
