@@ -1,36 +1,39 @@
 import { ConfigManager } from '../ConfigManager/ConfigManager';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 import { KeyMap } from '@fm/common';
 import { DEFAULT_KEYMAP } from '@fm/common';
 import { merge } from 'lodash';
+import { IKeysManager } from './IKeysManager';
+import { TYPES } from 'common/ioc';
+import { IDirectoryManager } from '../DirectoryManager';
+import { ILogManager } from '../LogManager';
 
 @injectable()
-class KeysManager extends ConfigManager {
+class KeysManager extends ConfigManager implements IKeysManager {
   /** Keymap for manager */
   private KeyMap?: KeyMap;
 
-  constructor(fileName: string) {
-    super(fileName);
+  constructor(
+    @inject(TYPES.ILogManger) logger: ILogManager,
+    @inject(TYPES.IDirectoryManager) directoryManager: IDirectoryManager
+  ) {
+    super(logger, directoryManager);
   }
 
   /** Returns default and users key map settings */
-  getKeyMap() {
+  getKeyMap(): KeyMap {
     if (!this.KeyMap) {
-      this.retrieve();
+      this.KeyMap = this.retrieve();
     }
 
     return this.KeyMap;
   }
 
   /** Loads key maps */
-  private retrieve() {
-    const fileInfo = this.getFile();
+  private retrieve(): KeyMap {
+    const userKeys = this.parseFile<KeyMap>('keymap.json');
 
-    if (fileInfo === null) {
-      this.KeyMap = DEFAULT_KEYMAP;
-    } else {
-      this.KeyMap = merge(JSON.parse(fileInfo), DEFAULT_KEYMAP);
-    }
+    return userKeys ? merge(userKeys, DEFAULT_KEYMAP) : DEFAULT_KEYMAP;
   }
 }
 
