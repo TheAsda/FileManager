@@ -1,7 +1,7 @@
 import { Theme } from '@fm/common';
 
 interface IThemesManager {
-  getTheme: Theme;
+  getTheme(): Theme;
 }
 
 export { IThemesManager };

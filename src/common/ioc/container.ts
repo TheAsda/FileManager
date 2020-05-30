@@ -9,7 +9,7 @@ import {
   SettingsManager,
   IKeysManager,
 } from '@fm/common';
-import { KeysManager } from 'common/managers';
+import { KeysManager, IThemesManager, ThemesManager } from 'common/managers';
 
 const container = new Container({ defaultScope: 'Singleton' });
 
@@ -20,5 +20,6 @@ container
 container.bind<ILogManager>(TYPES.ILogManger).to(LogManager);
 container.bind<ISettingsManager>(TYPES.ISettingsManager).to(SettingsManager);
 container.bind<IKeysManager>(TYPES.IKeysManager).to(KeysManager);
+container.bind<IThemesManager>(TYPES.IThemesManager).to(ThemesManager);
 
 export { container };
