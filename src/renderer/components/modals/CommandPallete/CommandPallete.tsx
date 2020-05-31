@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './style.css';
 import { CommandPalleteItem } from './CommandPalleteItem';
+import { map } from 'lodash';
 
 const CommandPallete = () => {
   const [selected, setSelected] = useState<number>(0);
@@ -26,7 +27,7 @@ const CommandPallete = () => {
 
   return (
     <div className="commands-menu">
-      {MenuItems.map((item, i) => (
+      {map(MenuItems, (item, i) => (
         <CommandPalleteItem {...item} selected={i === selected} />
       ))}
     </div>

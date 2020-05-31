@@ -1,5 +1,5 @@
-import { ILogManager, TYPES } from '@fm/common';
-import { injectable, inject } from 'inversify';
+import { ILogManager } from '@fm/common';
+import { injectable } from 'inversify';
 import Logger, { createLogger, LoggerOptions } from 'bunyan';
 
 const loggerOptions: LoggerOptions = {

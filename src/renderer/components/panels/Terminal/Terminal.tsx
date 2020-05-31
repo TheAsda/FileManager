@@ -10,8 +10,8 @@ class Terminal extends Component {
   private terminal: Term;
   private process?: IPty;
 
-  constructor(props: {}) {
-    super(props);
+  constructor() {
+    super({});
 
     this.containerRef = createRef<HTMLDivElement>();
     this.terminal = new Term();
@@ -24,7 +24,7 @@ class Terminal extends Component {
     }
 
     this.terminal.onData((data) => {
-      this.process!.write(data);
+      this.process?.write(data);
     });
     this.process.onData((data: string | Uint8Array) => {
       this.terminal.write(data);

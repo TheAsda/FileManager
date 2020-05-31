@@ -1,10 +1,10 @@
 import { FileInfo } from '@fm/common';
 import { useCache, useView, useManagers } from '@fm/hooks';
-import { clamp } from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DetailView } from './DetailView';
 import { PathLine } from './PathLine';
 import { StateLine } from './StateLine';
+import { reduce } from 'lodash';
 
 const Explorer = () => {
   const { directoryManager } = useManagers();
@@ -12,7 +12,7 @@ const Explorer = () => {
   const { view, setDetailsView, setFolderView } = useView();
   const [selected, setSelected] = useState<number>(0);
   const [dir, setDir] = useState<string[]>(['D:', 'FileManagerTest']);
-  const dirString = dir.reduce((acc, cur) => acc + cur + '/', '');
+  const dirString = reduce(dir, (acc, cur) => acc + cur + '/', '');
   const [dirState, setDirState] = useState<FileInfo[]>([]);
   useEffect(() => {
     directoryManager

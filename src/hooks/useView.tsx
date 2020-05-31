@@ -1,4 +1,4 @@
-import React, { Dispatch, useReducer } from 'react';
+import { useReducer } from 'react';
 
 interface SetFolderView {
   type: 'folder';

@@ -1,5 +1,6 @@
 import React, { useContext, createContext, useState } from 'react';
 import { FileInfo } from '@fm/common';
+import { constant, noop } from 'lodash';
 
 interface Cache {
   [path: string]: FileInfo[];
@@ -9,11 +10,11 @@ const CacheContext = createContext<{
   storage: Cache;
   updateStorage: (path: string, data: FileInfo[]) => void;
   getCached: (path: string) => FileInfo[] | null;
-}>({ storage: {}, getCached: () => null, updateStorage: () => {} });
+}>({ storage: {}, getCached: constant(null), updateStorage: noop });
 
 const useCache = () => useContext(CacheContext);
 
-const CacheProvider = ({ children }: { children: any }) => {
+const CacheProvider = ({ children }: { children: JSX.Element }) => {
   const [cache, setCache] = useState<Cache>({});
 
   const updateStorage = (path: string, data: FileInfo[]) => {

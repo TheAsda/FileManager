@@ -1,7 +1,6 @@
 import { ConfigManager } from '../ConfigManager/ConfigManager';
 import { injectable, inject } from 'inversify';
-import { KeyMap } from '@fm/common';
-import { DEFAULT_KEYMAP } from '@fm/common';
+import { KeyMap, DEFAULT_KEYMAP } from '@fm/common';
 import { merge } from 'lodash';
 import { IKeysManager } from './IKeysManager';
 import { TYPES } from 'common/ioc';

@@ -21,6 +21,7 @@ import {
 } from 'fs';
 import { inject, injectable } from 'inversify';
 import { basename, join } from 'path';
+import { map } from 'lodash';
 import trash from 'trash';
 
 @injectable()
@@ -46,7 +47,8 @@ class DirectoryManager implements IDirectoryManager {
     }
 
     return await Promise.all(
-      fileList.map(
+      map(
+        fileList,
         async (fileName): Promise<FileInfo> => {
           const fullPath = join(path, fileName);
           let fileStats: Stats;
@@ -121,7 +123,8 @@ class DirectoryManager implements IDirectoryManager {
 
   /** @inheritdoc */
   async deleteItems(itemsToDelete: FileInfo[]): Promise<void> {
-    const itemDeletions = itemsToDelete.map(
+    const itemDeletions = map(
+      itemsToDelete,
       async (item) => await this.deleteItem(item.path, item.type)
     );
 
@@ -130,7 +133,8 @@ class DirectoryManager implements IDirectoryManager {
 
   /** @inheritdoc */
   async sendItemsToTrash(itemsToTrash: FileInfo[]): Promise<void> {
-    const itemsSending = itemsToTrash.map(
+    const itemsSending = map(
+      itemsToTrash,
       async (item) => await this.sendItemToTrash(item.path)
     );
 
@@ -142,7 +146,7 @@ class DirectoryManager implements IDirectoryManager {
     itemsToCopy: FileInfo[],
     destinationFolder: string
   ): Promise<void> {
-    const itemsCopying = itemsToCopy.map(async (item) =>
+    const itemsCopying = map(itemsToCopy, async (item) =>
       this.copyItem(item.path, destinationFolder)
     );
 
@@ -154,7 +158,7 @@ class DirectoryManager implements IDirectoryManager {
     itemsToMove: FileInfo[],
     destinationFolder: string
   ): Promise<void> {
-    const itemsMoving = itemsToMove.map(async (item) =>
+    const itemsMoving = map(itemsToMove, async (item) =>
       this.moveItem(item.path, destinationFolder, item.type)
     );
 

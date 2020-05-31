@@ -28,7 +28,9 @@
     "sourceType": "module"
   },
   "plugins": ["react", "@typescript-eslint", "lodash"],
-  "rules": {},
+  "rules": {
+    "lodash/import-scope": [2, "member"]
+  },
   "settings": {
     "react": {
       "version": "detect"

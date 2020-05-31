@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileInfo } from '@fm/common';
 import { DetailViewItem } from './DetailViewItem';
+import { reduce, map } from 'lodash';
 import './style.css';
 
 interface DetailViewProps {
@@ -19,7 +20,7 @@ const DetailView = (props: DetailViewProps) => {
         </tr>
       </thead>
       <tbody className="detail-view__body">
-        {props.data.map((item, i) => (
+        {map(props.data, (item, i) => (
           <DetailViewItem
             key={item.name}
             data={item}

@@ -29,7 +29,7 @@ const ManagersContext = createContext<{
 
 const useManagers = () => useContext(ManagersContext);
 
-const ManagersProvider = ({ children }: { children: any }) => {
+const ManagersProvider = ({ children }: { children: JSX.Element }) => {
   return (
     <ManagersContext.Provider
       value={{ keysManager, settingsManager, themesManager, directoryManager }}

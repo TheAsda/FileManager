@@ -1,11 +1,14 @@
 import { ISettingsManager } from './ISettingsManager';
 import { inject, injectable } from 'inversify';
-import { Settings } from '@fm/common';
+import {
+  Settings,
+  ConfigManager,
+  ILogManager,
+  IDirectoryManager,
+  DEFAULT_SETTINGS,
+} from '@fm/common';
 import { TYPES } from 'common/ioc';
-import { ILogManager, IDirectoryManager } from '@fm/common';
-import { ConfigManager } from '@fm/common';
 import { merge } from 'lodash';
-import { DEFAULT_KEYMAP, DEFAULT_SETTINGS } from 'common/settings';
 
 @injectable()
 class SettingsManager extends ConfigManager implements ISettingsManager {
