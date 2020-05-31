@@ -1,4 +1,4 @@
-.commands-menu {
+.select-palette {
   position: fixed;
   margin: auto;
   display: flex;
@@ -6,5 +6,11 @@
   align-items: stretch;
   background-color: black;
   color: white;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.select-palette__search {
   width: 100%;
 }

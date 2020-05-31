@@ -1,1 +1,1 @@
-export * from './CommandPallete';
+export * from './CommandPalette';

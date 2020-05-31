@@ -48,7 +48,7 @@
     "node-pty": "^0.9.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-hot-keys": "^2.5.2",
+    "react-hotkeys": "^2.0.0",
     "reflect-metadata": "^0.1.13",
     "trash": "^6.1.1",
     "xterm": "^4.6.0"

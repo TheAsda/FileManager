@@ -5,7 +5,7 @@ dependencies:
   node-pty: 0.9.0
   react: 16.13.1
   react-dom: 16.13.1_react@16.13.1
-  react-hot-keys: 2.5.2_react@16.13.1
+  react-hotkeys: 2.0.0_react@16.13.1
   reflect-metadata: 0.1.13
   trash: 6.1.1
   xterm: 4.6.0
@@ -274,6 +274,7 @@ packages:
   /@babel/runtime/7.10.1:
     dependencies:
       regenerator-runtime: 0.13.5
+    dev: true
     resolution:
       integrity: sha512-nQbbCbQc9u/rpg1XCxoMYQTbSMVZjCDxErQ1ClCn9Pvcmv1lGads19ep0a2VsEiIJeHqjZley6EQGEC3Yo1xMA==
   /@babel/template/7.10.1:
@@ -3497,10 +3498,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-f/wzC2QaWBs7t9IYqB4T3sR1xviIViXJRJTWBlx2Gf3g0Xi5vI7Yy4koXQ1c9OYDGHN9sBy1DQ2AB8fqZBWhUg==
-  /hotkeys-js/3.8.1:
-    dev: false
-    resolution:
-      integrity: sha512-YlhVQtyG9f1b7GhtzdhR0Pl+cImD1ZrKI6zYUa7QLd0zuThiL7RzZ+ANJyy7z+kmcCpNYBf5PjBa3CjiQ5PFpw==
   /html-encoding-sniffer/2.0.1:
     dependencies:
       whatwg-encoding: 1.0.5
@@ -6023,17 +6020,15 @@ packages:
       react: ^16.13.1
     resolution:
       integrity: sha512-81PIMmVLnCNLO/fFOQxdQkvEq/+Hfpv24XNJfpyZhTRfO0QcmQIF/PgCa1zCOj2w1hrn12MFLyaJ/G0+Mxtfag==
-  /react-hot-keys/2.5.2_react@16.13.1:
+  /react-hotkeys/2.0.0_react@16.13.1:
     dependencies:
-      '@babel/runtime': 7.10.1
-      hotkeys-js: 3.8.1
       prop-types: 15.7.2
       react: 16.13.1
     dev: false
     peerDependencies:
-      react: '>=16.7.0'
+      react: '>= 0.14.0'
     resolution:
-      integrity: sha512-JnCDS/qtAOdjr1x+dWr/wbCgWGN7SrnKbqpk5+Y6iftrsMSrKcIWu3YaQrFnb7b5Sh5poc7vKZICV6zNYX+/Ow==
+      integrity: sha512-3n3OU8vLX/pfcJrR3xJ1zlww6KS1kEJt0Whxc4FiGV+MJrQ1mYSYI3qS/11d2MJDFm8IhOXMTFQirfu6AVOF6Q==
   /react-is/16.13.1:
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -6133,6 +6128,7 @@ packages:
     resolution:
       integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
   /regenerator-runtime/0.13.5:
+    dev: true
     resolution:
       integrity: sha512-ZS5w8CpKFinUzOwW3c83oPeVXoNsrLsaCoLtJvAClH135j/R77RuymhiSErhm2lKcwSCIpmvIWSbDkIfAqKQlA==
   /regex-not/1.0.2:
@@ -7874,7 +7870,7 @@ specifiers:
   node-pty: ^0.9.0
   react: ^16.13.1
   react-dom: ^16.13.1
-  react-hot-keys: ^2.5.2
+  react-hotkeys: ^2.0.0
   reflect-metadata: ^0.1.13
   style-loader: ^1.2.1
   trash: ^6.1.1
