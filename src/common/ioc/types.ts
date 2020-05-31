@@ -6,6 +6,4 @@ const TYPES = {
   IThemesManager: Symbol.for('IThemesManager'),
 };
 
-console.log(TYPES);
-
 export { TYPES };

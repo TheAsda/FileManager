@@ -1,10 +1,7 @@
-import {
-  FileInfo,
-  FileType,
-  IDirectoryManager,
-  ILogManager,
-  TYPES,
-} from '@fm/common';
+import { FileInfo, FileType } from '@fm/common';
+import { TYPES } from '../../ioc';
+import { IDirectoryManager } from './IDirectoryManager';
+import { ILogManager } from '../LogManager/ILogManager';
 import {
   copyFileSync,
   FSWatcher,
@@ -41,6 +38,7 @@ class DirectoryManager implements IDirectoryManager {
 
     try {
       fileList = readdirSync(path);
+      this.logger.log(`Reading folder ${path}`);
     } catch {
       this.logger.error(`Cannot read folder ${path}`);
       return Promise.reject();

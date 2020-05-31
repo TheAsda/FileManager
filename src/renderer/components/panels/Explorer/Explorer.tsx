@@ -11,12 +11,12 @@ const Explorer = () => {
   const { updateStorage, getCached } = useCache();
   const { view, setDetailsView, setFolderView } = useView();
   const [selected, setSelected] = useState<number>(0);
-  const [dir, setDir] = useState<string[]>(['D:', 'FileManagerTest']);
+  const [dir, setDir] = useState<string[]>(['D:']);
   const dirString = reduce(dir, (acc, cur) => acc + cur + '/', '');
   const [dirState, setDirState] = useState<FileInfo[]>([]);
   useEffect(() => {
     directoryManager
-      .listDirectory(dir.join('/'))
+      .listDirectory(dir.join('/') + '/')
       .then((data) => setDirState(data));
   }, [dir]);
 

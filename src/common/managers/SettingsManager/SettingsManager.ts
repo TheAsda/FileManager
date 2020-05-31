@@ -1,13 +1,10 @@
 import { ISettingsManager } from './ISettingsManager';
 import { inject, injectable } from 'inversify';
-import {
-  Settings,
-  ConfigManager,
-  ILogManager,
-  IDirectoryManager,
-  DEFAULT_SETTINGS,
-} from '@fm/common';
-import { TYPES } from 'common/ioc';
+import { Settings, DEFAULT_SETTINGS } from '@fm/common';
+import { TYPES } from '../../ioc';
+import { ILogManager } from '../LogManager/ILogManager';
+import { IDirectoryManager } from '../DirectoryManager/IDirectoryManager';
+import { ConfigManager } from '../ConfigManager/ConfigManager';
 import { merge } from 'lodash';
 
 @injectable()

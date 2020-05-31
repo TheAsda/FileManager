@@ -10,8 +10,8 @@ import {
   KeysManager,
   IThemesManager,
   ThemesManager,
-  TYPES,
 } from '@fm/common';
+import { TYPES } from './types';
 
 const container = new Container({ defaultScope: 'Singleton' });
 

@@ -1,11 +1,11 @@
 import { injectable, inject } from 'inversify';
 import { Theme, DEFAULT_THEME } from '@fm/common';
 import { IThemesManager } from './IThemesManager';
-import { ISettingsManager } from '../SettingsManager';
-import { ConfigManager } from '../ConfigManager';
+import { ISettingsManager } from '../SettingsManager/ISettingsManager';
+import { ConfigManager } from '../ConfigManager/ConfigManager';
 import { TYPES } from 'common/ioc';
-import { ILogManager } from '../LogManager';
-import { IDirectoryManager } from '../DirectoryManager';
+import { ILogManager } from '../LogManager/ILogManager';
+import { IDirectoryManager } from '../DirectoryManager/IDirectoryManager';
 import { merge } from 'lodash';
 
 @injectable()

@@ -1,4 +1,4 @@
-import { ILogManager } from '@fm/common';
+import { ILogManager } from './ILogManager';
 import { injectable } from 'inversify';
 import Logger, { createLogger, LoggerOptions } from 'bunyan';
 

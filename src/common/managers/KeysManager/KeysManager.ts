@@ -1,4 +1,4 @@
-import { ConfigManager } from '../ConfigManager/ConfigManager';
+import { ConfigManager } from '../ConfigManager';
 import { injectable, inject } from 'inversify';
 import { KeyMap, DEFAULT_KEYMAP } from '@fm/common';
 import { merge } from 'lodash';
