@@ -1,5 +1,3 @@
-import { FileFilter } from 'electron';
-
 type FileType = 'folder' | 'file';
 
 interface FileInfo {
