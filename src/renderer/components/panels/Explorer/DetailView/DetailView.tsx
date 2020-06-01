@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileInfo } from '@fm/common';
 import { DetailViewItem } from './DetailViewItem';
-import { reduce, map } from 'lodash';
+import { map } from 'lodash';
 import './style.css';
 
 interface DetailViewProps {

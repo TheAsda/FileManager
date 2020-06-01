@@ -6,7 +6,7 @@ const DEFAULT_SETTINGS: Settings = {
     fontFamily: 'Consolas',
     fontSize: 15,
   },
-  theme: 'Dark',
+  theme: 'light',
 };
 
 export { DEFAULT_SETTINGS };

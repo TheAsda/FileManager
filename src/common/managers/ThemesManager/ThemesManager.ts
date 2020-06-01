@@ -36,7 +36,7 @@ class ThemesManager extends ConfigManager implements IThemesManager {
   private retrieve(themeName: string): Theme {
     const userTheme = this.parseFile<Theme>(`/themes/${themeName}.json`);
 
-    return userTheme ? merge(userTheme, DEFAULT_THEME) : DEFAULT_THEME;
+    return userTheme ? merge(DEFAULT_THEME, userTheme) : DEFAULT_THEME;
   }
 }
 

@@ -1,9 +1,11 @@
 import { app, BrowserWindow } from 'electron';
+import { resolve } from 'path';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: BrowserWindow | null;
 app.allowRendererProcessReuse = false;
+app.setPath('userData', resolve('./resources'));
 
 const createWindow = () => {
   // Create the browser window.

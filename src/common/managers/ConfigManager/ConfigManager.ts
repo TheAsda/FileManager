@@ -10,7 +10,6 @@ abstract class ConfigManager {
   /** Path to config file */
   protected DirectotyManager: IDirectoryManager;
   protected Logger: ILogManager;
-
   constructor(logger: ILogManager, directoryManager: IDirectoryManager) {
     this.DirectotyManager = directoryManager;
     this.Logger = logger;

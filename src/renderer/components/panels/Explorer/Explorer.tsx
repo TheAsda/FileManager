@@ -81,15 +81,17 @@ const Explorer = () => {
   };
 
   return (
-    <div className="explorer">
-      <HotKeys keyMap={keysManager.getKeyMap()} handlers={handlers}>
-        <PathLine path={dirString} />
-        {view === 'detail' ? (
-          <DetailView data={dirState} selectedIndex={selected} />
-        ) : null}
-        <StateLine count={dirState.length} />
-      </HotKeys>
-    </div>
+    <HotKeys
+      keyMap={keysManager.getKeyMap()}
+      handlers={handlers}
+      className="hot-keys explorer"
+    >
+      <PathLine path={dirString} />
+      {view === 'detail' ? (
+        <DetailView data={dirState} selectedIndex={selected} />
+      ) : null}
+      <StateLine count={dirState.length} />
+    </HotKeys>
   );
 };
 
