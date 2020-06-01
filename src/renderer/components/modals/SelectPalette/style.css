@@ -1,5 +1,5 @@
 .select-palette {
-  position: fixed;
+  /* position: fixed;
   margin: auto;
   display: flex;
   flex-flow: column nowrap;
@@ -8,7 +8,7 @@
   color: white;
   width: 100%;
   top: 0;
-  left: 0;
+  left: 0; */
 }
 
 .select-palette__search {

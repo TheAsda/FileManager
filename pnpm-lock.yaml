@@ -1,4 +1,5 @@
 dependencies:
+  autobind-decorator: 2.4.0
   bunyan: 1.8.12
   inversify: 5.0.1
   lodash: 4.17.15
@@ -6,6 +7,8 @@ dependencies:
   react: 16.13.1
   react-dom: 16.13.1_react@16.13.1
   react-hotkeys: 2.0.0_react@16.13.1
+  react-modal: 3.11.2_react-dom@16.13.1+react@16.13.1
+  react-split-pane: 0.1.91_react-dom@16.13.1+react@16.13.1
   reflect-metadata: 0.1.13
   trash: 6.1.1
   xterm: 4.6.0
@@ -17,6 +20,7 @@ devDependencies:
   '@types/node': 14.0.6
   '@types/react': 16.9.35
   '@types/react-dom': 16.9.8
+  '@types/react-modal': 3.10.5
   '@types/testing-library__react-hooks': 3.2.0
   '@typescript-eslint/eslint-plugin': 3.0.2_6305112a4dd05588288c08258cda3068
   '@typescript-eslint/parser': 3.0.2_eslint@7.1.0+typescript@3.9.3
@@ -716,6 +720,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-ykkPQ+5nFknnlU6lDd947WbQ6TE3NNzbQAkInC2EKY1qeYdTKp7onFusmYZb+ityzx2YviqT6BXSu+LyWWJwcA==
+  /@types/react-modal/3.10.5:
+    dependencies:
+      '@types/react': 16.9.35
+    dev: true
+    resolution:
+      integrity: sha512-iLL9afYbcgYlboW2J8mFNKH2tFgErIHR0q+JgHotKrFK99+d97v+V/dxL5LVoxt1OjlnWsuwj8sZuBMVsI1MtQ==
   /@types/react-test-renderer/16.9.2:
     dependencies:
       '@types/react': 16.9.35
@@ -1252,6 +1262,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
+  /autobind-decorator/2.4.0:
+    dev: false
+    engines:
+      node: '>=8.10'
+      npm: '>=6.4.1'
+    resolution:
+      integrity: sha512-OGYhWUO72V6DafbF8PM8rm3EPbfuyMZcJhtm5/n26IDwO18pohE4eNazLoCGhPiXOCD0gEGmrbU3849QvM8bbw==
   /aws-sign2/0.7.0:
     dev: true
     resolution:
@@ -2823,6 +2840,10 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-QI2zLa6CjGWdiQsmSkZoGtDx2N+cQIGb3yNolGTdjSQzydzLgYYf8LRuagp7S7fPimjcrzUDSUFd/MgzELMi4Q==
+  /exenv/1.2.2:
+    dev: false
+    resolution:
+      integrity: sha1-KueOhdmJQVhnCwPUe+wfA72Ru50=
   /exit/0.1.2:
     dev: true
     engines:
@@ -6032,6 +6053,43 @@ packages:
   /react-is/16.13.1:
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+  /react-lifecycles-compat/3.0.4:
+    dev: false
+    resolution:
+      integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+  /react-modal/3.11.2_react-dom@16.13.1+react@16.13.1:
+    dependencies:
+      exenv: 1.2.2
+      prop-types: 15.7.2
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
+      react-lifecycles-compat: 3.0.4
+      warning: 4.0.3
+    dev: false
+    peerDependencies:
+      react: ^0.14.0 || ^15.0.0 || ^16
+      react-dom: ^0.14.0 || ^15.0.0 || ^16
+    resolution:
+      integrity: sha512-o8gvvCOFaG1T7W6JUvsYjRjMVToLZgLIsi5kdhFIQCtHxDkA47LznX62j+l6YQkpXDbvQegsDyxe/+JJsFQN7w==
+  /react-split-pane/0.1.91_react-dom@16.13.1+react@16.13.1:
+    dependencies:
+      prop-types: 15.7.2
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
+      react-lifecycles-compat: 3.0.4
+      react-style-proptype: 3.2.2
+    dev: false
+    peerDependencies:
+      react: ^16.0.0-0
+      react-dom: ^16.0.0-0
+    resolution:
+      integrity: sha512-8U56HOKQGFlvXXT1PaHbijjYy2W8g0iQaHC99Q2aV4yYfvUURcRGyfPKN3scGkbYN2pvy3qyoEwHyewUmR1VbQ==
+  /react-style-proptype/3.2.2:
+    dependencies:
+      prop-types: 15.7.2
+    dev: false
+    resolution:
+      integrity: sha512-ywYLSjNkxKHiZOqNlso9PZByNEY+FTyh3C+7uuziK0xFXu9xzdyfHwg4S9iyiRRoPCR4k2LqaBBsWVmSBwCWYQ==
   /react/16.13.1:
     dependencies:
       loose-envify: 1.4.0
@@ -7525,6 +7583,12 @@ packages:
     dev: true
     resolution:
       integrity: sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
+  /warning/4.0.3:
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
+    resolution:
+      integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
   /watchpack-chokidar2/2.0.0:
     dependencies:
       chokidar: 2.1.8
@@ -7850,9 +7914,11 @@ specifiers:
   '@types/node': ^14.0.6
   '@types/react': ^16.9.35
   '@types/react-dom': ^16.9.8
+  '@types/react-modal': ^3.10.5
   '@types/testing-library__react-hooks': ^3.2.0
   '@typescript-eslint/eslint-plugin': ^3.0.2
   '@typescript-eslint/parser': ^3.0.2
+  autobind-decorator: ^2.4.0
   bunyan: ^1.8.12
   circular-dependency-plugin: ^5.2.0
   css-loader: ^3.5.3
@@ -7871,6 +7937,8 @@ specifiers:
   react: ^16.13.1
   react-dom: ^16.13.1
   react-hotkeys: ^2.0.0
+  react-modal: ^3.11.2
+  react-split-pane: ^0.1.91
   reflect-metadata: ^0.1.13
   style-loader: ^1.2.1
   trash: ^6.1.1

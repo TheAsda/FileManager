@@ -2,7 +2,7 @@ import { app, BrowserWindow } from 'electron';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow: any;
+let mainWindow: BrowserWindow | null;
 app.allowRendererProcessReuse = false;
 
 const createWindow = () => {

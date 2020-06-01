@@ -7,9 +7,6 @@ interface FileInfo {
   /** The display name of the directory item. */
   name: string;
 
-  /** Whether the directory item is a directory (i.e., a 'folder'). */
-  type: FileType;
-
   /** Whether the directory item can be accessed by the user. */
   accessible: boolean;
 
@@ -21,6 +18,16 @@ interface FileInfo {
 
   /** The date time the directory item was created. */
   created?: Date;
+
+  attributes: {
+    hidden: boolean;
+
+    directory: boolean;
+
+    readonly: boolean;
+    
+    system:boolean;
+  };
 }
 
 export { FileInfo, FileType };

@@ -1,13 +1,37 @@
 import { FileType } from '@fm/common';
 import { FileInfo } from 'common/interfaces';
 
+type name = 0;
+type size = 1;
+type lastModified = 2;
+type created = 3;
+
+interface SortOptions {
+  property: name | size | lastModified | created;
+  asc: boolean;
+}
+
+interface OptionalParameters {
+  mask?: string;
+  sortOptions?: SortOptions;
+
+  /** Default value "true" */
+  showHidden: boolean;
+
+  /** Default value "true" */
+  showSystem: boolean;
+}
+
 interface IDirectoryManager {
   /**
    * Returns list of all files in the given folder
    *
    * @param path the path to directory
    */
-  listDirectory(path: string): Promise<FileInfo[]>;
+  listDirectory(
+    path: string,
+    options?: OptionalParameters
+  ): Promise<FileInfo[]>;
 
   /**
    * Creates an item with itemName of itemType at itemPath

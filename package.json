@@ -20,6 +20,7 @@
     "@types/node": "^14.0.6",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
+    "@types/react-modal": "^3.10.5",
     "@types/testing-library__react-hooks": "^3.2.0",
     "@typescript-eslint/eslint-plugin": "^3.0.2",
     "@typescript-eslint/parser": "^3.0.2",
@@ -42,6 +43,7 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "autobind-decorator": "^2.4.0",
     "bunyan": "^1.8.12",
     "inversify": "^5.0.1",
     "lodash": "^4.17.15",
@@ -49,6 +51,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hotkeys": "^2.0.0",
+    "react-modal": "^3.11.2",
+    "react-split-pane": "^0.1.91",
     "reflect-metadata": "^0.1.13",
     "trash": "^6.1.1",
     "xterm": "^4.6.0"

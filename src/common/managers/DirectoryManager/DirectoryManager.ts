@@ -56,7 +56,12 @@ class DirectoryManager implements IDirectoryManager {
           } catch {
             return {
               accessible: false,
-              type: 'folder',
+              attributes: {
+                directory: true,
+                hidden: false,
+                readonly: false,
+                system: false,
+              },
               name: fileName,
               path: fullPath,
             };
@@ -65,11 +70,16 @@ class DirectoryManager implements IDirectoryManager {
           return {
             accessible: true,
             created: fileStats.ctime,
-            type: fileStats.isDirectory() ? 'folder' : 'file',
             lastModified: fileStats.mtime,
             name: fileName,
             path: fullPath,
             size: !fileStats.isDirectory() ? fileStats.size : undefined,
+            attributes: {
+              directory: fileStats.isDirectory(),
+              hidden: false,
+              readonly: false,
+              system: false,
+            },
           };
         }
       )
@@ -123,7 +133,11 @@ class DirectoryManager implements IDirectoryManager {
   async deleteItems(itemsToDelete: FileInfo[]): Promise<void> {
     const itemDeletions = map(
       itemsToDelete,
-      async (item) => await this.deleteItem(item.path, item.type)
+      async (item) =>
+        await this.deleteItem(
+          item.path,
+          item.attributes.directory ? 'folder' : 'file'
+        )
     );
 
     await Promise.all(itemDeletions);
@@ -157,7 +171,11 @@ class DirectoryManager implements IDirectoryManager {
     destinationFolder: string
   ): Promise<void> {
     const itemsMoving = map(itemsToMove, async (item) =>
-      this.moveItem(item.path, destinationFolder, item.type)
+      this.moveItem(
+        item.path,
+        destinationFolder,
+        item.attributes.directory ? 'folder' : 'file'
+      )
     );
 
     await Promise.all(itemsMoving);

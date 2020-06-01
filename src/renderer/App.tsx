@@ -7,7 +7,6 @@ import './style.css';
 const App = () => {
   const { keysManager } = useManagers();
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
-  console.log(isCommandPaletteOpen);
   const openCommandPalette = () => setCommandPalette(true);
   const closeCommandPalette = () => setCommandPalette(false);
 

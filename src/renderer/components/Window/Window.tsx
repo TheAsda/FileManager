@@ -1,11 +1,13 @@
 import React from 'react';
-import { Explorer, Terminal } from '../panels';
+import { SplitPanels } from '../SplitPanels';
 import './style.css';
 
 const Window = () => {
   return (
     <div className="window">
-      <Explorer />
+      <SplitPanels
+        panels={{ split: 'vertical', allowResize: true, minSize: '50%' }}
+      />
     </div>
   );
 };
