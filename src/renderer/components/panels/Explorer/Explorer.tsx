@@ -6,6 +6,7 @@ import { PathLine } from './PathLine';
 import { StateLine } from './StateLine';
 import { reduce, clamp, noop } from 'lodash';
 import { HotKeys } from 'react-hotkeys';
+import './style.css';
 
 const Explorer = () => {
   const { directoryManager, keysManager } = useManagers();
@@ -80,7 +81,7 @@ const Explorer = () => {
   };
 
   return (
-    <div className="window">
+    <div className="explorer">
       <HotKeys keyMap={keysManager.getKeyMap()} handlers={handlers}>
         <PathLine path={dirString} />
         {view === 'detail' ? (

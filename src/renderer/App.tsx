@@ -3,9 +3,10 @@ import { Window, CommandPalette, Option } from './components';
 import { CacheProvider, ManagersProvider, useManagers } from '@fm/hooks';
 import { HotKeys } from 'react-hotkeys';
 import './style.css';
+import { CSSApplicator } from './components/CSSApplicator';
 
 const App = () => {
-  const { keysManager } = useManagers();
+  const { keysManager, themesManager } = useManagers();
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
   const openCommandPalette = () => setCommandPalette(true);
   const closeCommandPalette = () => setCommandPalette(false);
@@ -24,7 +25,7 @@ const App = () => {
   };
 
   return (
-    <>
+    <CSSApplicator theme={themesManager.getTheme()}>
       <HotKeys
         keyMap={keysManager.getKeyMap()}
         handlers={handlers}
@@ -41,7 +42,7 @@ const App = () => {
         commands={commands}
         onClose={closeCommandPalette}
       />
-    </>
+    </CSSApplicator>
   );
 };
 
