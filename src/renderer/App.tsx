@@ -23,7 +23,7 @@ const App = () => {
     'Console Log 5': () => console.log('Test5'),
     'Console Log 6': () => console.log('Test6'),
   };
-  console.log(themesManager.getTheme());
+
   return (
     <CSSApplicator theme={themesManager.getTheme()}>
       <HotKeys keyMap={keysManager.getKeyMap()} handlers={handlers}>

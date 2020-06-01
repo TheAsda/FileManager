@@ -52,7 +52,6 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
   @autobind
   selectNextItem() {
-    console.log('next');
     this.setState({
       selectedIndex: clamp(
         this.state.selectedIndex + 1,
@@ -90,8 +89,6 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
   @autobind
   handleInput() {
-    console.log('input');
-
     if (!this.inputRef || this.inputRef.value.length === 0) {
       return;
     }
