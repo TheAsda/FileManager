@@ -4,6 +4,7 @@ const TYPES = {
   ISettingsManager: Symbol.for('ISettingsManager'),
   IKeysManager: Symbol.for('IKeysManager'),
   IThemesManager: Symbol.for('IThemesManager'),
+  ITerminalManager: Symbol.for('ITerminalManager'),
 };
 
 export { TYPES };

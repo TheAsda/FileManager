@@ -1,6 +1,6 @@
 import React from 'react';
 import SplitPane, { SplitPaneProps } from 'react-split-pane';
-import { Explorer } from '../panels';
+import { Explorer, Terminal } from '../panels';
 import { useCache, useManagers } from '@fm/hooks';
 
 interface SplitPanelsProps {
@@ -9,7 +9,7 @@ interface SplitPanelsProps {
 
 const SplitPanels = (props: SplitPanelsProps) => {
   const { getCached, updateStorage } = useCache();
-  const { directoryManager, keysManager } = useManagers();
+  const { directoryManager, keysManager, getTerminalManager } = useManagers();
 
   return (
     <SplitPane {...props.panels}>
@@ -20,13 +20,7 @@ const SplitPanels = (props: SplitPanelsProps) => {
         keysManager={keysManager}
         initialDirectoryArray={['C:']}
       />
-      <Explorer
-        addToCache={updateStorage}
-        getCachedDirectory={getCached}
-        directoryManager={directoryManager}
-        keysManager={keysManager}
-        initialDirectoryArray={['D:']}
-      />
+      <Terminal terminalManager={getTerminalManager()} />
     </SplitPane>
   );
 };

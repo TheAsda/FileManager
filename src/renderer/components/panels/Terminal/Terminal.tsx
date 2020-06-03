@@ -4,41 +4,29 @@ import { IPty } from 'node-pty';
 import { Terminal as Term } from 'xterm';
 import { platform, homedir } from 'os';
 import 'xterm/css/xterm.css';
+import { ITerminalManager } from '@fm/common';
 
-class Terminal extends Component {
+interface TerminalProps {
+  terminalManager: ITerminalManager;
+}
+
+class Terminal extends Component<TerminalProps> {
   private containerRef: RefObject<HTMLDivElement>;
   private terminal: Term;
-  private process?: IPty;
+  private TerminalManager: ITerminalManager;
 
-  constructor() {
-    super({});
+  constructor(props: TerminalProps) {
+    super(props);
 
+    this.TerminalManager = props.terminalManager;
     this.containerRef = createRef<HTMLDivElement>();
     this.terminal = new Term();
   }
 
-  attach = () => {
-    if (!this.process) {
-      console.error('Terminal process has not been inicialized');
-      return;
-    }
-
-    this.terminal.onData((data) => {
-      this.process?.write(data);
-    });
-    this.process.onData((data: string | Uint8Array) => {
-      this.terminal.write(data);
-    });
-  };
-
   componentDidMount() {
     if (this.containerRef.current) {
       this.terminal.open(this.containerRef.current);
-      const shell = platform() === 'win32' ? 'bash.exe' : 'bash';
-      this.process = remote.require('node-pty').spawn(shell, [], {
-        cwd: homedir(),
-      });
-      this.attach();
+      this.TerminalManager.attach(this.terminal);
     }
   }
 
