@@ -16,7 +16,7 @@ class TerminalManager implements ITerminalManager {
     });
   }
 
-  attach(terminal: Terminal): void {
+  attach(terminal: Terminal, onExit?: (code: number) => void): void {
     if (!this.process) {
       console.error('Terminal process has not been inicialized');
       return;
@@ -28,6 +28,8 @@ class TerminalManager implements ITerminalManager {
     this.process.onData((data: string | Uint8Array) => {
       terminal.write(data);
     });
+
+    onExit && this.process.onExit((e) => onExit(e.exitCode));
   }
 
   changeDirectory(path: string): void {

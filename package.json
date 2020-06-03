@@ -6,10 +6,11 @@
   "scripts": {
     "tsc": "tsc --noEmit",
     "build": "webpack --config ./webpack.config.js",
-    "watch": "pnpm run build -- --watch",
-    "start": "electron dist/main.js",
+    "watch": "npm run build -- --watch",
+    "start": "npm run build && npm run electron",
     "lint": "eslint src",
-    "builder":"electron-builder"
+    "builder": "electron-builder",
+    "electron": "electron dist/main.js"
   },
   "author": "",
   "license": "ISC",

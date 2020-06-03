@@ -1,13 +1,12 @@
 import React, { Component, RefObject, createRef } from 'react';
-import { remote } from 'electron';
-import { IPty } from 'node-pty';
 import { Terminal as Term } from 'xterm';
-import { platform, homedir } from 'os';
 import 'xterm/css/xterm.css';
 import { ITerminalManager } from '@fm/common';
 
 interface TerminalProps {
   terminalManager: ITerminalManager;
+  initialDirectory?: string;
+  onExit?: (exitCode: number) => void;
 }
 
 class Terminal extends Component<TerminalProps> {
@@ -26,7 +25,9 @@ class Terminal extends Component<TerminalProps> {
   componentDidMount() {
     if (this.containerRef.current) {
       this.terminal.open(this.containerRef.current);
-      this.TerminalManager.attach(this.terminal);
+      this.TerminalManager.attach(this.terminal, this.props.onExit);
+      this.props.initialDirectory &&
+        this.TerminalManager.changeDirectory(this.props.initialDirectory);
     }
   }
 
