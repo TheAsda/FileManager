@@ -1,5 +1,5 @@
 import { FileInfo, IDirectoryManager, IKeysManager } from '@fm/common';
-import React, { Component } from 'react';
+import React, { Component, RefObject } from 'react';
 import { DetailView } from './DetailView';
 import { PathLine } from './PathLine';
 import { StateLine } from './StateLine';
@@ -21,6 +21,7 @@ interface ExplorerProps {
   directoryManager: IDirectoryManager;
   getCachedDirectory: (path: string) => FileInfo[] | null;
   addToCache: (path: string, data: FileInfo[]) => void;
+  focus: boolean;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
@@ -29,12 +30,14 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
     this.state = {
       initialDirectory: props.initialDirectory ?? 'C:/',
-      directoryArray: props.initialDirectory?.split(/[\\/]+/) ?? ['C:/'],
+      directoryArray: props.initialDirectory?.split(/[\\/]+/) ?? ['C:'],
       selectedIndex: 0,
       viewType: 'detail',
       directoryState: [],
     };
+  }
 
+  componentDidMount() {
     this.onDirectoryChange();
   }
 
@@ -143,15 +146,17 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   render() {
     return (
-      <HotKeys handlers={this.handlers} className="hot-keys explorer">
-        <PathLine path={this.directoryString} />
-        {this.state.viewType === 'detail' ? (
-          <DetailView
-            data={this.state.directoryState}
-            selectedIndex={this.state.selectedIndex}
-          />
-        ) : null}
-        <StateLine count={this.state.directoryState.length} />
+      <HotKeys handlers={this.handlers} className="hot-keys">
+        <div className="explorer">
+          <PathLine path={this.directoryString} />
+          {this.state.viewType === 'detail' ? (
+            <DetailView
+              data={this.state.directoryState}
+              selectedIndex={this.state.selectedIndex}
+            />
+          ) : null}
+          <StateLine count={this.state.directoryState.length} />
+        </div>
       </HotKeys>
     );
   }
