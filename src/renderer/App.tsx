@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { Window, CommandPalette, Option } from './components';
-import { CacheProvider, ManagersProvider, useManagers } from '@fm/hooks';
+import {
+  CacheProvider,
+  ManagersProvider,
+  useManagers,
+  usePanels,
+} from '@fm/hooks';
 import { HotKeys } from 'react-hotkeys';
 import './style.css';
 import { CSSApplicator } from './components/CSSApplicator';
+import { PanelType } from '@fm/common';
 
 const App = () => {
   const { keysManager, themesManager } = useManagers();
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
+  const { addNewPanel } = usePanels();
   const openCommandPalette = () => setCommandPalette(true);
   const closeCommandPalette = () => setCommandPalette(false);
 
@@ -15,13 +22,12 @@ const App = () => {
     openCommandPalette: openCommandPalette,
   };
 
+  const openExplorer = () => {
+    addNewPanel(PanelType.explorer);
+  };
+
   const commands: Option = {
-    'Console Log': () => console.log('Test1'),
-    'Console Log 2': () => console.log('Test2'),
-    'Console Log 3': () => console.log('Test3'),
-    'Console Log 4': () => console.log('Test4'),
-    'Console Log 5': () => console.log('Test5'),
-    'Console Log 6': () => console.log('Test6'),
+    'Open new explorer': openExplorer,
   };
 
   return (

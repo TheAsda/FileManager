@@ -10,15 +10,15 @@ import autobind from 'autobind-decorator';
 
 interface ExplorerState {
   selectedIndex: number;
+  initialDirectory: string;
   directoryArray: string[];
   viewType: 'detail' | 'folder';
   directoryState: FileInfo[];
 }
 
 interface ExplorerProps {
-  initialDirectoryArray?: string[];
+  initialDirectory?: string;
   directoryManager: IDirectoryManager;
-  keysManager: IKeysManager;
   getCachedDirectory: (path: string) => FileInfo[] | null;
   addToCache: (path: string, data: FileInfo[]) => void;
 }
@@ -28,7 +28,8 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     super(props);
 
     this.state = {
-      directoryArray: props.initialDirectoryArray ?? ['C:'],
+      initialDirectory: props.initialDirectory ?? 'C:/',
+      directoryArray: props.initialDirectory?.split(/[\\/]+/) ?? ['C:/'],
       selectedIndex: 0,
       viewType: 'detail',
       directoryState: [],
@@ -142,11 +143,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   render() {
     return (
-      <HotKeys
-        keyMap={this.props.keysManager.getKeyMap()}
-        handlers={this.handlers}
-        className="hot-keys explorer"
-      >
+      <HotKeys handlers={this.handlers} className="hot-keys explorer">
         <PathLine path={this.directoryString} />
         {this.state.viewType === 'detail' ? (
           <DetailView
