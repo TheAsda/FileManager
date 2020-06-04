@@ -33,7 +33,11 @@ const App = () => {
 
   return (
     <CSSApplicator theme={themesManager.getTheme()}>
-      <HotKeys keyMap={keysManager.getKeyMap()} handlers={handlers}>
+      <HotKeys
+        keyMap={keysManager.getKeyMap()}
+        handlers={handlers}
+        className="hot-keys"
+      >
         <ManagersProvider>
           <CacheProvider>
             <Window />
