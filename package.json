@@ -6,12 +6,13 @@
   "scripts": {
     "tsc": "tsc --noEmit",
     "build": "webpack --config ./webpack.config.js",
-    "watch": "npm run build -- --watch",
-    "start": "npm run build && npm run electron",
+    "watch": "yarn run build -- --watch",
+    "start": "yarn run build && yarn run electron",
     "lint": "eslint src",
     "builder": "electron-builder",
     "electron": "electron dist/main.js",
-    "dev": "concurrently \"npm run watch\" \"npm run electron\""
+    "dev": "concurrently \"yarn run watch\" \"yarn run electron\"",
+    "postinstall": "electron-rebuild"
   },
   "author": "",
   "license": "ISC",
@@ -32,6 +33,7 @@
     "css-loader": "^3.5.3",
     "electron": "^9.0.0",
     "electron-builder": "^22.7.0",
+    "electron-rebuild": "^1.11.0",
     "eslint": "^7.1.0",
     "eslint-import-resolver-webpack": "^0.12.1",
     "eslint-plugin-import": "^2.20.2",
