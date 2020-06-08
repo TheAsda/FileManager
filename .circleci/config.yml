@@ -6,6 +6,17 @@ commands:
       - checkout
       - run: yarn
       - run: yarn validate
+  create-artifact:
+    parameters:
+      path: 
+        type: string
+      archive-name:
+        type: string
+    steps:
+      - run: mkdir ~/artifact
+      - run: tar -cvf ~/artifact/<< parameters.archive-name >>.tar << parameters.path >>
+      - store_artifacts:
+          path: ~/artifact/<< parameters.archive-name >>.tar
 
 jobs:
   build_windows:
@@ -17,8 +28,9 @@ jobs:
     steps:
       - install-validate
       - run: yarn build:win
-      - store_artifacts:
+      - create-artifact:
           path: ~/windows/build/
+          archive-name: build
 
   build_linux:
     docker:
@@ -29,8 +41,9 @@ jobs:
     steps:
       - install-validate
       - run: yarn build:linux
-      - store_artifacts:
+      - create-artifact:
           path: ~/linux/build/
+          archive-name: build
 
 workflows:
   build:
