@@ -1,16 +1,39 @@
 version: 2.1
 
-jobs:
-  build:
-    docker:
-      - image: electronuserland/builder:wine
-
-    working_directory: ~/app
-
+commands:
+  install-validate:
     steps:
       - checkout
       - run: yarn
       - run: yarn validate
+
+jobs:
+  build_windows:
+    docker:
+      - image: electronuserland/builder:wine
+
+    working_directory: ~/windows
+
+    steps:
+      - install-validate
       - run: yarn build:win
       - store_artifacts:
-          path: ~/app/build/
+          path: ~/windows/build/
+
+  build_linux:
+    docker:
+      - image: electronuserland/builder
+
+    working_directory: ~/linux
+
+    steps:
+      - install-validate
+      - run: yarn build:linux
+      - store_artifacts:
+          path: ~/linux/build/
+
+workflows:
+  build:
+    jobs:
+      - build_windows
+      - build_linux
