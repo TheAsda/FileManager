@@ -3,7 +3,7 @@ import SplitPane from 'react-split-pane';
 import { Explorer, Terminal } from '../panels';
 import { useCache, useManagers } from '@fm/hooks';
 import { Panel, PanelType } from '@fm/common';
-import { map } from 'lodash';
+import { map, noop } from 'lodash';
 import { ErrorBoundary } from '../ErrorBoundary';
 import { HotKeys } from 'react-hotkeys';
 
@@ -17,7 +17,7 @@ const SplitPanels = (props: SplitPanelsProps) => {
   const [focus, setFocus] = useState<number>(props.panels[0]?.id ?? undefined);
   console.log(props.panels);
 
-  const switchPane = () => {};
+  const switchPane = noop;
 
   const handlers = {
     switchPane,
@@ -45,10 +45,7 @@ const SplitPanels = (props: SplitPanelsProps) => {
               case PanelType.terminal:
                 return (
                   <ErrorBoundary>
-                    <Terminal
-                      terminalManager={getTerminalManager()}
-                      onExit={() => console.log('Exit terminal')}
-                    />
+                    <Terminal terminalManager={getTerminalManager()} onExit={() => console.log('Exit terminal')} />
                   </ErrorBoundary>
                 );
               default:

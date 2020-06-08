@@ -25,8 +25,8 @@ interface FileInfo {
     directory: boolean;
 
     readonly: boolean;
-    
-    system:boolean;
+
+    system: boolean;
   };
 }
 

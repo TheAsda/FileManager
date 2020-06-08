@@ -26,8 +26,7 @@ class Terminal extends Component<TerminalProps> {
     if (this.containerRef.current) {
       this.terminal.open(this.containerRef.current);
       this.TerminalManager.attach(this.terminal, this.props.onExit);
-      this.props.initialDirectory &&
-        this.TerminalManager.changeDirectory(this.props.initialDirectory);
+      this.props.initialDirectory && this.TerminalManager.changeDirectory(this.props.initialDirectory);
     }
   }
 

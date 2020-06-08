@@ -28,10 +28,7 @@ interface IDirectoryManager {
    *
    * @param path the path to directory
    */
-  listDirectory(
-    path: string,
-    options?: OptionalParameters
-  ): Promise<FileInfo[]>;
+  listDirectory(path: string, options?: OptionalParameters): Promise<FileInfo[]>;
 
   /**
    * Creates an item with itemName of itemType at itemPath
@@ -40,11 +37,7 @@ interface IDirectoryManager {
    * @param itemPath the path of the item
    * @param itemType the type of the item
    */
-  createItem(
-    itemName: string,
-    itemPath: string,
-    itemType: FileType
-  ): Promise<void>;
+  createItem(itemName: string, itemPath: string, itemType: FileType): Promise<void>;
 
   /**
    * Renames item with oldName to newName

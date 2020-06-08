@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  KeyboardEvent,
-  useRef,
-  Component,
-  ChangeEvent,
-} from 'react';
+import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
 import { clamp, map, findIndex } from 'lodash';
 import { HotKeys, KeyMap } from 'react-hotkeys';
@@ -53,22 +47,14 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
   @autobind
   selectNextItem() {
     this.setState({
-      selectedIndex: clamp(
-        this.state.selectedIndex + 1,
-        0,
-        this.props.options.length - 1
-      ),
+      selectedIndex: clamp(this.state.selectedIndex + 1, 0, this.props.options.length - 1),
     });
   }
 
   @autobind
   selectPreviousItem() {
     this.setState({
-      selectedIndex: clamp(
-        this.state.selectedIndex - 1,
-        0,
-        this.props.options.length - 1
-      ),
+      selectedIndex: clamp(this.state.selectedIndex - 1, 0, this.props.options.length - 1),
     });
   }
 
@@ -109,11 +95,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
         shouldCloseOnOverlayClick={true}
         onRequestClose={this.props.onClose}
       >
-        <HotKeys
-          keyMap={this.keyMap}
-          handlers={this.handlers}
-          className="select-palette"
-        >
+        <HotKeys keyMap={this.keyMap} handlers={this.handlers} className="select-palette">
           <input
             className="select-palette__search"
             type="text"
@@ -124,11 +106,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
             onChange={this.handleInput}
           />
           {map(this.props.options, (option, i) => (
-            <SelectPaletteItem
-              command={option}
-              selected={i === this.state.selectedIndex}
-              key={option}
-            />
+            <SelectPaletteItem command={option} selected={i === this.state.selectedIndex} key={option} />
           ))}
         </HotKeys>
       </Modal>

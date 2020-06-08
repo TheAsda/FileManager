@@ -1,5 +1,5 @@
-import { FileInfo, IDirectoryManager, IKeysManager } from '@fm/common';
-import React, { Component, RefObject } from 'react';
+import { FileInfo, IDirectoryManager } from '@fm/common';
+import React, { Component } from 'react';
 import { DetailView } from './DetailView';
 import { PathLine } from './PathLine';
 import { StateLine } from './StateLine';
@@ -47,20 +47,16 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   onDirectoryChange() {
-    const cachedDirectoryState = this.props.getCachedDirectory(
-      this.directoryString
-    );
+    const cachedDirectoryState = this.props.getCachedDirectory(this.directoryString);
     if (cachedDirectoryState === null) {
-      this.props.directoryManager
-        .listDirectory(this.directoryString)
-        .then((data) => {
-          this.props.addToCache(this.directoryString, data);
-          this.setState((state) => ({
-            ...state,
-            selectedIndex: 0,
-            directoryState: data,
-          }));
-        });
+      this.props.directoryManager.listDirectory(this.directoryString).then((data) => {
+        this.props.addToCache(this.directoryString, data);
+        this.setState((state) => ({
+          ...state,
+          selectedIndex: 0,
+          directoryState: data,
+        }));
+      });
     } else {
       this.setState((state) => ({
         ...state,
@@ -74,11 +70,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   selectNextItem() {
     this.setState((state) => ({
       ...state,
-      selectedIndex: clamp(
-        state.selectedIndex + 1,
-        0,
-        state.directoryState.length
-      ),
+      selectedIndex: clamp(state.selectedIndex + 1, 0, state.directoryState.length),
     }));
   }
 
@@ -86,11 +78,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   selectPreviousItem() {
     this.setState((state) => ({
       ...state,
-      selectedIndex: clamp(
-        state.selectedIndex - 1,
-        0,
-        state.directoryState.length
-      ),
+      selectedIndex: clamp(state.selectedIndex - 1, 0, state.directoryState.length),
     }));
   }
 
@@ -99,10 +87,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     this.setState(
       (state) => ({
         ...state,
-        directoryArray: state.directoryArray.slice(
-          0,
-          state.directoryArray.length - 1
-        ),
+        directoryArray: state.directoryArray.slice(0, state.directoryArray.length - 1),
       }),
       () => this.onDirectoryChange()
     );
@@ -113,10 +98,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     this.setState(
       (state) => ({
         ...state,
-        directoryArray: [
-          ...state.directoryArray,
-          state.directoryState[state.selectedIndex].name,
-        ],
+        directoryArray: [...state.directoryArray, state.directoryState[state.selectedIndex].name],
       }),
       () => this.onDirectoryChange()
     );
@@ -150,10 +132,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         <div className="explorer">
           <PathLine path={this.directoryString} />
           {this.state.viewType === 'detail' ? (
-            <DetailView
-              data={this.state.directoryState}
-              selectedIndex={this.state.selectedIndex}
-            />
+            <DetailView data={this.state.directoryState} selectedIndex={this.state.selectedIndex} />
           ) : null}
           <StateLine count={this.state.directoryState.length} />
         </div>

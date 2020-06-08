@@ -29,7 +29,8 @@
   },
   "plugins": ["react", "@typescript-eslint", "lodash"],
   "rules": {
-    "lodash/import-scope": [2, "member"]
+    "lodash/import-scope": [2, "member"],
+    "@typescript-eslint/explicit-module-boundary-types": [0]
   },
   "settings": {
     "react": {

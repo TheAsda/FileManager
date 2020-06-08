@@ -1,9 +1,8 @@
 import { ITerminalManager } from './ITerminalManager';
-import { IPty } from 'node-pty';
+import { IPty, spawn } from 'node-pty';
 import { injectable } from 'inversify';
 import { platform, homedir, EOL } from 'os';
 import { Terminal } from 'xterm';
-import app, { remote } from 'electron';
 
 @injectable()
 class TerminalManager implements ITerminalManager {
@@ -11,7 +10,7 @@ class TerminalManager implements ITerminalManager {
 
   constructor() {
     const shell = platform() === 'win32' ? 'powershell.exe' : 'bash';
-    this.process = remote.require('node-pty').spawn(shell, [], {
+    this.process = spawn(shell, [], {
       cwd: homedir(),
     });
   }

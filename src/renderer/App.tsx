@@ -33,22 +33,14 @@ const App = () => {
 
   return (
     <CSSApplicator theme={themesManager.getTheme()}>
-      <HotKeys
-        keyMap={keysManager.getKeyMap()}
-        handlers={handlers}
-        className="hot-keys"
-      >
+      <HotKeys keyMap={keysManager.getKeyMap()} handlers={handlers} className="hot-keys">
         <ManagersProvider>
           <CacheProvider>
             <Window />
           </CacheProvider>
         </ManagersProvider>
       </HotKeys>
-      <CommandPalette
-        isOpened={isCommandPaletteOpen}
-        commands={commands}
-        onClose={closeCommandPalette}
-      />
+      <CommandPalette isOpened={isCommandPaletteOpen} commands={commands} onClose={closeCommandPalette} />
     </CSSApplicator>
   );
 };

@@ -19,14 +19,8 @@ class CSSApplicator extends Component<CSSApplicatorProps> {
 
   @autobind
   updateCSSVariables() {
-    document.documentElement.style.setProperty(
-      '--primary-color',
-      this.props.theme.primaryColor
-    );
-    document.documentElement.style.setProperty(
-      '--primary-background-color',
-      this.props.theme.primaryBackgroundColor
-    );
+    document.documentElement.style.setProperty('--primary-color', this.props.theme.primaryColor);
+    document.documentElement.style.setProperty('--primary-background-color', this.props.theme.primaryBackgroundColor);
     document.documentElement.style.setProperty(
       '--additional-background-color',
       this.props.theme.additionalBackgroundColor

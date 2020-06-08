@@ -21,11 +21,7 @@ const DetailView = (props: DetailViewProps) => {
       </thead>
       <tbody className="detail-view__body">
         {map(props.data, (item, i) => (
-          <DetailViewItem
-            key={item.name}
-            data={item}
-            selected={i === props.selectedIndex}
-          />
+          <DetailViewItem key={item.name} data={item} selected={i === props.selectedIndex} />
         ))}
       </tbody>
     </table>

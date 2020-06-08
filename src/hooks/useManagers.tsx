@@ -12,9 +12,7 @@ import React, { createContext, useContext } from 'react';
 const settingsManager = container.get<ISettingsManager>(TYPES.ISettingsManager);
 const keysManager = container.get<IKeysManager>(TYPES.IKeysManager);
 const themesManager = container.get<IThemesManager>(TYPES.IThemesManager);
-const directoryManager = container.get<IDirectoryManager>(
-  TYPES.IDirectoryManager
-);
+const directoryManager = container.get<IDirectoryManager>(TYPES.IDirectoryManager);
 const panelsManager = container.get<IPanelsManager>(TYPES.IPanelsManager);
 
 const getTerminalManager = () => {

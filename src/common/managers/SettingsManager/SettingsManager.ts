@@ -30,9 +30,7 @@ class SettingsManager extends ConfigManager implements ISettingsManager {
   private retrieve(): Settings {
     const userSettings = this.parseFile<Settings>('settings.json');
 
-    return userSettings
-      ? merge(DEFAULT_SETTINGS, userSettings)
-      : DEFAULT_SETTINGS;
+    return userSettings ? merge(DEFAULT_SETTINGS, userSettings) : DEFAULT_SETTINGS;
   }
 }
 
