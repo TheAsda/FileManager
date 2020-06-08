@@ -2,7 +2,7 @@
   "name": "electron_file_manager",
   "version": "0.0.1",
   "description": "File manager using electron, react, typescript",
-  "main": "dist/main.js",
+  "main": "./dist/main.js",
   "scripts": {
     "tsc": "tsc --noEmit",
     "lint": "eslint src",
@@ -13,8 +13,17 @@
     "start": "yarn webpack && yarn electron",
     "electron": "electron dist/main.js",
     "dev": "concurrently \"yarn watch\" \"yarn electron\"",
-    "build": "electron-builder",
+    "build": "yarn webpack && electron-builder",
+    "build:win": "yarn webpack && electron-builder --win",
+    "build:linux": "yarn webpack && electron-builder --linux",
     "postinstall": "electron-rebuild"
+  },
+  "build": {
+    "appId": "com.electron.filemanager",
+    "files": "dist/**/*",
+    "directories": {
+      "output": "build/"
+    }
   },
   "author": "Andrey Kiselev",
   "license": "ISC",

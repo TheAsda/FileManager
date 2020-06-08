@@ -1,0 +1,16 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: electronuserland/builder:wine
+
+    working_directory: ~/app
+
+    steps:
+      - checkout
+      - run: yarn
+      - run: yarn validate
+      - run: yarn build:win
+      - store_artifacts:
+          path: ~/app/build/

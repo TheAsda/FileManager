@@ -26,6 +26,9 @@ module.exports = [
         async: false,
       }),
     ],
+    node: {
+      __dirname: false,
+    },
   },
   {
     mode: 'development',
