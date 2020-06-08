@@ -1,7 +1,9 @@
 import React, { Component, RefObject, createRef } from 'react';
 import { Terminal as Term } from 'xterm';
-import 'xterm/css/xterm.css';
+import { FitAddon } from 'xterm-addon-fit';
 import { ITerminalManager } from '@fm/common';
+import 'xterm/css/xterm.css';
+import './style.css';
 
 interface TerminalProps {
   terminalManager: ITerminalManager;
@@ -24,9 +26,12 @@ class Terminal extends Component<TerminalProps> {
 
   componentDidMount() {
     if (this.containerRef.current) {
+      const fitAddon = new FitAddon();
+      this.terminal.loadAddon(fitAddon);
       this.terminal.open(this.containerRef.current);
       this.TerminalManager.attach(this.terminal, this.props.onExit);
       this.props.initialDirectory && this.TerminalManager.changeDirectory(this.props.initialDirectory);
+      fitAddon.fit();
     }
   }
 
@@ -35,7 +40,7 @@ class Terminal extends Component<TerminalProps> {
   }
 
   render() {
-    return <div ref={this.containerRef} />;
+    return <div ref={this.containerRef} className="terminal" />;
   }
 }
 

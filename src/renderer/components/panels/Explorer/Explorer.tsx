@@ -21,7 +21,7 @@ interface ExplorerProps {
   directoryManager: IDirectoryManager;
   getCachedDirectory: (path: string) => FileInfo[] | null;
   addToCache: (path: string, data: FileInfo[]) => void;
-  focus: boolean;
+  focus?: boolean;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {

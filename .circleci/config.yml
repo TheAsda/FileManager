@@ -8,7 +8,7 @@ commands:
       - run: yarn validate
   create-artifact:
     parameters:
-      path: 
+      path:
         type: string
       archive-name:
         type: string

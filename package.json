@@ -75,6 +75,7 @@
     "react-split-pane": "^2.0.3",
     "reflect-metadata": "^0.1.13",
     "trash": "^6.1.1",
-    "xterm": "^4.6.0"
+    "xterm": "^4.6.0",
+    "xterm-addon-fit": "^0.4.0"
   }
 }

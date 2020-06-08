@@ -18,12 +18,12 @@ const App = () => {
 
   const openExplorer = () => {
     console.log('Add explorer');
-    panelsManager.addNewPanel(PanelType.explorer);
+    // panelsManager.addNewPanel(PanelType.explorer);
   };
 
   const openTerminal = () => {
     console.log('Open terminal');
-    panelsManager.addNewPanel(PanelType.terminal);
+    // panelsManager.addNewPanel(PanelType.terminal);
   };
 
   const commands: Option = {
