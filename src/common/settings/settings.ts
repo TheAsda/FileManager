@@ -7,6 +7,10 @@ const DEFAULT_SETTINGS: Settings = {
     fontSize: 15,
   },
   theme: 'light',
+  panelsGridSize: {
+    xLength: 3,
+    yLength: 2,
+  },
 };
 
 export { DEFAULT_SETTINGS };

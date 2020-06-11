@@ -1,0 +1,17 @@
+.split-panels {
+  width: 100%;
+  height: 100%;
+  border-spacing: 0.4rem;
+  table-layout: fixed;
+}
+
+.split-panels__row {
+  height: 50%;
+  width: 1%;
+}
+
+.split-panels__cell {
+  height: 100%;
+  width: 100%;
+  line-height: 0;
+}

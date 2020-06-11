@@ -1,5 +1,6 @@
 .detail-view {
   width: 100%;
+  height: 100%;
   text-align: left;
   border-collapse: collapse;
   column-rule: 3px solid black;
