@@ -13,7 +13,7 @@ const PanelsEditor = (props: PanelsEditor) => {
   const { settingsManager, panelsManager } = useManagers();
   const { panelsGridSize } = settingsManager.getSettings();
   const [selected, setSelected] = useState<boolean[][]>(
-    Array.from(Array(panelsGridSize.xLength), () => Array.from(Array(panelsGridSize.yLength), constant(false)))
+    Array.from(Array(panelsGridSize.yLength), () => Array.from(Array(panelsGridSize.xLength), constant(false)))
   );
   const [palette, setPalette] = useState<boolean>(false);
 
@@ -28,8 +28,8 @@ const PanelsEditor = (props: PanelsEditor) => {
 
         if (cell) {
           start = {
-            x: i,
-            y: j,
+            x: j,
+            y: i,
           };
 
           break start;
@@ -47,8 +47,8 @@ const PanelsEditor = (props: PanelsEditor) => {
     };
 
     // go through xs
-    for (let i = start.x; i < selected.length; i++) {
-      if (selected[i][start.y] === true) {
+    for (let i = start.x; i < selected[0].length; i++) {
+      if (selected[start.y][i] === true) {
         span.x++;
       } else {
         break;
@@ -56,8 +56,8 @@ const PanelsEditor = (props: PanelsEditor) => {
     }
 
     // go through ys
-    for (let i = start.y; i < selected[0].length; i++) {
-      if (selected[start.x][i] === true) {
+    for (let i = start.y; i < selected.length; i++) {
+      if (selected[i][start.x] === true) {
         span.y++;
       } else {
         break;
@@ -95,12 +95,12 @@ const PanelsEditor = (props: PanelsEditor) => {
             <tr>
               {times(panelsGridSize.xLength, (j) => (
                 <td
-                  className={`panels-editor__item ${selected[j][i] ? 'panels-editor__item--selected' : ''}`}
+                  className={`panels-editor__item ${selected[i][j] ? 'panels-editor__item--selected' : ''}`}
                   onClick={(event) => {
                     if (event.ctrlKey) {
                       setSelected((state) => {
                         const copy = clone(state);
-                        copy[j][i] = !copy[j][i];
+                        copy[i][j] = !copy[i][j];
                         return copy;
                       });
                     }

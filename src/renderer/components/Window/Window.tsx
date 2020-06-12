@@ -12,7 +12,16 @@ const Window = () => {
 
   return (
     <div className="window">
-      {showEditor ? <PanelsEditor onClose={() => setShowEditor(false)} /> : <SplitPanels panels={panels} />}
+      {showEditor ? (
+        <PanelsEditor onClose={() => setShowEditor(false)} />
+      ) : (
+        <>
+          <SplitPanels panels={panels} />
+          <button className="fixed-button" onClick={() => setShowEditor(true)}>
+            Show editor
+          </button>
+        </>
+      )}
     </div>
   );
 };
