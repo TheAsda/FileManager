@@ -1,0 +1,13 @@
+.split-panels {
+  display: flex;
+}
+
+.split-panels_resizer {
+  width: 2px;
+  background-color: black;
+  cursor: col-resize;
+}
+
+.split-panels__panel {
+  height: 100%;
+}
