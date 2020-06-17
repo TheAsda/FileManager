@@ -15,10 +15,10 @@ const CommandPalette = (props: CommandPaletteProps) => {
 
   return (
     <SelectPalette
-      options={keys(props.commands)}
+      isOpened={props.isOpened}
       onClose={props.onClose}
       onSelect={onSelect}
-      isOpened={props.isOpened}
+      options={keys(props.commands)}
     />
   );
 };

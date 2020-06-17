@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
-import { clamp, map, findIndex } from 'lodash';
+import { clamp, findIndex, map } from 'lodash';
 import { HotKeys, KeyMap } from 'react-hotkeys';
 import './style.css';
 import { SelectPaletteItem } from './SelectPaletteItem';
@@ -90,23 +90,23 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
   render() {
     return (
       <Modal
-        isOpen={this.props.isOpened}
         ariaHideApp={false}
-        shouldCloseOnOverlayClick={true}
+        isOpen={this.props.isOpened}
         onRequestClose={this.props.onClose}
+        shouldCloseOnOverlayClick={true}
       >
-        <HotKeys keyMap={this.keyMap} handlers={this.handlers} className="select-palette">
+        <HotKeys className="select-palette" handlers={this.handlers} keyMap={this.keyMap}>
           <input
             className="select-palette__search"
-            type="text"
+            onChange={this.handleInput}
             ref={(ref) => {
               this.inputRef = ref;
               ref && ref.focus();
             }}
-            onChange={this.handleInput}
+            type="text"
           />
           {map(this.props.options, (option, i) => (
-            <SelectPaletteItem command={option} selected={i === this.state.selectedIndex} key={option} />
+            <SelectPaletteItem command={option} key={option} selected={i === this.state.selectedIndex} />
           ))}
         </HotKeys>
       </Modal>

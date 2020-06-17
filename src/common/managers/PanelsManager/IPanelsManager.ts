@@ -1,13 +1,29 @@
-import { Panel, PanelType, Layout, Coords } from '@fm/common';
+import { Layout, Panel, PanelType } from '@fm/common';
 
 interface IPanelsManager {
-  getPanelsList(): Panel[];
-
+  /**
+   * Returns info about panel with specified id
+   *
+   * @param id the id of panel
+   */
   getPanel(id: number): Panel | null;
 
-  addNewPanel(type: PanelType, start: Coords, span: Coords): Panel;
+  /**
+   * Registrates new panel or throws error if there are no empty slots
+   *
+   * @param type the type of panel to spawn
+   */
+  registerNewPanel(type: PanelType, initialDirectory?: string): Panel;
 
-  getLayout(): Layout;
+  /**
+   * Unregisters panel with specified id and returns boolean operation status
+   *
+   * @param id the id of panel to remove
+   */
+  unregisterPanel(id: number): boolean;
+
+  /* Layout with registered panels */
+  layout: Layout;
 }
 
 export { IPanelsManager };

@@ -1,7 +1,20 @@
-import { PanelInfo } from './Panel';
+import { ExplorerPanel, PreviewPanel, TerminalPanel } from './Panel';
 
 interface Layout {
-  panels: PanelInfo[];
+  explorers: {
+    count: 1 | 2;
+    hidden: boolean;
+    panels: ExplorerPanel[];
+  };
+  preview: {
+    hidden: boolean;
+    panel?: PreviewPanel;
+  };
+  terminals: {
+    hidden: boolean;
+    count: 1 | 2;
+    panels: TerminalPanel[];
+  };
 }
 
 export { Layout };

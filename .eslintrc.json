@@ -29,8 +29,14 @@
   },
   "plugins": ["react", "@typescript-eslint", "lodash"],
   "rules": {
-    "lodash/import-scope": [2, "member"],
-    "@typescript-eslint/explicit-module-boundary-types": [0]
+    "lodash/import-scope": ["error", "member"],
+    "@typescript-eslint/explicit-module-boundary-types": ["off"],
+    "react/jsx-sort-props": [
+      "warn",
+      {
+        "shorthandLast": true
+      }
+    ]
   },
   "settings": {
     "react": {

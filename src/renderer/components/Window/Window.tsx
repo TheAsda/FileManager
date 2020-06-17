@@ -1,27 +1,53 @@
 import React, { useState } from 'react';
-import { SplitPanels } from '../SplitPanels';
 import './style.css';
-import { useManagers } from '@fm/hooks';
-import { PanelsEditor } from '../PanelsEditor';
+import { HotKeys } from 'react-hotkeys';
+import { useCache, useManagers } from '@fm/hooks';
+import { Layout, IDirectoryManager, ITerminalManager } from '@fm/common';
+import { cloneDeep, noop } from 'lodash';
+import { SplitPanels } from '../SplitPanels';
+import { ExplorerPanels, TerminalPanels } from '../panels';
+import { Preview } from '../Preview';
 
 const Window = () => {
-  const { panelsManager } = useManagers();
-  const [showEditor, setShowEditor] = useState<boolean>(true);
+  const { getCached, updateStorage } = useCache();
+  const {
+    directoryManager,
+    getTerminalManager,
+    keysManager,
+    settingsManager,
+    panelsManager,
+  } = useManagers();
+  const [layout, setLayout] = useState<Layout>(cloneDeep(panelsManager.layout));
+  const [dirCount, setDirCount] = useState<number>(1);
+  const [terminals, setTerminals] = useState<ITerminalManager[]>([getTerminalManager()]);
 
-  const panels = panelsManager.getPanelsList();
+  const splitExplorer = () => {
+    panelsManager.registerNewPanel('explorer');
+    setLayout(cloneDeep(panelsManager.layout));
+  };
+
+  const splitTerminal = () => {
+    console.log('split');
+    // panelsManager.registerNewPanel('terminal');
+    // setLayout(cloneDeep(panelsManager.layout));
+    setTerminals((state) => [state[0], getTerminalManager()]);
+  };
+
+  const switchPane = noop;
+
+  const handlers = {
+    switchPane,
+  };
 
   return (
     <div className="window">
-      {showEditor ? (
-        <PanelsEditor onClose={() => setShowEditor(false)} />
-      ) : (
-        <>
-          <SplitPanels panels={panels} />
-          <button className="fixed-button" onClick={() => setShowEditor(true)}>
-            Show editor
-          </button>
-        </>
-      )}
+      <HotKeys className="hot-keys" handlers={handlers} keyMap={keysManager.getKeyMap()}>
+        <SplitPanels splitType="vertical">
+          <ExplorerPanels manager={directoryManager} panelCount={dirCount} />
+          <Preview />
+          <TerminalPanels managers={terminals} onSplit={splitTerminal} />
+        </SplitPanels>
+      </HotKeys>
     </div>
   );
 };

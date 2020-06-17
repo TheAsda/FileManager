@@ -1,39 +1,29 @@
-enum PanelType {
-  explorer,
-  terminal,
-  preview,
-}
-
-interface Coords {
-  x: number;
-  y: number;
-}
-
-interface PanelPosition {
-  start: Coords;
-  span: Coords;
-}
+type PanelType = 'explorer' | 'terminal' | 'preview';
 
 interface PanelBase {
   id: number;
 }
 
-interface ExplorerPanelInfo extends PanelPosition {
-  type: PanelType.explorer;
+interface PanelInfoBase {
+  type: PanelType;
+}
+
+interface ExplorerPanelInfo extends PanelInfoBase {
+  type: 'explorer';
   initialDirectory?: string;
 }
 
 interface ExplorerPanel extends ExplorerPanelInfo, PanelBase {}
 
-interface TerminalPanelInfo extends PanelPosition {
-  type: PanelType.terminal;
+interface TerminalPanelInfo extends PanelInfoBase {
+  type: 'terminal';
   initialDirectory?: string;
 }
 
 interface TerminalPanel extends TerminalPanelInfo, PanelBase {}
 
-interface PreviewPanelInfo extends PanelPosition {
-  type: PanelType.preview;
+interface PreviewPanelInfo extends PanelInfoBase {
+  type: 'preview';
 }
 
 interface PreviewPanel extends PreviewPanelInfo, PanelBase {}
@@ -52,5 +42,4 @@ export {
   PreviewPanelInfo,
   TerminalPanelInfo,
   PanelInfo,
-  Coords,
 };

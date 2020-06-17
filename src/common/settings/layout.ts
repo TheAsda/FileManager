@@ -1,30 +1,19 @@
 import { Layout, PanelType } from 'common/interfaces';
 
 const DEFAULT_LAYOUT: Layout = {
-  panels: [
-    // {
-    //   type: PanelType.explorer,
-    //   start: {
-    //     x: 0,
-    //     y: 0,
-    //   },
-    //   span: {
-    //     x: 1,
-    //     y: 2,
-    //   },
-    // },
-    // {
-    //   type: PanelType.terminal,
-    //   start: {
-    //     x: 1,
-    //     y: 0,
-    //   },
-    //   span: {
-    //     x: 1,
-    //     y: 2,
-    //   },
-    // },
-  ],
+  explorers: {
+    hidden: false,
+    count: 1,
+    panels: [],
+  },
+  preview: {
+    hidden: false,
+  },
+  terminals: {
+    hidden: false,
+    count: 1,
+    panels: [],
+  },
 };
 
 export { DEFAULT_LAYOUT };

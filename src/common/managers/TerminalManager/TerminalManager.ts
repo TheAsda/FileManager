@@ -35,6 +35,17 @@ class TerminalManager implements ITerminalManager {
     const cdCommand = `cd '${path}'${EOL}`;
     this.process.write(cdCommand);
   }
+
+  resize(size: { cols: number; rows: number }, terminal: Terminal): void {
+    this.process.resize(
+      Math.max(size ? size.cols : terminal.cols, 1),
+      Math.max(size ? size.rows : terminal.rows, 1)
+    );
+  }
+
+  destroy(): void {
+    this.process.write('exit');
+  }
 }
 
 export { TerminalManager };

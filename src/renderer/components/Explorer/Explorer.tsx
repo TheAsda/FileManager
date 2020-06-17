@@ -1,12 +1,12 @@
 import { FileInfo, IDirectoryManager } from '@fm/common';
 import React, { Component } from 'react';
+import { clamp, noop, reduce } from 'lodash';
 import { DetailView } from './DetailView';
+import { HotKeys } from 'react-hotkeys';
 import { PathLine } from './PathLine';
 import { StateLine } from './StateLine';
-import { reduce, clamp, noop } from 'lodash';
-import { HotKeys } from 'react-hotkeys';
-import './style.css';
 import autobind from 'autobind-decorator';
+import './style.css';
 
 interface ExplorerState {
   selectedIndex: number;
@@ -19,8 +19,8 @@ interface ExplorerState {
 interface ExplorerProps {
   initialDirectory?: string;
   directoryManager: IDirectoryManager;
-  getCachedDirectory: (path: string) => FileInfo[] | null;
-  addToCache: (path: string, data: FileInfo[]) => void;
+  getCachedDirectory?: (path: string) => FileInfo[] | null;
+  addToCache?: (path: string, data: FileInfo[]) => void;
   focus?: boolean;
 }
 
@@ -47,10 +47,12 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   onDirectoryChange() {
-    const cachedDirectoryState = this.props.getCachedDirectory(this.directoryString);
+    const cachedDirectoryState =
+      (this.props.getCachedDirectory && this.props.getCachedDirectory(this.directoryString)) ??
+      null;
     if (cachedDirectoryState === null) {
       this.props.directoryManager.listDirectory(this.directoryString).then((data) => {
-        this.props.addToCache(this.directoryString, data);
+        this.props.addToCache && this.props.addToCache(this.directoryString, data);
         this.setState((state) => ({
           ...state,
           selectedIndex: 0,
@@ -128,7 +130,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   render() {
     return (
-      <HotKeys handlers={this.handlers} className="hot-keys">
+      <HotKeys className="hot-keys" handlers={this.handlers}>
         <div className="explorer">
           <PathLine path={this.directoryString} />
           {this.state.viewType === 'detail' ? (

@@ -2,16 +2,16 @@ import { Container } from 'inversify';
 import {
   DirectoryManager,
   IDirectoryManager,
-  ILogManager,
-  LogManager,
-  ISettingsManager,
-  SettingsManager,
   IKeysManager,
-  KeysManager,
-  IThemesManager,
-  ThemesManager,
-  TerminalManager,
+  ILogManager,
+  ISettingsManager,
   ITerminalManager,
+  IThemesManager,
+  KeysManager,
+  LogManager,
+  SettingsManager,
+  TerminalManager,
+  ThemesManager,
 } from '@fm/common';
 import { TYPES } from './types';
 import { IPanelsManager, PanelsManager } from 'common/managers';

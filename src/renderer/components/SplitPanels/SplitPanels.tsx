@@ -1,102 +1,251 @@
-import React, { useState } from 'react';
-import { Explorer, Terminal } from '../panels';
-import { useCache, useManagers } from '@fm/hooks';
-import { Panel, PanelType } from '@fm/common';
-import { map, noop, forEach, compact, constant, times } from 'lodash';
-import { ErrorBoundary } from '../ErrorBoundary';
-import { HotKeys } from 'react-hotkeys';
+import React, { Component, ReactNode } from 'react';
+import { clone, constant, fill, isArray, reduce, times, debounce, map } from 'lodash';
+import { Resizer } from './Resizer';
+import { SplitPanel } from './SplitPanel';
+import { SplitType } from './splitType';
 import './style.css';
-import { time } from 'console';
+import autobind from 'autobind-decorator';
 
 interface SplitPanelsProps {
-  panels: Panel[];
+  minSize?: number | number[];
+  maxSize?: number | number[];
+  children: ReactNode | ReactNode[];
+  splitType: SplitType;
 }
 
-const SplitPanels = (props: SplitPanelsProps) => {
-  const { getCached, updateStorage } = useCache();
-  const { directoryManager, getTerminalManager, keysManager, settingsManager } = useManagers();
-  const [focus, setFocus] = useState<number>(props.panels[0]?.id ?? undefined);
-  const { panelsGridSize } = settingsManager.getSettings();
-  const grid = Array.from(Array(panelsGridSize.yLength), () =>
-    Array.from<undefined, Panel | null | undefined>(Array(panelsGridSize.xLength), constant(undefined))
-  );
+interface SplitState {
+  sizes: number[];
+  active: boolean;
+  x: number;
+  y: number;
+  resizerIndex: number;
+  minSize: number[];
+  maxSize: number[];
+}
 
-  forEach(props.panels, (item) => {
-    for (let i = item.start.y; i < item.start.y + item.span.y; i++) {
-      for (let j = item.start.x; j < item.start.x + item.span.x; j++) {
-        grid[i][j] = null;
+const DEFAULT_MIN_SIZE = 100;
+const DEFAULT_MAX_SIZE = 2000;
+
+class SplitPanels extends Component<SplitPanelsProps, SplitState> {
+  private containerRef: null | HTMLDivElement;
+
+  constructor(props: SplitPanelsProps) {
+    super(props);
+
+    const children = isArray(props.children) ? props.children : [props.children];
+
+    this.state = {
+      sizes: [],
+      active: false,
+      x: 0,
+      y: 0,
+      resizerIndex: -1,
+      minSize: isArray(props.minSize)
+        ? props.minSize.length < children.length
+          ? fill(props.minSize, DEFAULT_MIN_SIZE, props.minSize.length - 1, children.length)
+          : props.minSize
+        : fill(Array(children.length), props.minSize ?? DEFAULT_MIN_SIZE),
+      maxSize: isArray(props.maxSize)
+        ? props.maxSize.length < children.length
+          ? fill(props.maxSize, DEFAULT_MAX_SIZE, props.maxSize.length - 1, children.length)
+          : props.maxSize
+        : fill(Array(children.length), props.maxSize ?? DEFAULT_MAX_SIZE),
+    };
+
+    this.containerRef = null;
+  }
+
+  private get children() {
+    return isArray(this.props.children) ? this.props.children : [this.props.children];
+  }
+
+  componentDidUpdate() {
+    if (this.children.length !== this.state.sizes.length) {
+      if (this.containerRef !== null) {
+        let totalLength: number;
+
+        const containerInfo = this.containerRef.getBoundingClientRect();
+
+        if (this.props.splitType === 'vertical') {
+          totalLength = containerInfo.width;
+        } else {
+          totalLength = containerInfo.height;
+        }
+
+        console.log(totalLength);
+
+        const sizes = times(this.children.length, () => totalLength / this.children.length);
+
+        this.setState((state) => ({ ...state, sizes }));
       }
     }
+  }
 
-    grid[item.start.y][item.start.x] = item;
-  });
+  @autobind
+  onMouseMove(event: MouseEvent) {
+    if (this.state.active && this.state.resizerIndex !== -1 && this.containerRef !== null) {
+      event.preventDefault();
 
-  const switchPane = noop;
+      const newSizes = clone(this.state.sizes);
 
-  const handlers = {
-    switchPane,
-  };
+      let mouseState: number;
+      let newMouseState: number;
 
-  console.table(grid);
+      if (this.props.splitType === 'vertical') {
+        mouseState = this.state.x;
+        newMouseState = event.clientX;
+      } else {
+        mouseState = this.state.y;
+        newMouseState = event.clientY;
+      }
 
-  return (
-    <HotKeys keyMap={keysManager.getKeyMap()} handlers={handlers} className="hot-keys">
-      <table className="split-panels">
-        <colgroup>
-          {times(panelsGridSize.xLength, () => (
-            <col width={`${100 / panelsGridSize.xLength}%`} />
-          ))}
-        </colgroup>
-        <tbody>
-          {map(grid, (row) => {
-            return (
-              <tr className="split-panels__row">
-                {map(row, (item: Panel | null | undefined) => {
-                  if (item === null) {
-                    return <td className="split-panels__cell"></td>;
-                  }
+      const delta = newMouseState - mouseState;
 
-                  if (item === undefined) {
-                    return null;
-                  }
+      console.log(delta);
 
-                  switch (item.type) {
-                    case PanelType.explorer:
-                      return (
-                        <td colSpan={item.span.x} rowSpan={item.span.y} className="split-panels__cell">
-                          <ErrorBoundary>
-                            <Explorer
-                              addToCache={updateStorage}
-                              getCachedDirectory={getCached}
-                              directoryManager={directoryManager}
-                              initialDirectory={item.initialDirectory}
-                              key={item.id}
-                            />
-                          </ErrorBoundary>
-                        </td>
-                      );
-                    case PanelType.terminal:
-                      return (
-                        <td className="split-panels__cell" colSpan={item.span.x} rowSpan={item.span.y}>
-                          <ErrorBoundary>
-                            <Terminal
-                              terminalManager={getTerminalManager()}
-                              onExit={() => console.log('Exit terminal')}
-                            />
-                          </ErrorBoundary>
-                        </td>
-                      );
-                    default:
-                      return <td className="split-panels__cell" />;
-                  }
-                })}
-              </tr>
+      const leftPanelIndex = this.state.resizerIndex;
+      const rightPanelIndex = this.state.resizerIndex + 1;
+
+      const newLeftPanelSize = newSizes[leftPanelIndex] + delta;
+      const newRightPanelSize = newSizes[rightPanelIndex] - delta;
+
+      if (
+        newLeftPanelSize < this.state.minSize[leftPanelIndex] ||
+        newLeftPanelSize > this.state.maxSize[leftPanelIndex] ||
+        newRightPanelSize < this.state.minSize[rightPanelIndex] ||
+        newRightPanelSize > this.state.maxSize[rightPanelIndex]
+      ) {
+        return;
+      }
+
+      newSizes[leftPanelIndex] = newLeftPanelSize;
+      newSizes[rightPanelIndex] = newRightPanelSize;
+
+      if (this.props.splitType === 'vertical') {
+        this.setState((state) => ({
+          ...state,
+          x: newMouseState,
+          sizes: newSizes,
+        }));
+      } else {
+        this.setState((state) => ({
+          ...state,
+          y: newMouseState,
+          sizes: newSizes,
+        }));
+      }
+    }
+  }
+
+  @autobind
+  onMouseDown(event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) {
+    console.log('mousedown');
+    const { clientX, clientY } = event;
+
+    document.addEventListener('mouseup', this.onMouseUp);
+
+    console.log(this.state.minSize);
+
+    this.setState((state) => ({
+      ...state,
+      active: true,
+      x: clientX,
+      y: clientY,
+      resizerIndex: index,
+    }));
+  }
+
+  @autobind
+  onMouseUp() {
+    console.log('mouseup');
+    document.removeEventListener('mouseup', this.onMouseUp);
+    this.setState((state) => ({
+      ...state,
+      active: false,
+      resizerIndex: -1,
+    }));
+  }
+
+  componentDidMount() {
+    document.addEventListener('mousemove', this.onMouseMove);
+    window.addEventListener('resize', this.onResize);
+    this.onResize();
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousemove', this.onMouseMove);
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  @autobind
+  onResize() {
+    if (this.containerRef !== null) {
+      let totalLength: number;
+
+      const containerInfo = this.containerRef.getBoundingClientRect();
+
+      if (this.props.splitType === 'vertical') {
+        totalLength = containerInfo.width;
+      } else {
+        totalLength = containerInfo.height;
+      }
+
+      let sizes: number[];
+      if (this.state.sizes.length !== 0) {
+        const oldWindowSize = reduce(this.state.sizes, (acc, cur) => acc + cur, 0);
+
+        if (Math.abs(oldWindowSize - totalLength) < 10) {
+          return;
+        }
+
+        const percents = map(this.state.sizes, (item) => item / oldWindowSize);
+
+        // TODO: check minimal panel size
+        sizes = map(percents, (item) => totalLength * item);
+      } else {
+        sizes = times(this.children.length, () => totalLength / this.children.length);
+      }
+
+      this.setState((state) => ({ ...state, sizes }));
+    }
+  }
+
+  render() {
+    const classes = ['split-panels'];
+
+    if (this.props.splitType === 'horizontal') {
+      classes.push('split-panels--horizontal');
+    }
+
+    return (
+      <div className={classes.join(' ')} ref={(ref) => (this.containerRef = ref)}>
+        {reduce<ReactNode, ReactNode[]>(
+          this.children,
+          (acc, cur, i) => {
+            acc.push(
+              <SplitPanel key={i} size={this.state.sizes[i]} type={this.props.splitType}>
+                {cur}
+              </SplitPanel>
             );
-          })}
-        </tbody>
-      </table>
-    </HotKeys>
-  );
-};
 
-export { SplitPanels };
+            if (i !== this.children.length - 1) {
+              acc.push(
+                <Resizer
+                  index={i}
+                  key={(i + 1) * 10}
+                  onMouseDown={this.onMouseDown}
+                  type={this.props.splitType}
+                />
+              );
+            }
+
+            return acc;
+          },
+          []
+        )}
+      </div>
+    );
+  }
+}
+
+export { SplitPanels, SplitPanelsProps };

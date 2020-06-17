@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Window, CommandPalette, Option } from './components';
+import { CommandPalette, Option, Window } from './components';
 import { CacheProvider, ManagersProvider, useManagers } from '@fm/hooks';
 import { HotKeys } from 'react-hotkeys';
 import './style.css';
@@ -33,14 +33,14 @@ const App = () => {
 
   return (
     <CSSApplicator theme={themesManager.getTheme()}>
-      <HotKeys keyMap={keysManager.getKeyMap()} handlers={handlers} className="hot-keys">
+      <HotKeys className="hot-keys" handlers={handlers} keyMap={keysManager.getKeyMap()}>
         <ManagersProvider>
           <CacheProvider>
             <Window />
           </CacheProvider>
         </ManagersProvider>
       </HotKeys>
-      <CommandPalette isOpened={isCommandPaletteOpen} commands={commands} onClose={closeCommandPalette} />
+      <CommandPalette commands={commands} isOpened={isCommandPaletteOpen} onClose={closeCommandPalette} />
     </CSSApplicator>
   );
 };
