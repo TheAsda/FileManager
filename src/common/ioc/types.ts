@@ -6,6 +6,7 @@ const TYPES = {
   IThemesManager: Symbol.for('IThemesManager'),
   ITerminalManager: Symbol.for('ITerminalManager'),
   IPanelsManager: Symbol.for('IPanelsPanager'),
+  IExplorerManager: Symbol.for('IExplorerManager'),
 };
 
 export { TYPES };

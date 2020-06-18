@@ -5,6 +5,7 @@ import {
   IDirectoryManager,
   ITerminalManager,
   IPanelsManager,
+  IExplorerManager,
 } from '@fm/common';
 import { container, TYPES } from '../common/ioc';
 import React, { createContext, useContext } from 'react';
@@ -19,6 +20,10 @@ const getTerminalManager = () => {
   return container.get<ITerminalManager>(TYPES.ITerminalManager);
 };
 
+const getExplorerManager = () => {
+  return container.get<IExplorerManager>(TYPES.IExplorerManager);
+};
+
 const ManagersContext = createContext<{
   settingsManager: ISettingsManager;
   keysManager: IKeysManager;
@@ -26,6 +31,7 @@ const ManagersContext = createContext<{
   directoryManager: IDirectoryManager;
   panelsManager: IPanelsManager;
   getTerminalManager(): ITerminalManager;
+  getExplorerManager(): IExplorerManager;
 }>({
   settingsManager,
   keysManager,
@@ -33,6 +39,7 @@ const ManagersContext = createContext<{
   directoryManager,
   panelsManager,
   getTerminalManager,
+  getExplorerManager,
 });
 
 const useManagers = () => useContext(ManagersContext);
@@ -47,6 +54,7 @@ const ManagersProvider = ({ children }: { children: JSX.Element }) => {
         directoryManager,
         panelsManager,
         getTerminalManager,
+        getExplorerManager,
       }}
     >
       {children}
