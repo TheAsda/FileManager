@@ -72,8 +72,6 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
           totalLength = containerInfo.height;
         }
 
-        console.log(totalLength);
-
         const sizes = times(this.children.length, () => totalLength / this.children.length);
 
         this.setState((state) => ({ ...state, sizes }));
@@ -100,8 +98,6 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
       }
 
       const delta = newMouseState - mouseState;
-
-      console.log(delta);
 
       const leftPanelIndex = this.state.resizerIndex;
       const rightPanelIndex = this.state.resizerIndex + 1;
@@ -139,12 +135,9 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
 
   @autobind
   onMouseDown(event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) {
-    console.log('mousedown');
     const { clientX, clientY } = event;
 
     document.addEventListener('mouseup', this.onMouseUp);
-
-    console.log(this.state.minSize);
 
     this.setState((state) => ({
       ...state,
@@ -157,7 +150,6 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
 
   @autobind
   onMouseUp() {
-    console.log('mouseup');
     document.removeEventListener('mouseup', this.onMouseUp);
     this.setState((state) => ({
       ...state,
@@ -190,13 +182,15 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
         totalLength = containerInfo.height;
       }
 
+      totalLength -= (this.children.length - 1) * 2;
+
       let sizes: number[];
       if (this.state.sizes.length !== 0) {
         const oldWindowSize = reduce(this.state.sizes, (acc, cur) => acc + cur, 0);
 
-        if (Math.abs(oldWindowSize - totalLength) < 10) {
-          return;
-        }
+        // if (Math.abs(oldWindowSize - totalLength) < 10) {
+        //   return;
+        // }
 
         const percents = map(this.state.sizes, (item) => item / oldWindowSize);
 

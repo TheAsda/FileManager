@@ -1,6 +1,8 @@
 .explorer {
+  height: 100%;
+  width: 100%;
   background-color: var(--primary-background-color);
   color: var(--primary-color);
   display: grid;
-  grid-template-rows: 20px auto 20px;
+  grid-template-rows: 20px calc(100% - 40px) 20px;
 }
