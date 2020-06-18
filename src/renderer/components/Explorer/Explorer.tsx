@@ -99,10 +99,12 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   enterDirectory() {
-    this.props.explorerManager.enterDirectory(
-      this.state.directoryState[this.state.selectedIndex].name
-    );
-    this.onDirectoryChange();
+    if (this.state.directoryState[this.state.selectedIndex].attributes.directory) {
+      this.props.explorerManager.enterDirectory(
+        this.state.directoryState[this.state.selectedIndex].name
+      );
+      this.onDirectoryChange();
+    }
   }
 
   createFile = noop;

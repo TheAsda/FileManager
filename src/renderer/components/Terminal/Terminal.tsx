@@ -1,4 +1,4 @@
-import React, { Component, RefObject, createRef, useRef, MutableRefObject } from 'react';
+import React, { Component, RefObject, createRef, useRef, MutableRefObject, ReactNode } from 'react';
 import { FitAddon } from 'xterm-addon-fit';
 import { ITerminalManager } from '@fm/common';
 import { Terminal as XTerm } from 'xterm';
@@ -26,7 +26,7 @@ class Terminal extends Component<TerminalProps> {
     this.containerRef = createRef<HTMLDivElement>();
     this.terminal = new XTerm({
       convertEol: true,
-      fontFamily: `'Cascadia Code', 'Consolas'`,
+      fontFamily: `'Cascadia Code PL', 'Consolas'`,
       fontSize: 15,
       rendererType: 'dom', // default is canvas
     });
@@ -34,23 +34,21 @@ class Terminal extends Component<TerminalProps> {
   }
 
   componentDidMount() {
-    if (this.containerRef.current) {
+    if (this.containerRef.current !== null) {
       this.terminal.loadAddon(this.fitAddon);
       this.terminal.open(this.containerRef.current);
       this.TerminalManager.attach(this.terminal, this.props.onExit);
       this.props.initialDirectory &&
         this.TerminalManager.changeDirectory(this.props.initialDirectory);
-      this.resize();
       this.terminal.onResize((size) => {
         this.TerminalManager.resize(size, this.terminal);
       });
 
-      window.addEventListener('resize', this.debouncedFit);
-      this.debouncedFit();
+      window.addEventListener('resize', this.resize);
+
+      this.resize();
     }
   }
-
-  debouncedFit = debounce(() => this.resize(), 17);
 
   @autobind
   resize() {
@@ -60,6 +58,7 @@ class Terminal extends Component<TerminalProps> {
   componentWillUnmount() {
     this.terminal.dispose();
     this.TerminalManager.destroy();
+    window.removeEventListener('resize', this.resize);
   }
 
   render() {

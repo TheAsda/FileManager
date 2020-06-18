@@ -24,6 +24,7 @@ class TerminalManager implements ITerminalManager {
     terminal.onData((data) => {
       this.process?.write(data);
     });
+
     this.process.onData((data: string | Uint8Array) => {
       terminal.write(data);
     });

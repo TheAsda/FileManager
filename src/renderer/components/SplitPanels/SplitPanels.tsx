@@ -159,13 +159,13 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
   }
 
   componentDidMount() {
-    document.addEventListener('mousemove', this.onMouseMove);
+    window.addEventListener('mousemove', this.onMouseMove);
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousemove', this.onMouseMove);
+    window.removeEventListener('mousemove', this.onMouseMove);
     window.removeEventListener('resize', this.onResize);
   }
 
@@ -182,6 +182,7 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
         totalLength = containerInfo.height;
       }
 
+      console.log(totalLength);
       totalLength -= (this.children.length - 1) * 2;
 
       let sizes: number[];

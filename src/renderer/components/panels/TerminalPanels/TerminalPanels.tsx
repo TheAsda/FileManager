@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, ReactNode } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { Terminal } from 'renderer/components/Terminal';
 import { ITerminalManager } from '@fm/common';
