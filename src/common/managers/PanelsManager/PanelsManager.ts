@@ -8,30 +8,29 @@ import {
   TerminalPanel,
 } from '../../interfaces/models/';
 import { injectable } from 'inversify';
-import { cloneDeep, compact, find, floor, random, reject, times } from 'lodash';
-import { DEFAULT_LAYOUT } from '@fm/common';
+import { compact, find, floor, random, reject } from 'lodash';
 
 @injectable()
 class PanelsManager implements IPanelsManager {
   private Layout: Layout;
 
   constructor() {
-    const layout = cloneDeep(DEFAULT_LAYOUT);
-    if (layout.explorers.hidden === false) {
-      layout.explorers.panels = times(
-        layout.explorers.count,
-        () => PanelsManager.createPanel('explorer') as ExplorerPanel
-      );
-    }
-    if (layout.terminals.hidden === false) {
-      layout.terminals.panels = times(
-        layout.terminals.count,
-        () => PanelsManager.createPanel('terminal') as TerminalPanel
-      );
-    }
-    if (layout.preview.hidden === false) {
-      layout.preview.panel = PanelsManager.createPanel('preview') as PreviewPanel;
-    }
+    // TODO: change to default layout loading
+    const layout: Layout = {
+      explorers: {
+        hidden: false,
+        panels: [PanelsManager.createPanel('explorer') as ExplorerPanel],
+      },
+      preview: {
+        hidden: false,
+        panel: PanelsManager.createPanel('preview') as PreviewPanel,
+      },
+      terminals: {
+        hidden: false,
+        panels: [PanelsManager.createPanel('terminal') as TerminalPanel],
+      },
+    };
+
     this.Layout = layout;
   }
 
@@ -56,37 +55,29 @@ class PanelsManager implements IPanelsManager {
   }
 
   /** @inheritdoc */
-  registerNewPanel(type: PanelType, initialDirectory?: string): Panel {
+  registerNewPanel(type: PanelType): number {
     let newPanel: Panel;
     switch (type) {
       case 'explorer':
-        if (
-          this.Layout.explorers.count !== this.Layout.explorers.panels.length &&
-          this.Layout.explorers.count > 2
-        ) {
+        if (!this.checkPanel('explorer')) {
           throw new Error('Error while explorer registration');
         }
 
-        newPanel = PanelsManager.createPanel(type, initialDirectory) as ExplorerPanel;
+        newPanel = PanelsManager.createPanel(type) as ExplorerPanel;
 
         this.Layout.explorers.panels.push(newPanel);
-        this.Layout.explorers.count++;
         break;
       case 'terminal':
-        if (
-          this.Layout.terminals.count !== this.Layout.terminals.panels.length &&
-          this.Layout.terminals.count > 2
-        ) {
+        if (!this.checkPanel('terminal')) {
           throw new Error('Error while terminal registration');
         }
 
-        newPanel = PanelsManager.createPanel(type, initialDirectory) as TerminalPanel;
+        newPanel = PanelsManager.createPanel(type) as TerminalPanel;
 
         this.Layout.terminals.panels.push(newPanel);
-        this.Layout.terminals.count++;
         break;
       case 'preview':
-        if (this.Layout.preview.panel !== undefined) {
+        if (!this.checkPanel('preview')) {
           throw new Error('Error while preview registration: preview panel already registered');
         }
         newPanel = PanelsManager.createPanel(type) as PreviewPanel;
@@ -94,7 +85,7 @@ class PanelsManager implements IPanelsManager {
         this.Layout.preview.panel = newPanel;
     }
 
-    return newPanel;
+    return newPanel.id;
   }
 
   /** @inheritdoc */
@@ -114,11 +105,6 @@ class PanelsManager implements IPanelsManager {
     return false;
   }
 
-  /** @inheritdoc */
-  get layout(): Layout {
-    return this.Layout;
-  }
-
   private static createPanel(type: PanelType, initialDirectory?: string): Panel {
     let newPanel: Panel;
     switch (type) {
@@ -136,6 +122,32 @@ class PanelsManager implements IPanelsManager {
         newPanel = { id: this.getRandomId(), type: 'preview' };
     }
     return newPanel;
+  }
+
+  getLayout(): Layout {
+    return this.Layout;
+  }
+
+  checkPanel(type: PanelType): boolean {
+    switch (type) {
+      case 'explorer':
+        if (this.Layout.explorers.panels.length < 2) {
+          return true;
+        }
+        return false;
+
+      case 'preview':
+        if (this.Layout.preview.panel === undefined) {
+          return true;
+        }
+        return false;
+
+      case 'terminal':
+        if (this.Layout.terminals.panels.length < 2) {
+          return true;
+        }
+        return false;
+    }
   }
 }
 

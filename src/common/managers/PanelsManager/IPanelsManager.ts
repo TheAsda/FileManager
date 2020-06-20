@@ -11,9 +11,9 @@ interface IPanelsManager {
   /**
    * Registrates new panel or throws error if there are no empty slots
    *
-   * @param type the type of panel to spawn
+   * @param type generated id
    */
-  registerNewPanel(type: PanelType, initialDirectory?: string): Panel;
+  registerNewPanel(type: PanelType): number;
 
   /**
    * Unregisters panel with specified id and returns boolean operation status
@@ -22,8 +22,9 @@ interface IPanelsManager {
    */
   unregisterPanel(id: number): boolean;
 
-  /* Layout with registered panels */
-  layout: Layout;
+  getLayout(): Layout;
+
+  checkPanel(type: PanelType): boolean;
 }
 
 export { IPanelsManager };

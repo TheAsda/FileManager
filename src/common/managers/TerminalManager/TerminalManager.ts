@@ -3,12 +3,14 @@ import { IPty, spawn } from 'node-pty';
 import { injectable } from 'inversify';
 import { platform, homedir, EOL } from 'os';
 import { Terminal } from 'xterm';
+import { IdentityManager } from '../IdentityManager';
 
 @injectable()
-class TerminalManager implements ITerminalManager {
+class TerminalManager extends IdentityManager implements ITerminalManager {
   private process: IPty;
 
   constructor() {
+    super();
     const shell = platform() === 'win32' ? 'powershell.exe' : 'bash';
     this.process = spawn(shell, [], {
       cwd: homedir(),

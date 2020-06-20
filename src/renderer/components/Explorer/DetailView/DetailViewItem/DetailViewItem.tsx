@@ -13,7 +13,6 @@ interface DetailViewItemProps {
 
 const getIcon = (file: string): string => {
   const ext = extname(file);
-  console.log(file, ext);
 
   switch (ext) {
     case '.ai':
@@ -88,9 +87,8 @@ const getIcon = (file: string): string => {
       return 'icons://ppt.svg';
     case '.xls':
       return 'icons://xls.svg';
-
     default:
-      return '';
+      return 'icons://file.svg';
   }
 };
 

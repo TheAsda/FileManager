@@ -5,7 +5,7 @@ interface StateLineProps {
 }
 
 const StateLine = (props: StateLineProps) => {
-  return <div>Count: {props.count}</div>;
+  return <div className="explorer__footer">Count: {props.count}</div>;
 };
 
 export { StateLine };

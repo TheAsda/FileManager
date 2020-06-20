@@ -20,5 +20,7 @@
   "openGoto": ["ctrl+p"],
   "scrollToTop": ["pageup"],
   "scrollToBottom": ["pagedown"],
-  "openIntegratedTerminal": ["ctrl+`"]
+  "openIntegratedTerminal": ["ctrl+`"],
+  "togglePreview":["ctrl+alt+p"],
+  "splitPanel":["ctrl+\\"]
 }

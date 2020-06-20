@@ -11,7 +11,6 @@
 .detail-view__body {
   display: flex;
   flex-flow: column nowrap;
-  border-bottom: 1px solid black;
 }
 
 .detail-view__header {

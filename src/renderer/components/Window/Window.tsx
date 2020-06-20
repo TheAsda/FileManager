@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import './style.css';
 import { HotKeys } from 'react-hotkeys';
 import { useCache, useManagers } from '@fm/hooks';
-import { Layout, IDirectoryManager, ITerminalManager, IExplorerManager } from '@fm/common';
+import {
+  Layout,
+  IDirectoryManager,
+  ITerminalManager,
+  IExplorerManager,
+  PreviewPanel,
+} from '@fm/common';
 import { cloneDeep, noop } from 'lodash';
 import { SplitPanels } from '../SplitPanels';
 import { ExplorerPanels, TerminalPanels } from '../panels';
@@ -18,29 +24,65 @@ const Window = () => {
     panelsManager,
     getExplorerManager,
   } = useManagers();
-  const [layout, setLayout] = useState<Layout>(cloneDeep(panelsManager.layout));
   const [terminals, setTerminals] = useState<ITerminalManager[]>([getTerminalManager()]);
   const [explorers, setExplorers] = useState<IExplorerManager[]>([getExplorerManager()]);
+  const [preview, setPreview] = useState<PreviewPanel>();
   const [previewFile, setPreviewFile] = useState<string>();
 
   const previewHandler = (path: string) => setPreviewFile(path);
 
   const splitExplorer = () => {
-    // panelsManager.registerNewPanel('explorer');
-    // setLayout(cloneDeep(panelsManager.layout));
-    setExplorers((state) => [state[0], getExplorerManager()]);
+    if (!panelsManager.checkPanel('explorer')) {
+      // TODO: show error
+      return;
+    }
+
+    const id = panelsManager.registerNewPanel('explorer');
+    const manager = getExplorerManager();
+    manager.setId(id);
+
+    setExplorers((state) => [...state, manager]);
   };
 
   const splitTerminal = () => {
-    // panelsManager.registerNewPanel('terminal');
-    // setLayout(cloneDeep(panelsManager.layout));
-    setTerminals((state) => [state[0], getTerminalManager()]);
+    if (!panelsManager.checkPanel('terminal')) {
+      // TODO: show error
+      return;
+    }
+
+    const id = panelsManager.registerNewPanel('terminal');
+    const manager = getTerminalManager();
+    manager.setId(id);
+
+    setTerminals((state) => [...state, manager]);
+  };
+
+  const togglePreview = () => {
+    if (preview) {
+      panelsManager.unregisterPanel(preview.id);
+      setPreview(undefined);
+      return;
+    }
+
+    if (!panelsManager.checkPanel('preview')) {
+      // TODO: show error
+      return;
+    }
+
+    const id = panelsManager.registerNewPanel('preview');
+    const panel: PreviewPanel = {
+      id: id,
+      type: 'preview',
+    };
+
+    setPreview(panel);
   };
 
   const switchPane = noop;
 
   const handlers = {
     switchPane,
+    togglePreview,
   };
 
   return (
@@ -53,7 +95,9 @@ const Window = () => {
             onPreview={previewHandler}
             onSplit={splitExplorer}
           />
-          <Preview path={previewFile} />
+          {preview !== undefined && (
+            <Preview path={previewFile} toggle={togglePreview} />
+          )}
           <TerminalPanels managers={terminals} onSplit={splitTerminal} />
         </SplitPanels>
       </HotKeys>

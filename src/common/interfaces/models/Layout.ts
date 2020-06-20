@@ -2,7 +2,6 @@ import { ExplorerPanel, PreviewPanel, TerminalPanel } from './Panel';
 
 interface Layout {
   explorers: {
-    count: 1 | 2;
     hidden: boolean;
     panels: ExplorerPanel[];
   };
@@ -12,7 +11,6 @@ interface Layout {
   };
   terminals: {
     hidden: boolean;
-    count: 1 | 2;
     panels: TerminalPanel[];
   };
 }

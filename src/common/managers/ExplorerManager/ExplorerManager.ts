@@ -1,17 +1,15 @@
-import { IDirectoryManager } from '../DirectoryManager';
 import { IExplorerManager } from './IExplorerManager';
-import { inject, injectable } from 'inversify';
-import { TYPES } from 'common/ioc';
-import { execSync, execFileSync } from 'child_process';
+import { injectable } from 'inversify';
+import { execSync } from 'child_process';
 import { reduce } from 'lodash';
+import { IdentityManager } from '../IdentityManager';
 
 @injectable()
-class ExplorerManager implements IExplorerManager {
+class ExplorerManager extends IdentityManager implements IExplorerManager {
   private directoryArray: string[];
-  private DirectoryManager: IDirectoryManager;
 
-  constructor(@inject(TYPES.IDirectoryManager) directoryManager: IDirectoryManager) {
-    this.DirectoryManager = directoryManager;
+  constructor() {
+    super();
     this.directoryArray = [];
   }
 

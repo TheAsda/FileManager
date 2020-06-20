@@ -1,4 +1,3 @@
-export * from './ConfigManager';
 export * from './DirectoryManager';
 export * from './KeysManager';
 export * from './LogManager';

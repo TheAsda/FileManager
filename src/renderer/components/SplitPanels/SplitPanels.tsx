@@ -1,5 +1,16 @@
 import React, { Component, ReactNode } from 'react';
-import { clone, constant, fill, isArray, reduce, times, debounce, map } from 'lodash';
+import {
+  clone,
+  constant,
+  fill,
+  isArray,
+  reduce,
+  times,
+  debounce,
+  map,
+  filter,
+  compact,
+} from 'lodash';
 import { Resizer } from './Resizer';
 import { SplitPanel } from './SplitPanel';
 import { SplitType } from './splitType';
@@ -56,7 +67,7 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
   }
 
   private get children() {
-    return isArray(this.props.children) ? this.props.children : [this.props.children];
+    return isArray(this.props.children) ? compact(this.props.children) : [this.props.children];
   }
 
   componentDidUpdate() {
