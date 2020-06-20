@@ -31,7 +31,11 @@ const CacheProvider = ({ children }: { children: JSX.Element }) => {
     return null;
   };
 
-  return <CacheContext.Provider value={{ storage: cache, updateStorage, getCached }}>{children}</CacheContext.Provider>;
+  return (
+    <CacheContext.Provider value={{ storage: cache, updateStorage, getCached }}>
+      {children}
+    </CacheContext.Provider>
+  );
 };
 
 export { useCache, CacheProvider, Cache };

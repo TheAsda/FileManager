@@ -106,7 +106,11 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
             type="text"
           />
           {map(this.props.options, (option, i) => (
-            <SelectPaletteItem command={option} key={option} selected={i === this.state.selectedIndex} />
+            <SelectPaletteItem
+              command={option}
+              key={option}
+              selected={i === this.state.selectedIndex}
+            />
           ))}
         </HotKeys>
       </Modal>

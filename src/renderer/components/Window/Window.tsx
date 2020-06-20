@@ -95,9 +95,7 @@ const Window = () => {
             onPreview={previewHandler}
             onSplit={splitExplorer}
           />
-          {preview !== undefined && (
-            <Preview path={previewFile} toggle={togglePreview} />
-          )}
+          {preview !== undefined && <Preview path={previewFile} toggle={togglePreview} />}
           <TerminalPanels managers={terminals} onSplit={splitTerminal} />
         </SplitPanels>
       </HotKeys>

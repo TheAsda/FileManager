@@ -15,8 +15,7 @@ const App = () => {
     openCommandPalette: openCommandPalette,
   };
 
-  const commands: Option = {
-  };
+  const commands: Option = {};
 
   return (
     <CSSApplicator theme={themesManager.getTheme()}>
