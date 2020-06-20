@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileInfo } from '@fm/common';
 import { DetailViewItem } from './DetailViewItem';
-import { map, NumericDictionary } from 'lodash';
+import { map } from 'lodash';
 import './style.css';
 
 interface DetailViewProps {
@@ -9,6 +9,8 @@ interface DetailViewProps {
   selectedIndex?: number;
   onItemClick?: (index: number) => void;
   onItemDoubleClick?: (index: number) => void;
+  onExit?: () => void;
+  canExit?: boolean;
 }
 
 const DetailView = (props: DetailViewProps) => {
@@ -22,15 +24,31 @@ const DetailView = (props: DetailViewProps) => {
         </div>
       </div>
       <div className="detail-view__body">
-        {map(props.data, (item, i) => (
+        {props.canExit && (
           <DetailViewItem
-            data={item}
-            key={item.name}
-            onClick={() => props.onItemClick && props.onItemClick(i)}
-            onDoubleClick={() => props.onItemDoubleClick && props.onItemDoubleClick(i)}
-            selected={i === props.selectedIndex}
+            name={'..'}
+            onClick={() => props.onItemClick && props.onItemClick(-1)}
+            onDoubleClick={props.onExit}
+            selected={props.selectedIndex === -1}
           />
-        ))}
+        )}
+        {map(props.data, (item, i) => {
+          if (item.attributes.hidden || item.attributes.system) {
+            return null;
+          }
+          return (
+            <DetailViewItem
+              created={item.created}
+              isFolder={item.attributes.directory}
+              key={item.name}
+              name={item.name}
+              onClick={() => props.onItemClick && props.onItemClick(i)}
+              onDoubleClick={() => props.onItemDoubleClick && props.onItemDoubleClick(i)}
+              selected={i === props.selectedIndex}
+              size={item.size}
+            />
+          );
+        })}
       </div>
     </div>
   );

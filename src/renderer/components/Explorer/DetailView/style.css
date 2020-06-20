@@ -38,6 +38,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.detail-view__item > img {
+  height: calc(var(--detail-view-row-height) - 10%);
+  margin-right: 10px;
 }
 
 .detail-view__item + .detail-view__item {

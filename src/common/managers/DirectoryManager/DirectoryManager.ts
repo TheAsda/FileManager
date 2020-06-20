@@ -58,9 +58,9 @@ class DirectoryManager implements IDirectoryManager {
               accessible: false,
               attributes: {
                 directory: true,
-                hidden: false,
+                hidden: true,
                 readonly: false,
-                system: false,
+                system: true,
               },
               name: fileName,
               path: fullPath,
@@ -125,7 +125,8 @@ class DirectoryManager implements IDirectoryManager {
   async deleteItems(itemsToDelete: FileInfo[]): Promise<void> {
     const itemDeletions = map(
       itemsToDelete,
-      async (item) => await this.deleteItem(item.path, item.attributes.directory ? 'folder' : 'file')
+      async (item) =>
+        await this.deleteItem(item.path, item.attributes.directory ? 'folder' : 'file')
     );
 
     await Promise.all(itemDeletions);
@@ -140,7 +141,9 @@ class DirectoryManager implements IDirectoryManager {
 
   /** @inheritdoc */
   async copyItems(itemsToCopy: FileInfo[], destinationFolder: string): Promise<void> {
-    const itemsCopying = map(itemsToCopy, async (item) => this.copyItem(item.path, destinationFolder));
+    const itemsCopying = map(itemsToCopy, async (item) =>
+      this.copyItem(item.path, destinationFolder)
+    );
 
     await Promise.all(itemsCopying);
   }
@@ -212,8 +215,14 @@ class DirectoryManager implements IDirectoryManager {
     }
   }
 
-  private async moveItem(itemPath: string, destinationFolder: string, itemType: FileType): Promise<void> {
-    await this.copyItem(itemPath, destinationFolder).then(async () => await this.deleteItem(itemPath, itemType));
+  private async moveItem(
+    itemPath: string,
+    destinationFolder: string,
+    itemType: FileType
+  ): Promise<void> {
+    await this.copyItem(itemPath, destinationFolder).then(
+      async () => await this.deleteItem(itemPath, itemType)
+    );
   }
 }
 

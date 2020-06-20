@@ -21,6 +21,9 @@ const Window = () => {
   const [layout, setLayout] = useState<Layout>(cloneDeep(panelsManager.layout));
   const [terminals, setTerminals] = useState<ITerminalManager[]>([getTerminalManager()]);
   const [explorers, setExplorers] = useState<IExplorerManager[]>([getExplorerManager()]);
+  const [previewFile, setPreviewFile] = useState<string>();
+
+  const previewHandler = (path: string) => setPreviewFile(path);
 
   const splitExplorer = () => {
     // panelsManager.registerNewPanel('explorer');
@@ -47,9 +50,10 @@ const Window = () => {
           <ExplorerPanels
             directoryManager={directoryManager}
             managers={explorers}
+            onPreview={previewHandler}
             onSplit={splitExplorer}
           />
-          <Preview />
+          <Preview path={previewFile} />
           <TerminalPanels managers={terminals} onSplit={splitTerminal} />
         </SplitPanels>
       </HotKeys>

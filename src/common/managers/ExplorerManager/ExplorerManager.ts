@@ -2,6 +2,7 @@ import { IDirectoryManager } from '../DirectoryManager';
 import { IExplorerManager } from './IExplorerManager';
 import { inject, injectable } from 'inversify';
 import { TYPES } from 'common/ioc';
+import { execSync, execFileSync } from 'child_process';
 import { reduce } from 'lodash';
 
 @injectable()
@@ -33,6 +34,15 @@ class ExplorerManager implements IExplorerManager {
   exitDirectory(): void {
     if (this.directoryArray.length > 1) {
       this.directoryArray.pop();
+    }
+  }
+
+  openFile(fullPath: string): Promise<void> {
+    try {
+      execSync(fullPath);
+      return Promise.resolve();
+    } catch (err) {
+      return Promise.reject('Cannot open file');
     }
   }
 }

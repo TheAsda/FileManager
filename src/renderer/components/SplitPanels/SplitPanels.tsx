@@ -182,16 +182,11 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
         totalLength = containerInfo.height;
       }
 
-      console.log(totalLength);
       totalLength -= (this.children.length - 1) * 2;
 
       let sizes: number[];
       if (this.state.sizes.length !== 0) {
         const oldWindowSize = reduce(this.state.sizes, (acc, cur) => acc + cur, 0);
-
-        // if (Math.abs(oldWindowSize - totalLength) < 10) {
-        //   return;
-        // }
 
         const percents = map(this.state.sizes, (item) => item / oldWindowSize);
 

@@ -8,6 +8,8 @@ interface IExplorerManager {
   getPathString(): string;
 
   getPathArray(): string[];
+
+  openFile(fullPath: string): Promise<void>;
 }
 
 export { IExplorerManager };

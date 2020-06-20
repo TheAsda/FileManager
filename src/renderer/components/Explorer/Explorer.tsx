@@ -22,16 +22,17 @@ interface ExplorerProps {
   getCachedDirectory?: (path: string) => FileInfo[] | null;
   addToCache?: (path: string, data: FileInfo[]) => void;
   focus?: boolean;
+  onPreview?: (path: string) => void;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
   constructor(props: ExplorerProps) {
     super(props);
 
-    props.explorerManager.setPath(props.initialDirectory?.split(/[\\/]+/) ?? ['C:']);
+    props.explorerManager.setPath(props.initialDirectory?.split(/[\\/]+/) ?? ['D:']);
 
     this.state = {
-      initialDirectory: props.initialDirectory ?? 'C:/',
+      initialDirectory: props.initialDirectory ?? 'D:/',
       selectedIndex: 0,
       viewType: 'detail',
       directoryState: [],
@@ -85,25 +86,32 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   selectItem(index: number) {
     this.setState((state) => ({
       ...state,
-      selectedIndex: clamp(index, 0, state.directoryState.length - 1),
+      selectedIndex: clamp(index, -1, state.directoryState.length - 1),
     }));
   }
 
   @autobind
   exitDirectory() {
-    console.log('exit');
-
     this.props.explorerManager.exitDirectory();
     this.onDirectoryChange();
   }
 
   @autobind
   enterDirectory() {
+    if (this.state.selectedIndex === -1) {
+      return;
+    }
     if (this.state.directoryState[this.state.selectedIndex].attributes.directory) {
       this.props.explorerManager.enterDirectory(
         this.state.directoryState[this.state.selectedIndex].name
       );
       this.onDirectoryChange();
+    } else {
+      this.props.onPreview &&
+        this.props.onPreview(
+          this.props.explorerManager.getPathString() +
+            this.state.directoryState[this.state.selectedIndex].name
+        );
     }
   }
 
@@ -136,7 +144,9 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
           <PathLine path={this.props.explorerManager.getPathString()} />
           {this.state.viewType === 'detail' ? (
             <DetailView
+              canExit={this.props.explorerManager.getPathArray().length !== 1}
               data={this.state.directoryState}
+              onExit={this.exitDirectory}
               onItemClick={(i) => this.selectItem(i)}
               onItemDoubleClick={(i) => {
                 this.selectItem(i);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
-import { map, times } from 'lodash';
+import { map } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';
 import { IDirectoryManager, IExplorerManager } from '@fm/common';
 import { ErrorBoundary } from 'renderer/components';
@@ -11,6 +11,7 @@ interface ExplorerPalensProps {
   canSplit?: boolean;
   managers: IExplorerManager[];
   directoryManager: IDirectoryManager;
+  onPreview?: (path: string) => void;
 }
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
@@ -20,7 +21,11 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       <SplitPanels splitType="horizontal">
         {map(props.managers, (item, i) => (
           <ErrorBoundary key={i}>
-            <Explorer directoryManager={props.directoryManager} explorerManager={item} />
+            <Explorer
+              directoryManager={props.directoryManager}
+              explorerManager={item}
+              onPreview={props.onPreview}
+            />
           </ErrorBoundary>
         ))}
       </SplitPanels>

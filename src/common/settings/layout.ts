@@ -1,4 +1,4 @@
-import { Layout, PanelType } from 'common/interfaces';
+import { Layout } from 'common/interfaces';
 
 const DEFAULT_LAYOUT: Layout = {
   explorers: {

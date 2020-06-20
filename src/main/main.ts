@@ -1,11 +1,19 @@
-import { app, BrowserWindow } from 'electron';
-import { resolve } from 'path';
+import { app, BrowserWindow, protocol } from 'electron';
+import { resolve, join } from 'path';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: BrowserWindow | null;
 app.allowRendererProcessReuse = false;
 app.setPath('userData', resolve('./resources'));
+
+const registerProtocol = () => {
+  protocol.registerFileProtocol('icons', (req, callback) => {
+    const filePath = join(__dirname, '/icons/' + req.url.substring('icons://'.length));
+
+    callback({ path: filePath });
+  });
+};
 
 const createWindow = () => {
   // Create the browser window.
@@ -30,6 +38,8 @@ const createWindow = () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  registerProtocol();
 };
 
 // This method will be called when Electron has finished
