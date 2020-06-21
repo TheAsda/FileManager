@@ -10,3 +10,7 @@
 .explorer__footer {
   border-top: 1px solid black;
 }
+
+.explorer__header {
+  border-bottom: 1px solid black;
+}

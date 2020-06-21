@@ -11,6 +11,8 @@ interface DetailViewProps {
   onItemDoubleClick?: (index: number) => void;
   onExit?: () => void;
   canExit?: boolean;
+  editableIndex?: number;
+  onEditEnd?: (name: string | null) => void;
 }
 
 const DetailView = (props: DetailViewProps) => {
@@ -39,11 +41,13 @@ const DetailView = (props: DetailViewProps) => {
           return (
             <DetailViewItem
               created={item.created}
+              editable={i === props.editableIndex}
               isFolder={item.attributes.directory}
               key={item.name}
               name={item.name}
               onClick={() => props.onItemClick && props.onItemClick(i)}
               onDoubleClick={() => props.onItemDoubleClick && props.onItemDoubleClick(i)}
+              onEditEnd={props.onEditEnd}
               selected={i === props.selectedIndex}
               size={item.size}
             />

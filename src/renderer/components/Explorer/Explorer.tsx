@@ -1,6 +1,6 @@
 import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
 import React, { Component } from 'react';
-import { clamp, noop, reduce } from 'lodash';
+import { clamp, noop } from 'lodash';
 import { DetailView } from './DetailView';
 import { HotKeys } from 'react-hotkeys';
 import { PathLine } from './PathLine';
@@ -13,6 +13,8 @@ interface ExplorerState {
   initialDirectory: string;
   viewType: 'detail' | 'folder';
   directoryState: FileInfo[];
+  editableIndex?: number;
+  editType?: 'create' | 'rename';
 }
 
 interface ExplorerProps {
@@ -41,6 +43,10 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   componentDidMount() {
     this.onDirectoryChange();
+  }
+
+  private get selectedItem(): FileInfo {
+    return this.state.directoryState[this.state.selectedIndex];
   }
 
   @autobind
@@ -84,6 +90,9 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   selectItem(index: number) {
+    if (this.state.editType !== undefined && index !== this.state.editableIndex) {
+      return;
+    }
     this.setState((state) => ({
       ...state,
       selectedIndex: clamp(index, -1, state.directoryState.length - 1),
@@ -101,23 +110,107 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     if (this.state.selectedIndex === -1) {
       return;
     }
-    if (this.state.directoryState[this.state.selectedIndex].attributes.directory) {
-      this.props.explorerManager.enterDirectory(
-        this.state.directoryState[this.state.selectedIndex].name
-      );
+    if (this.selectedItem.attributes.directory) {
+      this.props.explorerManager.enterDirectory(this.selectedItem.name);
       this.onDirectoryChange();
     } else {
       this.props.onPreview &&
-        this.props.onPreview(
-          this.props.explorerManager.getPathString() +
-            this.state.directoryState[this.state.selectedIndex].name
-        );
+        this.props.onPreview(this.props.explorerManager.getPathString() + this.selectedItem.name);
     }
   }
 
-  createFile = noop;
+  @autobind
+  async onEditEnd(name: string | null) {
+    if (!this.state.editableIndex) {
+      return;
+    }
 
-  createFolder = noop;
+    // Forced edit end
+    if (name === null) {
+      this.setState((state) => ({
+        ...state,
+        editableIndex: undefined,
+        editType: undefined,
+        directoryState: state.directoryState.slice(0, state.directoryState.length - 1),
+        selectedIndex: 0,
+      }));
+      return;
+    }
+
+    if (name.length === 0) {
+      // TODO: show error about empty file
+
+      return;
+    }
+
+    if (this.state.editType === 'create') {
+      if (this.state.directoryState[this.state.editableIndex].attributes.directory) {
+        this.props.directoryManager.createItem(
+          name,
+          this.props.explorerManager.getPathString(),
+          'folder'
+        );
+      } else {
+        this.props.directoryManager.createItem(
+          name,
+          this.props.explorerManager.getPathString(),
+          'file'
+        );
+      }
+
+      const newDirectoryState = await this.props.directoryManager.listDirectory(
+        this.props.explorerManager.getPathString()
+      );
+
+      this.setState((state) => ({
+        ...state,
+        editableIndex: undefined,
+        editType: undefined,
+        directoryState: newDirectoryState,
+        selectedIndex: 0,
+      }));
+    }
+  }
+
+  @autobind
+  createFile() {
+    this.setState((state) => ({
+      ...state,
+      selectedIndex: state.directoryState.length,
+      editableIndex: state.directoryState.length,
+      editType: 'create',
+      directoryState: [
+        ...state.directoryState,
+        {
+          name: '',
+          accessible: true,
+          path: this.props.explorerManager.getPathString(),
+          attributes: { directory: false, hidden: false, readonly: false, system: false },
+        },
+      ],
+    }));
+  }
+
+  @autobind
+  createFolder() {
+    console.log('create folder');
+
+    this.setState((state) => ({
+      ...state,
+      selectedIndex: state.directoryState.length,
+      editableIndex: state.directoryState.length,
+      editType: 'create',
+      directoryState: [
+        ...state.directoryState,
+        {
+          name: '',
+          accessible: true,
+          path: this.props.explorerManager.getPathString(),
+          attributes: { directory: true, hidden: false, readonly: false, system: false },
+        },
+      ],
+    }));
+  }
 
   rename = noop;
 
@@ -146,6 +239,8 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
             <DetailView
               canExit={this.props.explorerManager.getPathArray().length !== 1}
               data={this.state.directoryState}
+              editableIndex={this.state.editableIndex}
+              onEditEnd={this.onEditEnd}
               onExit={this.exitDirectory}
               onItemClick={(i) => this.selectItem(i)}
               onItemDoubleClick={(i) => {

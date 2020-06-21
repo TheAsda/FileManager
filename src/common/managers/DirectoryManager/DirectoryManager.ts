@@ -18,7 +18,7 @@ import {
 } from 'fs';
 import { inject, injectable } from 'inversify';
 import { basename, join } from 'path';
-import { map } from 'lodash';
+import { map, compact } from 'lodash';
 import trash from 'trash';
 
 @injectable()
@@ -44,44 +44,36 @@ class DirectoryManager implements IDirectoryManager {
       return Promise.reject();
     }
 
-    return await Promise.all(
-      map(
-        fileList,
-        async (fileName): Promise<FileInfo> => {
-          const fullPath = join(path, fileName);
-          let fileStats: Stats;
+    return compact(
+      await Promise.all(
+        map(
+          fileList,
+          async (fileName): Promise<FileInfo | null> => {
+            const fullPath = join(path, fileName);
+            let fileStats: Stats;
 
-          try {
-            fileStats = lstatSync(fullPath);
-          } catch {
+            try {
+              fileStats = lstatSync(fullPath);
+            } catch {
+              return null;
+            }
+
             return {
-              accessible: false,
-              attributes: {
-                directory: true,
-                hidden: true,
-                readonly: false,
-                system: true,
-              },
+              accessible: true,
+              created: fileStats.ctime,
+              lastModified: fileStats.mtime,
               name: fileName,
               path: fullPath,
+              size: !fileStats.isDirectory() ? fileStats.size : undefined,
+              attributes: {
+                directory: fileStats.isDirectory(),
+                hidden: false,
+                readonly: false,
+                system: false,
+              },
             };
           }
-
-          return {
-            accessible: true,
-            created: fileStats.ctime,
-            lastModified: fileStats.mtime,
-            name: fileName,
-            path: fullPath,
-            size: !fileStats.isDirectory() ? fileStats.size : undefined,
-            attributes: {
-              directory: fileStats.isDirectory(),
-              hidden: false,
-              readonly: false,
-              system: false,
-            },
-          };
-        }
+        )
       )
     );
   }

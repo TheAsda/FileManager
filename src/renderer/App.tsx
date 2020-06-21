@@ -6,7 +6,7 @@ import './style.css';
 import { CSSApplicator } from './components/CSSApplicator';
 
 const App = () => {
-  const { keysManager, themesManager, panelsManager } = useManagers();
+  const { keysManager, themesManager } = useManagers();
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
   const openCommandPalette = () => setCommandPalette(true);
   const closeCommandPalette = () => setCommandPalette(false);

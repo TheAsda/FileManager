@@ -1,11 +1,10 @@
-import React, { Component, RefObject, createRef, useRef, MutableRefObject, ReactNode } from 'react';
+import React, { Component, RefObject, createRef } from 'react';
 import { FitAddon } from 'xterm-addon-fit';
 import { ITerminalManager } from '@fm/common';
 import { Terminal as XTerm } from 'xterm';
 import 'xterm/css/xterm.css';
 import './style.css';
 import autobind from 'autobind-decorator';
-import { debounce } from 'lodash';
 
 interface TerminalProps {
   terminalManager: ITerminalManager;

@@ -7,7 +7,7 @@ import { configure } from 'react-hotkeys';
 configure({
   // stopEventPropagationAfterIgnoring: false,
   // logLevel: 'debug',
-  simulateMissingKeyPressEvents: false,
+  // simulateMissingKeyPressEvents: false,
   // ignoreTags: [],
 });
 

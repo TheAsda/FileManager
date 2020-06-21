@@ -1,26 +1,18 @@
 import React, { useState } from 'react';
 import './style.css';
 import { HotKeys } from 'react-hotkeys';
-import { useCache, useManagers } from '@fm/hooks';
-import {
-  Layout,
-  IDirectoryManager,
-  ITerminalManager,
-  IExplorerManager,
-  PreviewPanel,
-} from '@fm/common';
-import { cloneDeep, noop } from 'lodash';
+import { useManagers } from '@fm/hooks';
+import { ITerminalManager, IExplorerManager, PreviewPanel } from '@fm/common';
+import { noop } from 'lodash';
 import { SplitPanels } from '../SplitPanels';
 import { ExplorerPanels, TerminalPanels } from '../panels';
 import { Preview } from '../Preview';
 
 const Window = () => {
-  const { getCached, updateStorage } = useCache();
   const {
     directoryManager,
     getTerminalManager,
     keysManager,
-    settingsManager,
     panelsManager,
     getExplorerManager,
   } = useManagers();

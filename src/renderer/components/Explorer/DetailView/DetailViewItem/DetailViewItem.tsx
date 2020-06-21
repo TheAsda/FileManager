@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { extname } from 'path';
 
 interface DetailViewItemProps {
@@ -9,6 +9,8 @@ interface DetailViewItemProps {
   selected?: boolean;
   onClick?: () => void;
   onDoubleClick?: () => void;
+  editable?: boolean;
+  onEditEnd?: (name: string | null) => void;
 }
 
 const getIcon = (file: string): string => {
@@ -94,10 +96,34 @@ const getIcon = (file: string): string => {
 
 const DetailViewItem = (props: DetailViewItemProps) => {
   const classes = ['detail-view__row'];
+  const inputRef = useRef<HTMLInputElement>(null);
 
   if (props.selected) {
     classes.push('detail-view__row--selected');
   }
+
+  const handleKeyboard = (event: KeyboardEvent) => {
+    console.log(event.key);
+
+    if (event.key === 'Enter' && inputRef.current) {
+      props.onEditEnd && props.onEditEnd(inputRef.current.value);
+    }
+
+    if (event.key === 'Escape') {
+      props.onEditEnd && props.onEditEnd(null);
+    }
+  };
+
+  useEffect(() => {
+    if (props.editable) {
+      document.addEventListener('keydown', handleKeyboard);
+      return () => {
+        document.removeEventListener('keydown', handleKeyboard);
+      };
+    } else {
+      document.removeEventListener('keydown', handleKeyboard);
+    }
+  }, [props.editable]);
 
   return (
     <div
@@ -113,8 +139,14 @@ const DetailViewItem = (props: DetailViewItemProps) => {
       }
     >
       <span className="detail-view__item">
-        <img src={props.isFolder ? 'icons://folder.svg' : getIcon(props.name)} />
-        {props.name}
+        {props.editable ? (
+          <input defaultValue={props.name} ref={inputRef} autoFocus />
+        ) : (
+          <>
+            <img src={props.isFolder ? 'icons://folder.svg' : getIcon(props.name)} />
+            {props.name}
+          </>
+        )}
       </span>
       <span className="detail-view__item">{props.size}</span>
       <span className="detail-view__item">{props.created?.toLocaleString()}</span>
