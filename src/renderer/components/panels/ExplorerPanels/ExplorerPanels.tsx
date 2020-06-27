@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { map } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';

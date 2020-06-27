@@ -1,1 +1,1 @@
-export * from './DefaultPanel'
+export * from './DefaultPanel';

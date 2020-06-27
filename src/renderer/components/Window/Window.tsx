@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { HotKeys } from 'react-hotkeys';
 import { useManagers, useTerminals, useExplorers, usePreview } from '@fm/hooks';
 import { PanelType } from '@fm/common';
