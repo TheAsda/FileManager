@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { clamp, noop } from 'lodash';
 import { DetailView } from './DetailView';
 import { HotKeys } from 'react-hotkeys';
-import { PathLine } from './PathLine';
 import { StateLine } from './StateLine';
 import autobind from 'autobind-decorator';
 import './style.css';
@@ -193,8 +192,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   createFolder() {
-    console.log('create folder');
-
     this.setState((state) => ({
       ...state,
       selectedIndex: state.directoryState.length,
@@ -234,7 +231,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     return (
       <HotKeys className="hot-keys" handlers={this.handlers}>
         <div className="explorer">
-          <PathLine path={this.props.explorerManager.getPathString()} />
           {this.state.viewType === 'detail' ? (
             <DetailView
               canExit={this.props.explorerManager.getPathArray().length !== 1}

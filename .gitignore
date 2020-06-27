@@ -93,3 +93,5 @@ dist/
 resources/
 
 build/
+
+_templates/

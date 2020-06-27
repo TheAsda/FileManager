@@ -11,6 +11,7 @@ interface SplitPanelsProps {
   maxSize?: number | number[];
   children: ReactNode | ReactNode[];
   splitType: SplitType;
+  className?: string;
 }
 
 interface SplitState {
@@ -206,6 +207,10 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
 
     if (this.props.splitType === 'horizontal') {
       classes.push('split-panels--horizontal');
+    }
+
+    if (this.props.className) {
+      classes.push(this.props.className);
     }
 
     return (

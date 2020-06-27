@@ -5,27 +5,29 @@ import { ITerminalManager } from '@fm/common';
 import { map } from 'lodash';
 import { ErrorBoundary } from 'renderer/components/ErrorBoundary';
 import './style.css';
+import { DefaultPanel } from '../DefaultPanel';
 
 interface TerminalPanelsProps {
   onSplit?: () => void;
   canSplit?: boolean;
   managers: ITerminalManager[];
+  onClose?: (id: number) => void;
 }
 
 const TerminalPanels = (props: TerminalPanelsProps) => {
   return (
-    <div className="terminal-panels">
-      <button className="terminal-panels__button" onClick={props.onSplit}>
-        split
-      </button>
-      <SplitPanels splitType="horizontal">
+    <DefaultPanel onSplit={props.onSplit} splitable={true}>
+      <SplitPanels className="terminal-panels" splitType="horizontal">
         {map(props.managers, (item, i) => (
           <ErrorBoundary key={i}>
-            <Terminal terminalManager={item} />
+            <Terminal
+              onExit={() => props.onClose && props.onClose(item.getId() as number)}
+              terminalManager={item}
+            />
           </ErrorBoundary>
         ))}
       </SplitPanels>
-    </div>
+    </DefaultPanel>
   );
 };
 

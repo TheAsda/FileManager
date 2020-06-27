@@ -5,6 +5,7 @@ import './style.css';
 interface PreviewProps {
   path?: string;
   toggle?: () => void;
+  onClose?: () => void;
 }
 
 const Preview = (props: PreviewProps) => {

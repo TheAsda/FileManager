@@ -28,6 +28,9 @@ class Terminal extends Component<TerminalProps> {
       fontFamily: `'Cascadia Code PL', 'Consolas'`,
       fontSize: 15,
       rendererType: 'dom', // default is canvas
+      theme: {
+        background: '#212533',
+      },
     });
     this.fitAddon = new FitAddon();
   }
