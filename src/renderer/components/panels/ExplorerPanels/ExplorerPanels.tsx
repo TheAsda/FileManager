@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { map } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';
@@ -18,23 +18,36 @@ interface ExplorerPalensProps {
 }
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
-  // eslint-disable-next-line lodash/prefer-invoke-map
-  console.log(map(props.managers, (item) => item.getPathArray()));
+  const [path, setPath] = useState<string[]>([]);
 
   return (
     <DefaultPanel onSplit={props.onSplit} splitable={true}>
       <SplitPanels splitType="horizontal">
-        {map(props.managers, (item, i) => (
-          <PathWrapper path={item.getPathString()}>
-            <ErrorBoundary key={i}>
-              <Explorer
-                directoryManager={props.directoryManager}
-                explorerManager={item}
-                onPreview={props.onPreview}
-              />
-            </ErrorBoundary>
-          </PathWrapper>
-        ))}
+        {map(props.managers, (item, i) => {
+          item.on('pathChange', (path) =>
+            setPath((state) => {
+              const copy = [...state];
+              copy[i] = path;
+              return copy;
+            })
+          );
+
+          return (
+            <PathWrapper
+              closable={props.managers.length !== 1}
+              onClose={() => props.onClose && props.onClose(i)}
+              path={path[i]}
+            >
+              <ErrorBoundary key={i}>
+                <Explorer
+                  directoryManager={props.directoryManager}
+                  explorerManager={item}
+                  onPreview={props.onPreview}
+                />
+              </ErrorBoundary>
+            </PathWrapper>
+          );
+        })}
       </SplitPanels>
     </DefaultPanel>
   );

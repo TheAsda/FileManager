@@ -5,3 +5,20 @@
   grid-template-rows: 25px calc(100% - 25px);
   grid-template-columns: 100%;
 }
+
+.path-wrapper__header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.path-wrapper__path {
+  white-space: nowrap;
+  overflow: auto;
+  margin: 0 0.5rem;
+}
+
+.path-wrapper__path::-webkit-scrollbar {
+  display: none;
+}
