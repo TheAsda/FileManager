@@ -1,7 +1,7 @@
 interface IIdentityManager {
   setId(id: number): void;
 
-  getId(): number | null;
+  getId(): number;
 }
 
 export { IIdentityManager };

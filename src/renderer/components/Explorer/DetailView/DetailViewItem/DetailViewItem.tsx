@@ -103,8 +103,6 @@ const DetailViewItem = (props: DetailViewItemProps) => {
   }
 
   const handleKeyboard = (event: KeyboardEvent) => {
-    console.log(event.key);
-
     if (event.key === 'Enter' && inputRef.current) {
       props.onEditEnd && props.onEditEnd(inputRef.current.value);
     }

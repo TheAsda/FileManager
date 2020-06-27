@@ -3,18 +3,22 @@ import { IIdentityManager } from './IIdentityManager';
 
 @injectable()
 abstract class IdentityManager implements IIdentityManager {
-  private id: number | null;
+  private id: number;
 
   constructor() {
-    this.id = null;
+    this.id = this.getRandomId();
   }
 
   public setId(id: number): void {
     this.id = id;
   }
 
-  public getId(): number | null {
+  public getId(): number {
     return this.id;
+  }
+
+  private getRandomId(): number {
+    return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
   }
 }
 

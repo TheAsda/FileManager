@@ -16,7 +16,6 @@ import {
   IExplorerManager,
 } from '@fm/common';
 import { TYPES } from './types';
-import { IPanelsManager, PanelsManager } from 'common/managers';
 
 const container = new Container({ defaultScope: 'Singleton' });
 
@@ -26,7 +25,6 @@ container.bind<ISettingsManager>(TYPES.ISettingsManager).to(SettingsManager);
 container.bind<IKeysManager>(TYPES.IKeysManager).to(KeysManager);
 container.bind<IThemesManager>(TYPES.IThemesManager).to(ThemesManager);
 container.bind<ITerminalManager>(TYPES.ITerminalManager).to(TerminalManager).inTransientScope();
-container.bind<IPanelsManager>(TYPES.IPanelsManager).to(PanelsManager);
 container.bind<IExplorerManager>(TYPES.IExplorerManager).to(ExplorerManager).inTransientScope();
 
 export { container };

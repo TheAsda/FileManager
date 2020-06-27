@@ -9,8 +9,6 @@ interface PathWrapperProps {
 }
 
 const PathWrapper = (props: PropsWithChildren<PathWrapperProps>) => {
-  console.log(props.path);
-
   return (
     <div className="path-wrapper">
       <PathWrapperHeader closable={props.closable} onClose={props.onClose} path={props.path} />

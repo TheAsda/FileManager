@@ -3,7 +3,7 @@ import { useManagers } from '@fm/hooks';
 import './style.css';
 
 interface PreviewProps {
-  path?: string;
+  path?: string | null;
   toggle?: () => void;
   onClose?: () => void;
 }

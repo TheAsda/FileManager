@@ -1,7 +1,7 @@
 import { IExplorerManager } from './IExplorerManager';
 import { injectable } from 'inversify';
 import { execSync } from 'child_process';
-import { reduce, forEach } from 'lodash';
+import { reduce, forEach, split } from 'lodash';
 import { IdentityManager } from '../IdentityManager';
 
 @injectable()
@@ -17,6 +17,11 @@ class ExplorerManager extends IdentityManager implements IExplorerManager {
 
   setPath(path: string[]): void {
     this.directoryArray = path;
+    this.onPathChange();
+  }
+
+  setPathFromString(path: string): void {
+    this.directoryArray = split(path, /[\\/]+/);
     this.onPathChange();
   }
 
