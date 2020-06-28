@@ -1,11 +1,12 @@
 import React, { createContext, useReducer, ReactNode, useContext, Dispatch } from 'react';
 import { container, TYPES, ITerminalManager, TerminalPanelInfo } from '@fm/common';
-import { map, isString, noop } from 'lodash';
+import { map, isString, noop, filter } from 'lodash';
 
 type Action =
   | { type: 'init'; state?: TerminalPanelInfo[] }
   | { type: 'spawn'; path?: string }
-  | { type: 'destroy'; index: number };
+  | { type: 'destroy'; index: number }
+  | { type: 'exit'; index: number };
 
 const getTerminalManager = () => {
   return container.get<ITerminalManager>(TYPES.ITerminalManager);
@@ -48,7 +49,16 @@ const terminalReducer = (state: ITerminalManager[], action: Action) => {
         return state;
       }
 
-      return action.index === 0 ? [state[1]] : [state[0]];
+      state[action.index].destroy();
+
+      return filter(state, (_, i) => i !== action.index);
+    }
+    case 'exit': {
+      if (action.index > 1) {
+        return state;
+      }
+
+      return filter(state, (_, i) => i !== action.index);
     }
   }
 };

@@ -47,7 +47,7 @@ class TerminalManager extends IdentityManager implements ITerminalManager {
   }
 
   destroy(): void {
-    this.process.write('exit');
+    this.process.write('exit\n');
   }
 }
 

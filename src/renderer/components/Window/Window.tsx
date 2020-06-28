@@ -11,26 +11,14 @@ import './style.css';
 const Window = () => {
   const { directoryManager, keysManager } = useManagers();
 
-  const { data: terminals, dispatch: terminalsAction } = useTerminals();
-  const { data: explorers, dispatch: explorersAction } = useExplorers();
+  const { dispatch: terminalsAction } = useTerminals();
+  const { dispatch: explorersAction } = useExplorers();
   const { data: preview, dispatch: previewAction } = usePreview();
 
   const previewHandler = (path: string) => {
     previewAction({
       type: 'display',
       path: path,
-    });
-  };
-
-  const splitExplorer = () => {
-    explorersAction({
-      type: 'spawn',
-    });
-  };
-
-  const splitTerminal = () => {
-    terminalsAction({
-      type: 'spawn',
     });
   };
 
@@ -87,21 +75,11 @@ const Window = () => {
     <div className="window">
       <HotKeys className="hot-keys" handlers={handlers} keyMap={keysManager.getKeyMap()}>
         <SplitPanels splitType="vertical">
-          <ExplorerPanels
-            directoryManager={directoryManager}
-            managers={explorers}
-            onClose={onClose('explorer')}
-            onPreview={previewHandler}
-            onSplit={splitExplorer}
-          />
+          <ExplorerPanels directoryManager={directoryManager} onPreview={previewHandler} />
           {preview.display && (
             <Preview onClose={onClose('preview')} path={preview.path} toggle={togglePreview} />
           )}
-          <TerminalPanels
-            managers={terminals}
-            onClose={onClose('terminal')}
-            onSplit={splitTerminal}
-          />
+          <TerminalPanels />
         </SplitPanels>
       </HotKeys>
     </div>

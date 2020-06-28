@@ -6,22 +6,40 @@ import { map } from 'lodash';
 import { ErrorBoundary } from 'renderer/components/ErrorBoundary';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
+import { useTerminals } from '@fm/hooks';
 
-interface TerminalPanelsProps {
-  onSplit?: () => void;
-  canSplit?: boolean;
-  managers: ITerminalManager[];
-  onClose?: (id: number) => void;
-}
+const TerminalPanels = () => {
+  const { data, dispatch } = useTerminals();
 
-const TerminalPanels = (props: TerminalPanelsProps) => {
+  const onClose = (index: number) => () => {
+    dispatch({
+      type: 'destroy',
+      index,
+    });
+  };
+
+  const onExit = (index: number) => () => {
+    dispatch({
+      type: 'exit',
+      index,
+    });
+  };
+
+  const splitTerminal = () => {
+    dispatch({
+      type: 'spawn',
+    });
+  };
+
   return (
-    <DefaultPanel onSplit={props.onSplit} splitable={true}>
+    <DefaultPanel onSplit={splitTerminal} splitable={data.length < 2}>
       <SplitPanels className="terminal-panels" splitType="horizontal">
-        {map(props.managers, (item, i) => (
-          <ErrorBoundary key={i}>
+        {map(data, (item, i) => (
+          <ErrorBoundary key={item.getId()}>
             <Terminal
-              onExit={() => props.onClose && props.onClose(item.getId() as number)}
+              closable={data.length > 1}
+              onClose={onClose(i)}
+              onExit={onExit(i)}
               terminalManager={item}
             />
           </ErrorBoundary>
@@ -31,4 +49,4 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   );
 };
 
-export { TerminalPanels, TerminalPanelsProps };
+export { TerminalPanels };

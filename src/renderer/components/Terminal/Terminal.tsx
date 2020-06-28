@@ -5,11 +5,14 @@ import { Terminal as XTerm } from 'xterm';
 import 'xterm/css/xterm.css';
 import './style.css';
 import autobind from 'autobind-decorator';
+import { PathWrapper } from '../PathWrapper';
 
 interface TerminalProps {
   terminalManager: ITerminalManager;
   initialDirectory?: string;
   onExit?: (exitCode: number) => void;
+  onClose?: () => void;
+  closable: boolean;
 }
 
 class Terminal extends Component<TerminalProps> {
@@ -58,13 +61,15 @@ class Terminal extends Component<TerminalProps> {
   }
 
   componentWillUnmount() {
-    this.terminal.dispose();
-    this.TerminalManager.destroy();
     window.removeEventListener('resize', this.resize);
   }
 
   render() {
-    return <div className="terminal" ref={this.containerRef} />;
+    return (
+      <PathWrapper closable={this.props.closable} onClose={this.props.onClose} path={''}>
+        <div className="terminal" ref={this.containerRef} />
+      </PathWrapper>
+    );
   }
 }
 

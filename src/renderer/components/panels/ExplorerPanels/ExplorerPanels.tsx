@@ -9,12 +9,8 @@ import { DefaultPanel } from '../DefaultPanel';
 import { useExplorers } from '@fm/hooks';
 
 interface ExplorerPalensProps {
-  onSplit?: () => void;
-  canSplit?: boolean;
-  managers: IExplorerManager[];
   directoryManager: IDirectoryManager;
   onPreview?: (path: string) => void;
-  onClose?: (index: number | null) => void;
 }
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
@@ -27,8 +23,14 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     });
   };
 
+  const splitExplorer = () => {
+    dispatch({
+      type: 'spawn',
+    });
+  };
+
   return (
-    <DefaultPanel onSplit={props.onSplit} splitable={true}>
+    <DefaultPanel onSplit={splitExplorer} splitable={data.length < 2}>
       <SplitPanels splitType="horizontal">
         {map(data, (item, i) => {
           return (
