@@ -1,12 +1,4 @@
-import React, {
-  createContext,
-  useReducer,
-  useContext,
-  Dispatch,
-  ReactNode,
-  PropsWithChildren,
-  useEffect,
-} from 'react';
+import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
 import { PanelType } from '../common';
 import { noop } from 'lodash';
 
