@@ -4,3 +4,5 @@ export * from './useManagers';
 export * from './useTerminals';
 export * from './useExplorers';
 export * from './usePreview';
+export * from './useFocus';
+export * from './useCommands';

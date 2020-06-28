@@ -13,6 +13,7 @@ interface TerminalProps {
   onExit?: (exitCode: number) => void;
   onClose?: () => void;
   closable: boolean;
+  onFocus?: () => void;
 }
 
 class Terminal extends Component<TerminalProps> {
@@ -67,7 +68,7 @@ class Terminal extends Component<TerminalProps> {
   render() {
     return (
       <PathWrapper closable={this.props.closable} onClose={this.props.onClose} path={''}>
-        <div className="terminal" ref={this.containerRef} />
+        <div className="terminal" onFocus={this.props.onFocus} ref={this.containerRef} />
       </PathWrapper>
     );
   }

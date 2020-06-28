@@ -1,11 +1,11 @@
 import React from 'react';
 import { keys } from 'lodash';
-import { Option, SelectPalette } from '../SelectPalette';
+import { Options, SelectPalette } from '../SelectPalette';
 
 interface CommandPaletteProps {
   isOpened: boolean;
   onClose: () => void;
-  commands: Option;
+  commands: Options;
 }
 
 const CommandPalette = (props: CommandPaletteProps) => {

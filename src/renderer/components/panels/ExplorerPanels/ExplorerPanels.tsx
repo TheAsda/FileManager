@@ -6,7 +6,7 @@ import { IDirectoryManager } from '@fm/common';
 import { ErrorBoundary } from 'renderer/components';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useExplorers } from '@fm/hooks';
+import { useExplorers, useFocus, useCommands } from '@fm/hooks';
 
 interface ExplorerPalensProps {
   directoryManager: IDirectoryManager;
@@ -15,6 +15,8 @@ interface ExplorerPalensProps {
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { data, dispatch } = useExplorers();
+  const { dispatch: focusAction } = useFocus();
+  const { dispatch: commandsAction } = useCommands();
 
   const onClose = (index: number) => () => {
     dispatch({
@@ -29,8 +31,41 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     });
   };
 
+  const focusItem = (index: number) => () => {
+    const name = `log ${index}`;
+    console.log('focus ' + name);
+
+    focusAction({
+      type: 'focusItem',
+      index,
+    });
+
+    commandsAction({
+      type: 'add',
+      items: {
+        [name]: () => console.log(index),
+      },
+    });
+  };
+
+  const unFocusItem = (index: number) => () => {
+    const name = `log ${index}`;
+    console.log('unfocus' + name);
+
+    commandsAction({
+      type: 'remove',
+      items: {
+        [name]: () => console.log(index),
+      },
+    });
+  };
+
   return (
-    <DefaultPanel onSplit={splitExplorer} splitable={data.length < 2}>
+    <DefaultPanel
+      onFocus={() => focusAction({ type: 'focusPanel', item: 'explorer' })}
+      onSplit={splitExplorer}
+      splitable={data.length < 2}
+    >
       <SplitPanels splitType="horizontal">
         {map(data, (item, i) => {
           return (
@@ -39,7 +74,9 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
                 closable={data.length > 1}
                 directoryManager={props.directoryManager}
                 explorerManager={item}
+                onBlur={unFocusItem(i)}
                 onClose={onClose(i)}
+                onFocus={focusItem(i)}
                 onPreview={props.onPreview}
               />
             </ErrorBoundary>

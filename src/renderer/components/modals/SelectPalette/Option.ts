@@ -1,5 +1,5 @@
-interface Option {
+interface Options {
   [commandName: string]: () => void;
 }
 
-export { Option };
+export { Options };

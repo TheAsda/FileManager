@@ -5,10 +5,11 @@ import { map } from 'lodash';
 import { ErrorBoundary } from 'renderer/components/ErrorBoundary';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useTerminals } from '@fm/hooks';
+import { useTerminals, useFocus } from '@fm/hooks';
 
 const TerminalPanels = () => {
   const { data, dispatch } = useTerminals();
+  const { dispatch: focusAction } = useFocus();
 
   const onClose = (index: number) => () => {
     dispatch({
@@ -30,8 +31,19 @@ const TerminalPanels = () => {
     });
   };
 
+  const focusItem = (index: number) => () => {
+    focusAction({
+      type: 'focusItem',
+      index,
+    });
+  };
+
   return (
-    <DefaultPanel onSplit={splitTerminal} splitable={data.length < 2}>
+    <DefaultPanel
+      onFocus={() => focusAction({ type: 'focusPanel', item: 'terminal' })}
+      onSplit={splitTerminal}
+      splitable={data.length < 2}
+    >
       <SplitPanels className="terminal-panels" splitType="horizontal">
         {map(data, (item, i) => (
           <ErrorBoundary key={item.getId()}>
@@ -39,6 +51,7 @@ const TerminalPanels = () => {
               closable={data.length > 1}
               onClose={onClose(i)}
               onExit={onExit(i)}
+              onFocus={focusItem(i)}
               terminalManager={item}
             />
           </ErrorBoundary>

@@ -27,6 +27,8 @@ interface ExplorerProps {
   onPreview?: (path: string) => void;
   onClose?: () => void;
   closable: boolean;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
@@ -252,8 +254,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   async sendToTrash() {
-    console.log('trash');
-
     await this.props.directoryManager.sendItemsToTrash([
       this.state.directoryState[this.state.selectedIndex],
     ]);
@@ -275,7 +275,12 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   render() {
     return (
-      <HotKeys className="hot-keys" handlers={this.handlers}>
+      <HotKeys
+        className="hot-keys"
+        handlers={this.handlers}
+        onBlur={this.props.onBlur}
+        onFocus={this.props.onFocus}
+      >
         <PathWrapper
           closable={this.props.closable}
           onClose={this.onClose}

@@ -37,6 +37,8 @@ module.exports = [
     devtool: 'source-map',
     externals: {
       trash: 'commonjs2 trash',
+      'node-pty': 'commonjs2 node-pty',
+      bunyan: 'commonjs2 bunyan',
     },
     module: {
       rules: [
