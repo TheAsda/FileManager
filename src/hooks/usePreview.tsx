@@ -1,5 +1,13 @@
-import React, { Dispatch, createContext, useReducer, ReactNode, useContext } from 'react';
+import React, {
+  Dispatch,
+  createContext,
+  useReducer,
+  useContext,
+  PropsWithChildren,
+  useEffect,
+} from 'react';
 import { noop } from 'lodash';
+import { PreviewPanelInfo } from '@fm/common';
 
 type Action =
   | { type: 'init'; display?: boolean }
@@ -42,11 +50,22 @@ const PreviewContext = createContext<{ data: ReducerState; dispatch: Dispatch<Ac
   dispatch: noop,
 });
 
-const PreviewProvider = ({ children }: { children: ReactNode }) => {
+interface PreviewProviderProps {
+  initialState?: PreviewPanelInfo;
+}
+
+const PreviewProvider = ({ children, initialState }: PropsWithChildren<PreviewProviderProps>) => {
   const [data, dispatch] = useReducer(previewReducer, {
     path: null,
     display: false,
   });
+
+  useEffect(() => {
+    dispatch({
+      type: 'init',
+      display: initialState !== undefined,
+    });
+  }, []);
 
   return <PreviewContext.Provider value={{ data, dispatch }}>{children}</PreviewContext.Provider>;
 };

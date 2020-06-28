@@ -1,4 +1,11 @@
-import React, { createContext, useReducer, ReactNode, useContext, Dispatch } from 'react';
+import React, {
+  createContext,
+  useReducer,
+  useContext,
+  Dispatch,
+  PropsWithChildren,
+  useEffect,
+} from 'react';
 import { container, TYPES, ITerminalManager, TerminalPanelInfo } from '@fm/common';
 import { map, isString, noop, filter } from 'lodash';
 
@@ -68,8 +75,22 @@ const TerminalsContext = createContext<{ data: ITerminalManager[]; dispatch: Dis
   dispatch: noop,
 });
 
-const TerminalsProvider = ({ children }: { children: ReactNode }) => {
+interface TerminalsProviderProps {
+  initialState?: TerminalPanelInfo[];
+}
+
+const TerminalsProvider = ({
+  children,
+  initialState,
+}: PropsWithChildren<TerminalsProviderProps>) => {
   const [data, dispatch] = useReducer(terminalReducer, []);
+
+  useEffect(() => {
+    dispatch({
+      type: 'init',
+      state: initialState,
+    });
+  }, []);
 
   return (
     <TerminalsContext.Provider value={{ data, dispatch }}>{children}</TerminalsContext.Provider>

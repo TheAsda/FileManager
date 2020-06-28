@@ -1,4 +1,11 @@
-import React, { createContext, useReducer, ReactNode, useContext, Dispatch } from 'react';
+import React, {
+  createContext,
+  useReducer,
+  useContext,
+  Dispatch,
+  PropsWithChildren,
+  useEffect,
+} from 'react';
 import { IExplorerManager, ExplorerPanelInfo, container, TYPES } from '@fm/common';
 import { map, isString, isArray, noop } from 'lodash';
 
@@ -62,8 +69,22 @@ const ExplorersContext = createContext<{ data: IExplorerManager[]; dispatch: Dis
   dispatch: noop,
 });
 
-const ExplorersProvider = ({ children }: { children: ReactNode }) => {
+interface ExplorersProviderProps {
+  initialState?: ExplorerPanelInfo[];
+}
+
+const ExplorersProvider = ({
+  children,
+  initialState,
+}: PropsWithChildren<ExplorersProviderProps>) => {
   const [data, dispatch] = useReducer(explorerReducer, []);
+
+  useEffect(() => {
+    dispatch({
+      type: 'init',
+      state: initialState,
+    });
+  }, []);
 
   return (
     <ExplorersContext.Provider value={{ data, dispatch }}>{children}</ExplorersContext.Provider>
@@ -72,4 +93,4 @@ const ExplorersProvider = ({ children }: { children: ReactNode }) => {
 
 const useExplorers = () => useContext(ExplorersContext);
 
-export { ExplorersProvider, useExplorers };
+export { ExplorersProvider, ExplorersProviderProps, useExplorers };

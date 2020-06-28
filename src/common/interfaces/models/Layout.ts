@@ -1,17 +1,17 @@
-import { ExplorerPanel, PreviewPanel, TerminalPanel } from './Panel';
+import { ExplorerPanelInfo, PreviewPanelInfo, TerminalPanelInfo } from './Panel';
 
 interface Layout {
   explorers: {
     hidden: boolean;
-    panels: ExplorerPanel[];
+    panels: ExplorerPanelInfo[];
   };
   preview: {
     hidden: boolean;
-    panel?: PreviewPanel;
+    panel?: PreviewPanelInfo;
   };
   terminals: {
     hidden: boolean;
-    panels: TerminalPanel[];
+    panels: TerminalPanelInfo[];
   };
 }
 

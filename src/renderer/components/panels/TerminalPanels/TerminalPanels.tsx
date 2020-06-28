@@ -1,7 +1,6 @@
 import React from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { Terminal } from 'renderer/components/Terminal';
-import { ITerminalManager } from '@fm/common';
 import { map } from 'lodash';
 import { ErrorBoundary } from 'renderer/components/ErrorBoundary';
 import './style.css';

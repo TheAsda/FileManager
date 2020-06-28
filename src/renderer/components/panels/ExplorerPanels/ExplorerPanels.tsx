@@ -2,7 +2,7 @@ import React from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { map } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';
-import { IDirectoryManager, IExplorerManager } from '@fm/common';
+import { IDirectoryManager } from '@fm/common';
 import { ErrorBoundary } from 'renderer/components';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
