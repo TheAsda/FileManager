@@ -37,12 +37,13 @@ class DirectoryManager implements IDirectoryManager {
     let fileList;
 
     try {
-      fileList = readdirSync(path);
       this.logger.log(`Reading folder ${path}`);
+      fileList = readdirSync(path);
     } catch {
       this.logger.error(`Cannot read folder ${path}`);
       return Promise.reject();
     }
+    this.logger.log('Read successfully');
 
     return compact(
       await Promise.all(
@@ -81,6 +82,7 @@ class DirectoryManager implements IDirectoryManager {
   /** @inheritdoc */
   async createItem(itemName: string, itemPath: string, itemType: FileType): Promise<void> {
     const fullPath = join(itemPath, itemName);
+    this.logger.log(`Creatin item ${itemPath}`);
 
     if (itemType === 'folder') {
       try {
@@ -99,6 +101,7 @@ class DirectoryManager implements IDirectoryManager {
 
   /** @inheritdoc */
   async renameItem(oldName: string, newName: string, itemPath: string): Promise<void> {
+    this.logger.log(`Renaming file ${oldName} to ${newName}`);
     if (oldName === newName) {
       return;
     }
@@ -107,7 +110,8 @@ class DirectoryManager implements IDirectoryManager {
     const newNameFull = join(itemPath, newName);
 
     try {
-      renameSync(oldNameFull, newNameFull);
+      await renameSync(oldNameFull, newNameFull);
+      this.logger.log('Renamed successfully');
     } catch {
       this.logger.error(`Cannot rename ${oldNameFull} to ${newNameFull}`);
     }
@@ -115,6 +119,7 @@ class DirectoryManager implements IDirectoryManager {
 
   /** @inheritdoc */
   async deleteItems(itemsToDelete: FileInfo[]): Promise<void> {
+    this.logger.log(`Deleting ${itemsToDelete.length} items`);
     const itemDeletions = map(
       itemsToDelete,
       async (item) =>
@@ -122,35 +127,43 @@ class DirectoryManager implements IDirectoryManager {
     );
 
     await Promise.all(itemDeletions);
+    this.logger.log(`Deletion successfull`);
   }
 
   /** @inheritdoc */
   async sendItemsToTrash(itemsToTrash: FileInfo[]): Promise<void> {
+    this.logger.log(`Moving ${itemsToTrash.length} items to trash`);
     const itemsSending = map(itemsToTrash, async (item) => await this.sendItemToTrash(item.path));
 
     await Promise.all(itemsSending);
+    this.logger.log(`Successfully moved items`);
   }
 
   /** @inheritdoc */
   async copyItems(itemsToCopy: FileInfo[], destinationFolder: string): Promise<void> {
+    this.logger.log(`Copying ${itemsToCopy.length} items to ${destinationFolder}`);
     const itemsCopying = map(itemsToCopy, async (item) =>
       this.copyItem(item.path, destinationFolder)
     );
 
     await Promise.all(itemsCopying);
+    this.logger.log('Copied successfully');
   }
 
   /** @inheritdoc */
   async moveItems(itemsToMove: FileInfo[], destinationFolder: string): Promise<void> {
+    this.logger.log(`Moving ${itemsToMove.length} items to ${destinationFolder}`);
     const itemsMoving = map(itemsToMove, async (item) =>
       this.moveItem(item.path, destinationFolder, item.attributes.directory ? 'folder' : 'file')
     );
 
     await Promise.all(itemsMoving);
+    this.logger.log('Moved successfully');
   }
 
   /** @inheritdoc */
   readFileSync(filePath: string): string {
+    this.logger.log(`Reading file ${filePath}`);
     return readFileSync(filePath, { encoding: 'utf-8' });
   }
 
@@ -189,8 +202,9 @@ class DirectoryManager implements IDirectoryManager {
       await trash(itemPath);
       return Promise.resolve();
     } catch {
-      this.logger.error(`Cannot send to trash ${itemPath}`);
-      return Promise.reject();
+      const errorMessage = `Cannot send to trash ${itemPath}`;
+      this.logger.error(errorMessage);
+      return Promise.reject(errorMessage);
     }
   }
 

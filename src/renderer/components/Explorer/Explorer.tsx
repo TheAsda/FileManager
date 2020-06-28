@@ -1,6 +1,6 @@
 import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
 import React, { Component } from 'react';
-import { clamp, noop, clone } from 'lodash';
+import { clamp } from 'lodash';
 import { DetailView } from './DetailView';
 import { HotKeys } from 'react-hotkeys';
 import { StateLine } from './StateLine';
@@ -158,17 +158,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         );
       }
 
-      const newDirectoryState = await this.props.directoryManager.listDirectory(
-        this.props.explorerManager.getPathString()
-      );
-
-      this.setState((state) => ({
-        ...state,
-        editableIndex: undefined,
-        editType: undefined,
-        directoryState: newDirectoryState,
-        selectedIndex: 0,
-      }));
+      this.updateDirectoryState();
     }
 
     if (this.state.editType === 'rename') {
@@ -178,18 +168,23 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         this.props.explorerManager.getPathString()
       );
 
-      const newDirectoryState = await this.props.directoryManager.listDirectory(
-        this.props.explorerManager.getPathString()
-      );
-
-      this.setState((state) => ({
-        ...state,
-        editableIndex: undefined,
-        editType: undefined,
-        directoryState: newDirectoryState,
-        selectedIndex: 0,
-      }));
+      this.updateDirectoryState();
     }
+  }
+
+  @autobind
+  private async updateDirectoryState() {
+    const newDirectoryState = await this.props.directoryManager.listDirectory(
+      this.props.explorerManager.getPathString()
+    );
+
+    this.setState((state) => ({
+      ...state,
+      editableIndex: undefined,
+      editType: undefined,
+      directoryState: newDirectoryState,
+      selectedIndex: 0,
+    }));
   }
 
   @autobind
@@ -237,21 +232,34 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   rename() {
-    this.setState(
-      (state) => {
-        return {
-          ...state,
-          editableIndex: state.selectedIndex,
-          editType: 'rename',
-        };
-      },
-      () => console.log(this.state)
-    );
+    this.setState((state) => {
+      return {
+        ...state,
+        editableIndex: state.selectedIndex,
+        editType: 'rename',
+      };
+    });
   }
 
-  del = noop;
+  @autobind
+  async del() {
+    await this.props.directoryManager.deleteItems([
+      this.state.directoryState[this.state.selectedIndex],
+    ]);
 
-  sendToTrash = noop;
+    this.updateDirectoryState();
+  }
+
+  @autobind
+  async sendToTrash() {
+    console.log('trash');
+
+    await this.props.directoryManager.sendItemsToTrash([
+      this.state.directoryState[this.state.selectedIndex],
+    ]);
+
+    this.updateDirectoryState();
+  }
 
   handlers = {
     moveDown: this.selectNextItem,

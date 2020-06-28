@@ -35,6 +35,9 @@ module.exports = [
     entry: './src/renderer/index.tsx',
     target: 'electron-renderer',
     devtool: 'source-map',
+    externals: {
+      trash: 'commonjs2 trash',
+    },
     module: {
       rules: [
         {

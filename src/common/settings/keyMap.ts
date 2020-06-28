@@ -13,7 +13,7 @@ const DEFAULT_KEYMAP: KeyMap = {
   newFolder: ['ctrl+shift+n'],
   rename: ['ctrl+shift+r', 'f2'],
   sendToTrash: ['del'],
-  delete: ['ctrl+del'],
+  delete: ['shift+del'],
   cut: ['ctrl+x'],
   copy: ['ctrl+c'],
   paste: ['ctrl+v'],
