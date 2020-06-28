@@ -32,6 +32,7 @@ const DetailView = (props: DetailViewProps) => {
             onClick={() => props.onItemClick && props.onItemClick(-1)}
             onDoubleClick={props.onExit}
             selected={props.selectedIndex === -1}
+            showIcon={false}
           />
         )}
         {map(props.data, (item, i) => {

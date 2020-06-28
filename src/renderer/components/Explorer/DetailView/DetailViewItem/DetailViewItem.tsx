@@ -11,6 +11,7 @@ interface DetailViewItemProps {
   onDoubleClick?: () => void;
   editable?: boolean;
   onEditEnd?: (name: string | null) => void;
+  showIcon?: boolean;
 }
 
 const getIcon = (file: string): string => {
@@ -141,7 +142,9 @@ const DetailViewItem = (props: DetailViewItemProps) => {
           <input defaultValue={props.name} ref={inputRef} autoFocus />
         ) : (
           <>
-            <img src={props.isFolder ? 'icons://folder.svg' : getIcon(props.name)} />
+            {props.showIcon !== false && (
+              <img src={props.isFolder ? 'icons://folder.svg' : getIcon(props.name)} />
+            )}
             {props.name}
           </>
         )}

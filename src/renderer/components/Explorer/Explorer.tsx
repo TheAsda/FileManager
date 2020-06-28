@@ -1,6 +1,6 @@
 import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
 import React, { Component } from 'react';
-import { clamp, noop } from 'lodash';
+import { clamp, noop, clone } from 'lodash';
 import { DetailView } from './DetailView';
 import { HotKeys } from 'react-hotkeys';
 import { StateLine } from './StateLine';
@@ -145,18 +145,38 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
     if (this.state.editType === 'create') {
       if (this.state.directoryState[this.state.editableIndex].attributes.directory) {
-        this.props.directoryManager.createItem(
+        await this.props.directoryManager.createItem(
           name,
           this.props.explorerManager.getPathString(),
           'folder'
         );
       } else {
-        this.props.directoryManager.createItem(
+        await this.props.directoryManager.createItem(
           name,
           this.props.explorerManager.getPathString(),
           'file'
         );
       }
+
+      const newDirectoryState = await this.props.directoryManager.listDirectory(
+        this.props.explorerManager.getPathString()
+      );
+
+      this.setState((state) => ({
+        ...state,
+        editableIndex: undefined,
+        editType: undefined,
+        directoryState: newDirectoryState,
+        selectedIndex: 0,
+      }));
+    }
+
+    if (this.state.editType === 'rename') {
+      await this.props.directoryManager.renameItem(
+        this.state.directoryState[this.state.editableIndex].name,
+        name,
+        this.props.explorerManager.getPathString()
+      );
 
       const newDirectoryState = await this.props.directoryManager.listDirectory(
         this.props.explorerManager.getPathString()
@@ -215,7 +235,19 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     }));
   }
 
-  rename = noop;
+  @autobind
+  rename() {
+    this.setState(
+      (state) => {
+        return {
+          ...state,
+          editableIndex: state.selectedIndex,
+          editType: 'rename',
+        };
+      },
+      () => console.log(this.state)
+    );
+  }
 
   del = noop;
 
