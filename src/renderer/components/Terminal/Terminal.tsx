@@ -14,6 +14,7 @@ interface TerminalProps {
   onClose?: () => void;
   closable: boolean;
   onFocus?: () => void;
+  focused?: boolean;
 }
 
 class Terminal extends Component<TerminalProps> {
@@ -53,6 +54,15 @@ class Terminal extends Component<TerminalProps> {
       window.addEventListener('resize', this.resize);
 
       this.resize();
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.focused) {
+      console.log('Terminal');
+
+      this.containerRef.current?.focus();
+      this.terminal.focus();
     }
   }
 

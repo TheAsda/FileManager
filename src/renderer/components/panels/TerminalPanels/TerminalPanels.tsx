@@ -9,7 +9,7 @@ import { useTerminals, useFocus } from '@fm/hooks';
 
 const TerminalPanels = () => {
   const { data, dispatch } = useTerminals();
-  const { dispatch: focusAction } = useFocus();
+  const { data: focus, dispatch: focusAction } = useFocus();
 
   const onClose = (index: number) => () => {
     dispatch({
@@ -45,17 +45,22 @@ const TerminalPanels = () => {
       splitable={data.length < 2}
     >
       <SplitPanels className="terminal-panels" splitType="horizontal">
-        {map(data, (item, i) => (
-          <ErrorBoundary key={item.getId()}>
-            <Terminal
-              closable={data.length > 1}
-              onClose={onClose(i)}
-              onExit={onExit(i)}
-              onFocus={focusItem(i)}
-              terminalManager={item}
-            />
-          </ErrorBoundary>
-        ))}
+        {map(data, (item, i) => {
+          console.log('terminal', focus, i);
+
+          return (
+            <ErrorBoundary key={item.getId()}>
+              <Terminal
+                closable={data.length > 1}
+                focused={focus.focusedPanel === 'terminal' && focus.index === i}
+                onClose={onClose(i)}
+                onExit={onExit(i)}
+                onFocus={focusItem(i)}
+                terminalManager={item}
+              />
+            </ErrorBoundary>
+          );
+        })}
       </SplitPanels>
     </DefaultPanel>
   );

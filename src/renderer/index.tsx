@@ -8,7 +8,7 @@ configure({
   // stopEventPropagationAfterIgnoring: false,
   // logLevel: 'debug',
   // simulateMissingKeyPressEvents: false,
-  // ignoreTags: [],
+  ignoreTags: ['input', 'select', 'textarea'],
 });
 
 render(<App />, document.getElementById('root'));

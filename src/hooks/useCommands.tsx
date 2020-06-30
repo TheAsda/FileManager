@@ -21,8 +21,6 @@ interface CommandsState {
 }
 
 const commandsReducer = (state: CommandsState, action: Action): CommandsState => {
-  console.log('state', state);
-  console.log('action', action);
   switch (action.type) {
     case 'add': {
       return { ...state, custom: merge(state.custom, action.items) };

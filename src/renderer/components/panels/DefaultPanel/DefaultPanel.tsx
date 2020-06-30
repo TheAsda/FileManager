@@ -5,7 +5,7 @@ interface DefaultPanelProps {
   splitable?: boolean;
   onSplit?: () => void;
   onHide?: () => void;
-  onFocus: () => void;
+  onFocus?: () => void;
 }
 
 const DefaultPanel = (props: PropsWithChildren<DefaultPanelProps>) => {

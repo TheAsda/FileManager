@@ -15,7 +15,7 @@ interface ExplorerPalensProps {
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { data, dispatch } = useExplorers();
-  const { dispatch: focusAction } = useFocus();
+  const { data: focus, dispatch: focusAction } = useFocus();
   const { dispatch: commandsAction } = useCommands();
 
   const onClose = (index: number) => () => {
@@ -33,8 +33,8 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
 
   const focusItem = (index: number) => () => {
     const name = `log ${index}`;
-    console.log('focus ' + name);
 
+    console.log('focusItem -> name', name);
     focusAction({
       type: 'focusItem',
       index,
@@ -50,7 +50,6 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
 
   const unFocusItem = (index: number) => () => {
     const name = `log ${index}`;
-    console.log('unfocus' + name);
 
     commandsAction({
       type: 'remove',
@@ -74,6 +73,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
                 closable={data.length > 1}
                 directoryManager={props.directoryManager}
                 explorerManager={item}
+                focused={focus.focusedPanel === 'explorer' && focus.index === i}
                 onBlur={unFocusItem(i)}
                 onClose={onClose(i)}
                 onFocus={focusItem(i)}

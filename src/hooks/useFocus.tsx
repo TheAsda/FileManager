@@ -1,4 +1,11 @@
-import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
+import React, {
+  createContext,
+  useReducer,
+  useContext,
+  Dispatch,
+  PropsWithChildren,
+  useEffect,
+} from 'react';
 import { PanelType } from '../common';
 import { noop } from 'lodash';
 
@@ -10,6 +17,12 @@ type Action =
   | {
       type: 'focusItem';
       index: number;
+    }
+  | {
+      type: 'toggleItem';
+    }
+  | {
+      type: 'togglePanel';
     };
 
 interface FocusState {
@@ -18,7 +31,6 @@ interface FocusState {
 }
 
 const focusReducer = (state: FocusState, action: Action): FocusState => {
-  console.log(action, state);
   switch (action.type) {
     case 'focusPanel': {
       return {
@@ -31,6 +43,40 @@ const focusReducer = (state: FocusState, action: Action): FocusState => {
         ...state,
         index: action.index,
       };
+    }
+    case 'toggleItem': {
+      if (state.index === undefined) {
+        return state;
+      }
+
+      return {
+        ...state,
+        index: state.index ^ 1,
+      };
+    }
+    case 'togglePanel': {
+      switch (state.focusedPanel) {
+        case 'explorer': {
+          return {
+            ...state,
+            focusedPanel: 'preview',
+          };
+        }
+        case 'preview': {
+          return {
+            ...state,
+            focusedPanel: 'terminal',
+            index: 0,
+          };
+        }
+        case 'terminal': {
+          return {
+            ...state,
+            focusedPanel: 'explorer',
+            index: 0,
+          };
+        }
+      }
     }
   }
 };
@@ -48,6 +94,32 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
     focusedPanel: 'explorer',
     index: 0,
   });
+
+  const handleKey = (event: KeyboardEvent) => {
+    if (event.keyCode === 9 && event.ctrlKey) {
+      event.preventDefault();
+
+      if (event.shiftKey) {
+        dispatch({
+          type: 'togglePanel',
+        });
+        return;
+      }
+
+      if (data.focusedPanel === 'explorer') {
+        dispatch({
+          type: 'toggleItem',
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKey, true);
+    return () => {
+      window.removeEventListener('keydown', handleKey, true);
+    };
+  }, []);
 
   return <FocusContext.Provider value={{ data, dispatch }}>{children}</FocusContext.Provider>;
 };

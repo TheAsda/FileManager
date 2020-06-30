@@ -1,5 +1,5 @@
 import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
-import React, { Component } from 'react';
+import React, { Component, createRef, RefObject } from 'react';
 import { clamp } from 'lodash';
 import { DetailView } from './DetailView';
 import { HotKeys } from 'react-hotkeys';
@@ -23,7 +23,7 @@ interface ExplorerProps {
   explorerManager: IExplorerManager;
   getCachedDirectory?: (path: string) => FileInfo[] | null;
   addToCache?: (path: string, data: FileInfo[]) => void;
-  focus?: boolean;
+  focused?: boolean;
   onPreview?: (path: string) => void;
   onClose?: () => void;
   closable: boolean;
@@ -32,8 +32,12 @@ interface ExplorerProps {
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
+  private container: RefObject<HTMLDivElement>;
+
   constructor(props: ExplorerProps) {
     super(props);
+
+    this.container = createRef<HTMLDivElement>();
 
     this.state = {
       initialDirectory: props.initialDirectory ?? 'D:/',
@@ -45,6 +49,18 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   componentDidMount() {
     this.onDirectoryChange();
+    if (this.props.onFocus) {
+      this.container.current?.addEventListener('focusin', this.props.onFocus);
+    }
+    if (this.props.onBlur) {
+      this.container.current?.addEventListener('focusout', this.props.onBlur);
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.focused) {
+      this.container.current?.focus();
+    }
   }
 
   private get selectedItem(): FileInfo {
@@ -275,18 +291,13 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   render() {
     return (
-      <HotKeys
-        className="hot-keys"
-        handlers={this.handlers}
-        onBlur={this.props.onBlur}
-        onFocus={this.props.onFocus}
-      >
+      <HotKeys className="hot-keys" handlers={this.handlers} innerRef={this.container}>
         <PathWrapper
           closable={this.props.closable}
           onClose={this.onClose}
           path={this.props.explorerManager.getPathString()}
         >
-          <div className="explorer">
+          <div className="explorer" onBlur={this.props.onBlur} onFocus={this.props.onFocus}>
             {this.state.viewType === 'detail' ? (
               <DetailView
                 canExit={this.props.explorerManager.getPathArray().length !== 1}
