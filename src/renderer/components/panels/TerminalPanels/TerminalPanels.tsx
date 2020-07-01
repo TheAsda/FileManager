@@ -46,8 +46,6 @@ const TerminalPanels = () => {
     >
       <SplitPanels className="terminal-panels" splitType="horizontal">
         {map(data, (item, i) => {
-          console.log('terminal', focus, i);
-
           return (
             <ErrorBoundary key={item.getId()}>
               <Terminal

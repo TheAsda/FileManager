@@ -6,3 +6,4 @@ export * from './useExplorers';
 export * from './usePreview';
 export * from './useFocus';
 export * from './useCommands';
+export * from './useHotKeys';

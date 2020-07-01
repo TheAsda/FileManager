@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { map } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';
 import { IDirectoryManager } from '@fm/common';
-import { ErrorBoundary } from 'renderer/components';
+import { ErrorBoundary, Commands } from 'renderer/components';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useExplorers, useFocus, useCommands } from '@fm/hooks';
+import { useExplorers, useFocus, useCommands, useHotKeys } from '@fm/hooks';
 
 interface ExplorerPalensProps {
   directoryManager: IDirectoryManager;
@@ -17,6 +17,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { data, dispatch } = useExplorers();
   const { data: focus, dispatch: focusAction } = useFocus();
   const { dispatch: commandsAction } = useCommands();
+  const { data: hotkeys, dispatch: keysAction } = useHotKeys();
 
   const onClose = (index: number) => () => {
     dispatch({
@@ -31,33 +32,52 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     });
   };
 
-  const focusItem = (index: number) => () => {
-    const name = `log ${index}`;
+  const focusItem = (index: number, name: string) => (options: Commands) => {
+    console.log(index, name);
+    console.log(focus.index, hotkeys.activeArea);
 
-    console.log('focusItem -> name', name);
-    focusAction({
-      type: 'focusItem',
-      index,
-    });
+    if (focus.index !== index && hotkeys.activeArea !== name) {
+      focusAction({
+        type: 'focusItem',
+        index,
+      });
 
-    commandsAction({
-      type: 'add',
-      items: {
-        [name]: () => console.log(index),
-      },
-    });
+      keysAction({
+        type: 'activateArea',
+        name,
+      });
+      commandsAction({
+        type: 'add',
+        items: options,
+      });
+    }
   };
 
-  const unFocusItem = (index: number) => () => {
-    const name = `log ${index}`;
-
+  const removeCommands = (options: string[]) => {
     commandsAction({
       type: 'remove',
-      items: {
-        [name]: () => console.log(index),
-      },
+      items: options,
     });
   };
+
+  const setArea = (name: string, activate?: boolean) => (handlers: Commands) => {
+    keysAction({
+      type: 'setArea',
+      name,
+      handlers,
+      activate,
+    });
+  };
+
+  useEffect(() => {
+    const name = `explorer${focus.index}`;
+    if (focus.focusedPanel === 'explorer' && hotkeys.activeArea !== name) {
+      keysAction({
+        type: 'activateArea',
+        name,
+      });
+    }
+  }, [focus]);
 
   return (
     <DefaultPanel
@@ -67,17 +87,19 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     >
       <SplitPanels splitType="horizontal">
         {map(data, (item, i) => {
+          const name = `explorer${i}`;
+          const focused = focus.focusedPanel === 'explorer' && focus.index === i;
+
           return (
             <ErrorBoundary key={item.getId()}>
               <Explorer
                 closable={data.length > 1}
                 directoryManager={props.directoryManager}
                 explorerManager={item}
-                focused={focus.focusedPanel === 'explorer' && focus.index === i}
-                onBlur={unFocusItem(i)}
                 onClose={onClose(i)}
-                onFocus={focusItem(i)}
+                onFocus={focusItem(i, name)}
                 onPreview={props.onPreview}
+                registerHotKeys={setArea(name, focused)}
               />
             </ErrorBoundary>
           );

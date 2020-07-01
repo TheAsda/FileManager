@@ -1,23 +1,23 @@
 import React, { createContext, useReducer, useContext, Dispatch, ReactNode } from 'react';
 import { noop, merge, forEach } from 'lodash';
-import { Options } from 'renderer/components';
+import { Commands } from 'renderer/components';
 
 type Action =
   | {
       type: 'add';
-      items: Options;
+      items: Commands;
     }
   | {
       type: 'remove';
-      items: Options;
+      items: string[];
     }
   | {
       type: 'empty';
     };
 
 interface CommandsState {
-  default: Options;
-  custom: Options;
+  default: Commands;
+  custom: Commands;
 }
 
 const commandsReducer = (state: CommandsState, action: Action): CommandsState => {
@@ -26,8 +26,8 @@ const commandsReducer = (state: CommandsState, action: Action): CommandsState =>
       return { ...state, custom: merge(state.custom, action.items) };
     }
     case 'remove':
-      forEach(action.items, (item, key) => {
-        delete state.custom[key];
+      forEach(action.items, (item) => {
+        delete state.custom[item];
       });
       return state;
     case 'empty': {
@@ -50,7 +50,7 @@ const CommandsContext = createContext<{ data: CommandsState; dispatch: Dispatch<
 const CommandsProvider = ({ children }: { children: ReactNode }) => {
   const [data, dispatch] = useReducer(commandsReducer, {
     custom: {},
-    default: { default: () => console.log('keks') },
+    default: {},
   });
 
   return <CommandsContext.Provider value={{ data, dispatch }}>{children}</CommandsContext.Provider>;

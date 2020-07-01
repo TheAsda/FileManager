@@ -1,2 +1,2 @@
 export * from './SelectPalette';
-export * from './Option';
+export * from '../../../../common/interfaces/Commands';

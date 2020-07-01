@@ -96,20 +96,21 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
   });
 
   const handleKey = (event: KeyboardEvent) => {
-    if (event.keyCode === 9 && event.ctrlKey) {
+    if (event.keyCode === 9) {
       event.preventDefault();
+      if (event.ctrlKey) {
+        if (event.shiftKey) {
+          dispatch({
+            type: 'togglePanel',
+          });
+          return;
+        }
 
-      if (event.shiftKey) {
-        dispatch({
-          type: 'togglePanel',
-        });
-        return;
-      }
-
-      if (data.focusedPanel === 'explorer') {
-        dispatch({
-          type: 'toggleItem',
-        });
+        if (data.focusedPanel === 'explorer') {
+          dispatch({
+            type: 'toggleItem',
+          });
+        }
       }
     }
   };

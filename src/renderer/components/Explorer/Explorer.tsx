@@ -1,12 +1,13 @@
 import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
 import React, { Component, createRef, RefObject } from 'react';
-import { clamp } from 'lodash';
+import { clamp, keys, noop } from 'lodash';
 import { DetailView } from './DetailView';
-import { HotKeys } from 'react-hotkeys';
 import { StateLine } from './StateLine';
 import autobind from 'autobind-decorator';
 import './style.css';
 import { PathWrapper } from '../PathWrapper';
+import { Commands } from '../modals';
+import { ExplorerCommands } from './explorerCommands';
 
 interface ExplorerState {
   selectedIndex: number;
@@ -23,21 +24,21 @@ interface ExplorerProps {
   explorerManager: IExplorerManager;
   getCachedDirectory?: (path: string) => FileInfo[] | null;
   addToCache?: (path: string, data: FileInfo[]) => void;
-  focused?: boolean;
   onPreview?: (path: string) => void;
   onClose?: () => void;
   closable: boolean;
-  onFocus?: () => void;
+  onFocus?: (options: Commands) => void;
   onBlur?: () => void;
+  removeCommands?: (options: string[]) => void;
+  registerHotKeys: (options: Commands) => void;
+  focused?: boolean;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
-  private container: RefObject<HTMLDivElement>;
+  private options: ExplorerCommands;
 
   constructor(props: ExplorerProps) {
     super(props);
-
-    this.container = createRef<HTMLDivElement>();
 
     this.state = {
       initialDirectory: props.initialDirectory ?? 'D:/',
@@ -45,21 +46,27 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       viewType: 'detail',
       directoryState: [],
     };
+
+    this.options = {
+      'Close panel': this.onClose,
+      'Delete item': this.del,
+      'New file': this.createFile,
+      'New folder': this.createFolder,
+      'Reload directory': this.updateDirectoryState,
+      'Rename item': this.rename,
+      'Send item to trash': this.sendToTrash,
+      'Open in terminal': noop,
+    };
   }
 
   componentDidMount() {
     this.onDirectoryChange();
-    if (this.props.onFocus) {
-      this.container.current?.addEventListener('focusin', this.props.onFocus);
-    }
-    if (this.props.onBlur) {
-      this.container.current?.addEventListener('focusout', this.props.onBlur);
-    }
+    this.props.registerHotKeys(this.handlers);
   }
 
   componentDidUpdate() {
     if (this.props.focused) {
-      this.container.current?.focus();
+      this.onFocus();
     }
   }
 
@@ -277,6 +284,17 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     this.updateDirectoryState();
   }
 
+  @autobind
+  onBlur() {
+    this.props.onBlur && this.props.onBlur();
+    this.props.removeCommands && this.props.removeCommands(keys(this.options));
+  }
+
+  @autobind
+  onFocus() {
+    this.props.onFocus && this.props.onFocus(this.options);
+  }
+
   handlers = {
     moveDown: this.selectNextItem,
     moveUp: this.selectPreviousItem,
@@ -291,32 +309,30 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   render() {
     return (
-      <HotKeys className="hot-keys" handlers={this.handlers} innerRef={this.container}>
-        <PathWrapper
-          closable={this.props.closable}
-          onClose={this.onClose}
-          path={this.props.explorerManager.getPathString()}
-        >
-          <div className="explorer" onBlur={this.props.onBlur} onFocus={this.props.onFocus}>
-            {this.state.viewType === 'detail' ? (
-              <DetailView
-                canExit={this.props.explorerManager.getPathArray().length !== 1}
-                data={this.state.directoryState}
-                editableIndex={this.state.editableIndex}
-                onEditEnd={this.onEditEnd}
-                onExit={this.exitDirectory}
-                onItemClick={(i) => this.selectItem(i)}
-                onItemDoubleClick={(i) => {
-                  this.selectItem(i);
-                  this.enterDirectory();
-                }}
-                selectedIndex={this.state.selectedIndex}
-              />
-            ) : null}
-            <StateLine count={this.state.directoryState.length} />
-          </div>
-        </PathWrapper>
-      </HotKeys>
+      <PathWrapper
+        closable={this.props.closable}
+        onClose={this.onClose}
+        path={this.props.explorerManager.getPathString()}
+      >
+        <div className="explorer" onClick={this.onFocus}>
+          {this.state.viewType === 'detail' ? (
+            <DetailView
+              canExit={this.props.explorerManager.getPathArray().length !== 1}
+              data={this.state.directoryState}
+              editableIndex={this.state.editableIndex}
+              onEditEnd={this.onEditEnd}
+              onExit={this.exitDirectory}
+              onItemClick={(i) => this.selectItem(i)}
+              onItemDoubleClick={(i) => {
+                this.selectItem(i);
+                this.enterDirectory();
+              }}
+              selectedIndex={this.state.selectedIndex}
+            />
+          ) : null}
+          <StateLine count={this.state.directoryState.length} />
+        </div>
+      </PathWrapper>
     );
   }
 }

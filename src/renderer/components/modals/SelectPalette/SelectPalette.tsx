@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
 import { clamp, findIndex, map } from 'lodash';
-import { HotKeys, KeyMap } from 'react-hotkeys';
 import './style.css';
 import { SelectPaletteItem } from './SelectPaletteItem';
 import Modal from 'react-modal';
+import { Commands, KeyMap } from '@fm/common';
 
 interface SelectPaletteProps {
   options: string[];
@@ -12,6 +12,7 @@ interface SelectPaletteProps {
   onSelect: (selectedItem: string) => void;
   onClose: () => void;
   isOpened: boolean;
+  initHotKeys: (keymap: KeyMap, commands: Commands) => void;
 }
 
 interface SelectPaletteState {
@@ -42,6 +43,11 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
     this.state = { selectedIndex: 0 };
     this.inputRef = null;
+  }
+
+  componentDidMount() {
+    console.log('Command palette mounted');
+    this.props.initHotKeys(this.keyMap, this.handlers);
   }
 
   @autobind
@@ -95,24 +101,22 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
         onRequestClose={this.props.onClose}
         shouldCloseOnOverlayClick={true}
       >
-        <HotKeys className="select-palette" handlers={this.handlers} keyMap={this.keyMap}>
-          <input
-            className="select-palette__search"
-            onChange={this.handleInput}
-            ref={(ref) => {
-              this.inputRef = ref;
-              ref && ref.focus();
-            }}
-            type="text"
+        <input
+          className="select-palette__search"
+          onChange={this.handleInput}
+          ref={(ref) => {
+            this.inputRef = ref;
+            // ref && ref.focus();
+          }}
+          type="text"
+        />
+        {map(this.props.options, (option, i) => (
+          <SelectPaletteItem
+            command={option}
+            key={option}
+            selected={i === this.state.selectedIndex}
           />
-          {map(this.props.options, (option, i) => (
-            <SelectPaletteItem
-              command={option}
-              key={option}
-              selected={i === this.state.selectedIndex}
-            />
-          ))}
-        </HotKeys>
+        ))}
       </Modal>
     );
   }
