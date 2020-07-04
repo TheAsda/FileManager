@@ -33,10 +33,12 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   };
 
   const focusItem = (index: number, name: string) => (options: Commands) => {
-    console.log(index, name);
-    console.log(focus.index, hotkeys.activeArea);
+    const indexChanged = focus.index !== index;
+    const panelChanged = hotkeys.activeArea && hotkeys.activeArea[0] !== name[0];
 
-    if (focus.index !== index && hotkeys.activeArea !== name) {
+    if (indexChanged || panelChanged) {
+      console.log('focusItem -> options', options);
+
       focusAction({
         type: 'focusItem',
         index,
@@ -46,6 +48,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
         type: 'activateArea',
         name,
       });
+
       commandsAction({
         type: 'add',
         items: options,
@@ -60,13 +63,22 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     });
   };
 
-  const setArea = (name: string, activate?: boolean) => (handlers: Commands) => {
+  const setArea = (name: string, activate?: boolean) => (handlers: Commands, options: Commands) => {
+    console.log(`Set Area ${name}`);
+
     keysAction({
       type: 'setArea',
       name,
       handlers,
       activate,
     });
+
+    if (activate) {
+      commandsAction({
+        type: 'add',
+        items: options,
+      });
+    }
   };
 
   useEffect(() => {
@@ -100,6 +112,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
                 onFocus={focusItem(i, name)}
                 onPreview={props.onPreview}
                 registerHotKeys={setArea(name, focused)}
+                // focused={focused}
               />
             </ErrorBoundary>
           );

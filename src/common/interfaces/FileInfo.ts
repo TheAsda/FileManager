@@ -7,9 +7,6 @@ interface FileInfo {
   /** The display name of the directory item. */
   name: string;
 
-  /** Whether the directory item can be accessed by the user. */
-  accessible: boolean;
-
   /** The size (in bytes) of the file, if any. */
   size?: number;
 

@@ -22,15 +22,13 @@ interface ExplorerProps {
   initialDirectory?: string;
   directoryManager: IDirectoryManager;
   explorerManager: IExplorerManager;
-  getCachedDirectory?: (path: string) => FileInfo[] | null;
-  addToCache?: (path: string, data: FileInfo[]) => void;
   onPreview?: (path: string) => void;
   onClose?: () => void;
   closable: boolean;
   onFocus?: (options: Commands) => void;
   onBlur?: () => void;
   removeCommands?: (options: string[]) => void;
-  registerHotKeys: (options: Commands) => void;
+  registerHotKeys: (handlers: Commands, options: Commands) => void;
   focused?: boolean;
 }
 
@@ -61,7 +59,13 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   componentDidMount() {
     this.onDirectoryChange();
-    this.props.registerHotKeys(this.handlers);
+    this.props.registerHotKeys(this.handlers, this.options);
+
+    if (this.props.focused) {
+      console.log('Explorer -> componentDidMount -> this.props', this.props);
+
+      this.onFocus();
+    }
   }
 
   componentDidUpdate() {
@@ -76,29 +80,15 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   onDirectoryChange() {
-    const cachedDirectoryState =
-      (this.props.getCachedDirectory &&
-        this.props.getCachedDirectory(this.props.explorerManager.getPathString())) ??
-      null;
-    if (cachedDirectoryState === null) {
-      this.props.directoryManager
-        .listDirectory(this.props.explorerManager.getPathString())
-        .then((data) => {
-          this.props.addToCache &&
-            this.props.addToCache(this.props.explorerManager.getPathString(), data);
-          this.setState((state) => ({
-            ...state,
-            selectedIndex: 0,
-            directoryState: data,
-          }));
-        });
-    } else {
-      this.setState((state) => ({
-        ...state,
-        directoryState: cachedDirectoryState,
-        selectedIndex: 0,
-      }));
-    }
+    this.props.directoryManager
+      .listDirectory(this.props.explorerManager.getPathString())
+      .then((data) => {
+        this.setState((state) => ({
+          ...state,
+          selectedIndex: 0,
+          directoryState: data,
+        }));
+      });
   }
 
   @autobind

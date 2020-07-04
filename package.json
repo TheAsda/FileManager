@@ -66,6 +66,7 @@
   "dependencies": {
     "autobind-decorator": "^2.4.0",
     "bunyan": "^1.8.12",
+    "filemancore": "^1.0.1",
     "inversify": "^5.0.1",
     "lodash": "^4.17.15",
     "mousetrap": "^1.6.5",

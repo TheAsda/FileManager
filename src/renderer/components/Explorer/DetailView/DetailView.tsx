@@ -26,19 +26,7 @@ const DetailView = (props: DetailViewProps) => {
         </div>
       </div>
       <div className="detail-view__body">
-        {props.canExit && (
-          <DetailViewItem
-            name={'..'}
-            onClick={() => props.onItemClick && props.onItemClick(-1)}
-            onDoubleClick={props.onExit}
-            selected={props.selectedIndex === -1}
-            showIcon={false}
-          />
-        )}
         {map(props.data, (item, i) => {
-          if (item.attributes.hidden || item.attributes.system) {
-            return null;
-          }
           return (
             <DetailViewItem
               created={item.created}

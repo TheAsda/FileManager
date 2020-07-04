@@ -19,7 +19,6 @@ import { CommandPalette } from '../modals';
 const Window = () => {
   const { data: hotkeys, dispatch: keysAction } = useHotKeys();
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
-  console.log('Rerender window');
   const openCommandPalette = () => {
     keysAction({
       type: 'activateArea',

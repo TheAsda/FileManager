@@ -5,21 +5,19 @@ import { ILogManager } from '../LogManager/ILogManager';
 import {
   copyFileSync,
   FSWatcher,
-  lstatSync,
   mkdirSync,
-  readdirSync,
   readFileSync,
   renameSync,
   rmdirSync,
-  Stats,
   unlinkSync,
   watch,
   writeFileSync,
 } from 'fs';
 import { inject, injectable } from 'inversify';
 import { basename, join } from 'path';
-import { map, compact } from 'lodash';
+import { map } from 'lodash';
 import trash from 'trash';
+import { listDir, moveFile } from 'filemancore';
 
 @injectable()
 class DirectoryManager implements IDirectoryManager {
@@ -34,49 +32,7 @@ class DirectoryManager implements IDirectoryManager {
 
   /** @inheritdoc */
   async listDirectory(path: string): Promise<FileInfo[]> {
-    let fileList;
-
-    try {
-      this.logger.log(`Reading folder ${path}`);
-      fileList = readdirSync(path);
-    } catch {
-      this.logger.error(`Cannot read folder ${path}`);
-      return Promise.reject();
-    }
-    this.logger.log('Read successfully');
-
-    return compact(
-      await Promise.all(
-        map(
-          fileList,
-          async (fileName): Promise<FileInfo | null> => {
-            const fullPath = join(path, fileName);
-            let fileStats: Stats;
-
-            try {
-              fileStats = lstatSync(fullPath);
-            } catch {
-              return null;
-            }
-
-            return {
-              accessible: true,
-              created: fileStats.ctime,
-              lastModified: fileStats.mtime,
-              name: fileName,
-              path: fullPath,
-              size: !fileStats.isDirectory() ? fileStats.size : undefined,
-              attributes: {
-                directory: fileStats.isDirectory(),
-                hidden: false,
-                readonly: false,
-                system: false,
-              },
-            };
-          }
-        )
-      )
-    );
+    return listDir(path);
   }
 
   /** @inheritdoc */
@@ -154,7 +110,7 @@ class DirectoryManager implements IDirectoryManager {
   async moveItems(itemsToMove: FileInfo[], destinationFolder: string): Promise<void> {
     this.logger.log(`Moving ${itemsToMove.length} items to ${destinationFolder}`);
     const itemsMoving = map(itemsToMove, async (item) =>
-      this.moveItem(item.path, destinationFolder, item.attributes.directory ? 'folder' : 'file')
+      this.moveItem(item.path, item.name, destinationFolder)
     );
 
     await Promise.all(itemsMoving);
@@ -222,13 +178,19 @@ class DirectoryManager implements IDirectoryManager {
   }
 
   private async moveItem(
-    itemPath: string,
-    destinationFolder: string,
-    itemType: FileType
+    itemDirectory: string,
+    itemName: string,
+    destinationDirectory: string
   ): Promise<void> {
-    await this.copyItem(itemPath, destinationFolder).then(
-      async () => await this.deleteItem(itemPath, itemType)
-    );
+    const itemPath = join(itemDirectory, itemName);
+    const newItemPath = join(destinationDirectory, itemName);
+
+    try {
+      moveFile(itemPath, newItemPath);
+      return Promise.resolve();
+    } catch {
+      return Promise.reject();
+    }
   }
 }
 
