@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
-import { map } from 'lodash';
+import { map, keys } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';
 import { IDirectoryManager } from '@fm/common';
 import { ErrorBoundary, Commands } from 'renderer/components';
@@ -108,6 +108,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
                 closable={data.length > 1}
                 directoryManager={props.directoryManager}
                 explorerManager={item}
+                onBlur={(options) => removeCommands(keys(options))}
                 onClose={onClose(i)}
                 onFocus={focusItem(i, name)}
                 onPreview={props.onPreview}

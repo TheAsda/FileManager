@@ -1,52 +1,31 @@
 import { IExplorerManager } from './IExplorerManager';
 import { injectable } from 'inversify';
 import { execSync } from 'child_process';
-import { reduce, forEach, split, compact } from 'lodash';
+import { forEach } from 'lodash';
 import { IdentityManager } from '../IdentityManager';
 
 @injectable()
 class ExplorerManager extends IdentityManager implements IExplorerManager {
-  private directoryArray: string[];
+  private directory: string;
   private pathHandlers: ((path: string) => void)[];
 
   constructor() {
     super();
-    this.directoryArray = [];
+    this.directory = '';
     this.pathHandlers = [];
   }
 
-  setPath(path: string[]): void {
-    this.directoryArray = path;
+  setPath(path: string): void {
+    this.directory = path;
     this.onPathChange();
   }
 
-  setPathFromString(path: string): void {
-    this.directoryArray = compact(split(path, /[\\/]+/));
-    this.onPathChange();
-  }
-
-  getPathString(): string {
-    return reduce(this.directoryArray, (acc, cur) => acc + cur + '/', '');
-  }
-
-  getPathArray(): string[] {
-    return this.directoryArray;
-  }
-
-  enterDirectory(name: string): void {
-    this.directoryArray.push(name);
-    this.onPathChange();
-  }
-
-  exitDirectory(): void {
-    if (this.directoryArray.length > 1) {
-      this.directoryArray.pop();
-      this.onPathChange();
-    }
+  getPath(): string {
+    return this.directory;
   }
 
   private onPathChange() {
-    forEach(this.pathHandlers, (handler) => handler(this.getPathString()));
+    forEach(this.pathHandlers, (handler) => handler(this.getPath()));
   }
 
   openFile(fullPath: string): Promise<void> {

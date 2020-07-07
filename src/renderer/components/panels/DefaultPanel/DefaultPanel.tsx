@@ -10,7 +10,7 @@ interface DefaultPanelProps {
 
 const DefaultPanel = (props: PropsWithChildren<DefaultPanelProps>) => {
   return (
-    <div className="default-panel" onFocus={props.onFocus}>
+    <div className="default-panel" onClick={props.onFocus}>
       <div className="default-panel__header">
         {props.splitable && <button onClick={props.onSplit}>Split</button>}
         <button onClick={props.onHide}>Hide</button>

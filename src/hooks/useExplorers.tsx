@@ -7,11 +7,12 @@ import React, {
   useEffect,
 } from 'react';
 import { IExplorerManager, ExplorerPanelInfo, container, TYPES } from '@fm/common';
-import { map, isString, isArray, noop } from 'lodash';
+import { map, noop } from 'lodash';
+import { normalizePath } from 'filemancore';
 
 type Action =
   | { type: 'init'; state?: ExplorerPanelInfo[] }
-  | { type: 'spawn'; path?: string | string[] }
+  | { type: 'spawn'; path?: string }
   | { type: 'destroy'; index: number };
 
 const getExplorerManager = () => {
@@ -29,7 +30,9 @@ const explorerReducer = (state: IExplorerManager[], action: Action) => {
         return map(action.state, (item) => {
           const manager = getExplorerManager();
           if (item.initialDirectory) {
-            manager.setPathFromString(item.initialDirectory);
+            manager.setPath(item.initialDirectory);
+          } else {
+            manager.setPath(process.cwd());
           }
           return manager;
         });
@@ -44,12 +47,10 @@ const explorerReducer = (state: IExplorerManager[], action: Action) => {
 
       const manager = getExplorerManager();
 
-      if (isString(action.path)) {
-        manager.setPathFromString(action.path);
-      } else if (isArray(action.path)) {
+      if (action.path) {
         manager.setPath(action.path);
       } else {
-        manager.setPathFromString('D:');
+        manager.setPath(normalizePath('.'));
       }
 
       return [...state, manager];

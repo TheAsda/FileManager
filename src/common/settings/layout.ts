@@ -6,11 +6,9 @@ const DEFAULT_LAYOUT: Layout = {
     panels: [
       {
         type: 'explorer',
-        initialDirectory: 'D:/',
       },
       {
         type: 'explorer',
-        initialDirectory: 'C:/',
       },
     ],
   },
@@ -25,7 +23,6 @@ const DEFAULT_LAYOUT: Layout = {
     panels: [
       {
         type: 'terminal',
-        initialDirectory: 'D:/',
       },
     ],
   },

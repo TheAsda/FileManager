@@ -31,6 +31,8 @@ const terminalReducer = (state: ITerminalManager[], action: Action) => {
           const manager = getTerminalManager();
           if (item.initialDirectory) {
             manager.changeDirectory(item.initialDirectory);
+          } else {
+            manager.changeDirectory(process.cwd());
           }
           return manager;
         });

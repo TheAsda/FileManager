@@ -8,10 +8,11 @@ import './style.css';
 import { PathWrapper } from '../PathWrapper';
 import { Commands } from '../modals';
 import { ExplorerCommands } from './explorerCommands';
+import { normalizePath } from 'filemancore';
+import { join } from 'path';
 
 interface ExplorerState {
   selectedIndex: number;
-  initialDirectory: string;
   viewType: 'detail' | 'folder';
   directoryState: FileInfo[];
   editableIndex?: number;
@@ -19,14 +20,13 @@ interface ExplorerState {
 }
 
 interface ExplorerProps {
-  initialDirectory?: string;
   directoryManager: IDirectoryManager;
   explorerManager: IExplorerManager;
   onPreview?: (path: string) => void;
   onClose?: () => void;
   closable: boolean;
   onFocus?: (options: Commands) => void;
-  onBlur?: () => void;
+  onBlur?: (options: Commands) => void;
   removeCommands?: (options: string[]) => void;
   registerHotKeys: (handlers: Commands, options: Commands) => void;
   focused?: boolean;
@@ -39,7 +39,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     super(props);
 
     this.state = {
-      initialDirectory: props.initialDirectory ?? 'D:/',
       selectedIndex: 0,
       viewType: 'detail',
       directoryState: [],
@@ -80,15 +79,13 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   onDirectoryChange() {
-    this.props.directoryManager
-      .listDirectory(this.props.explorerManager.getPathString())
-      .then((data) => {
-        this.setState((state) => ({
-          ...state,
-          selectedIndex: 0,
-          directoryState: data,
-        }));
-      });
+    this.props.directoryManager.listDirectory(this.props.explorerManager.getPath()).then((data) => {
+      this.setState((state) => ({
+        ...state,
+        selectedIndex: 0,
+        directoryState: data,
+      }));
+    });
   }
 
   @autobind
@@ -110,29 +107,46 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     }
     this.setState((state) => ({
       ...state,
-      selectedIndex: clamp(index, -1, state.directoryState.length - 1),
+      selectedIndex: clamp(index, 0, state.directoryState.length - 1),
     }));
   }
 
   @autobind
-  exitDirectory() {
-    this.props.explorerManager.exitDirectory();
+  activateItem() {
+    if (this.selectedItem.attributes.directory) {
+      this.activateDirectory();
+    } else {
+      // TODO: open file
+    }
+  }
+
+  @autobind
+  activateDirectory() {
+    this.props.explorerManager.setPath(
+      normalizePath(join(this.selectedItem.path, this.selectedItem.name))
+    );
     this.onDirectoryChange();
   }
 
   @autobind
-  enterDirectory() {
-    if (this.state.selectedIndex === -1) {
-      return;
-    }
-    if (this.selectedItem.attributes.directory) {
-      this.props.explorerManager.enterDirectory(this.selectedItem.name);
-      this.onDirectoryChange();
-    } else {
-      this.props.onPreview &&
-        this.props.onPreview(this.props.explorerManager.getPathString() + this.selectedItem.name);
-    }
+  exitDirectory() {
+    this.props.explorerManager.setPath(normalizePath(join(this.selectedItem.path, '..')));
+    this.onDirectoryChange();
   }
+
+  // @autobind
+  // enterDirectory() {
+  //   if (this.state.selectedIndex === -1) {
+  //     return;
+  //   }
+  //   if (this.selectedItem.attributes.directory) {
+  //     this.props.explorerManager.enterDirectory(this.selectedItem.name);
+  //     this.onDirectoryChange();
+  //   } else {
+  //     this.props.onPreview &&
+  //       this.props.onPreview(this.props.explorerManager.getPath() + this.selectedItem.name);
+  //   }
+  // }
 
   @autobind
   async onEditEnd(name: string | null) {
@@ -162,13 +176,13 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       if (this.state.directoryState[this.state.editableIndex].attributes.directory) {
         await this.props.directoryManager.createItem(
           name,
-          this.props.explorerManager.getPathString(),
+          this.props.explorerManager.getPath(),
           'folder'
         );
       } else {
         await this.props.directoryManager.createItem(
           name,
-          this.props.explorerManager.getPathString(),
+          this.props.explorerManager.getPath(),
           'file'
         );
       }
@@ -180,7 +194,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       await this.props.directoryManager.renameItem(
         this.state.directoryState[this.state.editableIndex].name,
         name,
-        this.props.explorerManager.getPathString()
+        this.props.explorerManager.getPath()
       );
 
       this.updateDirectoryState();
@@ -190,7 +204,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   @autobind
   private async updateDirectoryState() {
     const newDirectoryState = await this.props.directoryManager.listDirectory(
-      this.props.explorerManager.getPathString()
+      this.props.explorerManager.getPath()
     );
 
     this.setState((state) => ({
@@ -214,7 +228,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         {
           name: '',
           accessible: true,
-          path: this.props.explorerManager.getPathString(),
+          path: this.props.explorerManager.getPath(),
           attributes: { directory: false, hidden: false, readonly: false, system: false },
         },
       ],
@@ -238,7 +252,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         {
           name: '',
           accessible: true,
-          path: this.props.explorerManager.getPathString(),
+          path: this.props.explorerManager.getPath(),
           attributes: { directory: true, hidden: false, readonly: false, system: false },
         },
       ],
@@ -276,7 +290,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   onBlur() {
-    this.props.onBlur && this.props.onBlur();
+    this.props.onBlur && this.props.onBlur(this.options);
     this.props.removeCommands && this.props.removeCommands(keys(this.options));
   }
 
@@ -289,7 +303,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     moveDown: this.selectNextItem,
     moveUp: this.selectPreviousItem,
     moveBack: this.exitDirectory,
-    openDirectory: this.enterDirectory,
+    openDirectory: this.activateItem,
     newFile: this.createFile,
     newFolder: this.createFolder,
     rename: this.rename,
@@ -302,12 +316,11 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       <PathWrapper
         closable={this.props.closable}
         onClose={this.onClose}
-        path={this.props.explorerManager.getPathString()}
+        path={this.props.explorerManager.getPath()}
       >
         <div className="explorer" onClick={this.onFocus}>
           {this.state.viewType === 'detail' ? (
             <DetailView
-              canExit={this.props.explorerManager.getPathArray().length !== 1}
               data={this.state.directoryState}
               editableIndex={this.state.editableIndex}
               onEditEnd={this.onEditEnd}
@@ -315,7 +328,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
               onItemClick={(i) => this.selectItem(i)}
               onItemDoubleClick={(i) => {
                 this.selectItem(i);
-                this.enterDirectory();
+                this.activateItem();
               }}
               selectedIndex={this.state.selectedIndex}
             />

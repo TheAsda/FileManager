@@ -15,6 +15,7 @@ import { ExplorerPanels, TerminalPanels } from '../panels';
 import { Preview } from '../Preview';
 import './style.css';
 import { CommandPalette } from '../modals';
+import { PreviewPanel } from '../panels/PreviewPanel';
 
 const Window = () => {
   const { data: hotkeys, dispatch: keysAction } = useHotKeys();
@@ -125,9 +126,7 @@ const Window = () => {
         <FocusProvider>
           <SplitPanels splitType="vertical">
             <ExplorerPanels directoryManager={directoryManager} onPreview={previewHandler} />
-            {preview.display && (
-              <Preview onClose={onClose('preview')} path={preview.path} toggle={togglePreview} />
-            )}
+            {preview.display && <PreviewPanel onHide={togglePreview} path={preview.path} />}
             <TerminalPanels />
           </SplitPanels>
         </FocusProvider>
