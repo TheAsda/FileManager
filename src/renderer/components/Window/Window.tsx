@@ -1,24 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-  useManagers,
-  useTerminals,
-  useExplorers,
-  usePreview,
-  FocusProvider,
-  useCommands,
-  useHotKeys,
-} from '@fm/hooks';
-import { PanelType, Commands, KeyMap } from '@fm/common';
+import { useManagers, usePreview, FocusProvider, useCommands, useHotKeys } from '@fm/hooks';
+import { Commands, KeyMap } from '@fm/common';
 import { noop } from 'lodash';
 import { SplitPanels } from '../SplitPanels';
 import { ExplorerPanels, TerminalPanels } from '../panels';
-import { Preview } from '../Preview';
 import './style.css';
 import { CommandPalette } from '../modals';
 import { PreviewPanel } from '../panels/PreviewPanel';
 
 const Window = () => {
-  const { data: hotkeys, dispatch: keysAction } = useHotKeys();
+  const { dispatch: keysAction } = useHotKeys();
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
   const openCommandPalette = () => {
     keysAction({
@@ -34,8 +25,6 @@ const Window = () => {
 
   const { directoryManager, keysManager } = useManagers();
 
-  const { dispatch: terminalsAction } = useTerminals();
-  const { dispatch: explorersAction } = useExplorers();
   const { data: preview, dispatch: previewAction } = usePreview();
 
   const { data: commands } = useCommands();
@@ -57,35 +46,6 @@ const Window = () => {
         type: 'display',
         path: null,
       });
-    }
-  };
-
-  const onClose = (type: PanelType) => (index?: number | null) => {
-    if (!index) {
-      return;
-    }
-
-    switch (type) {
-      case 'explorer': {
-        explorersAction({
-          type: 'destroy',
-          index: index,
-        });
-        return;
-      }
-      case 'preview': {
-        previewAction({
-          type: 'destroy',
-        });
-        return;
-      }
-      case 'terminal': {
-        terminalsAction({
-          type: 'destroy',
-          index: index,
-        });
-        return;
-      }
     }
   };
 

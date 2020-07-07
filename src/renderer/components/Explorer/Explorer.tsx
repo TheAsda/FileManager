@@ -1,5 +1,5 @@
 import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
-import React, { Component, createRef, RefObject } from 'react';
+import React, { Component } from 'react';
 import { clamp, keys, noop } from 'lodash';
 import { DetailView } from './DetailView';
 import { StateLine } from './StateLine';
