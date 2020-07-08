@@ -9,14 +9,10 @@ interface PreviewPanelProps {
 }
 
 const PreviewPanel = (props: PreviewPanelProps) => {
-  const { data: focus, dispatch: focusAction } = useFocus();
+  const { dispatch: focusAction } = useFocus();
 
   const onFocus = () => {
-    console.log('Focus Preview');
-
-    if (focus.focusedPanel !== 'preview') {
-      focusAction({ type: 'focusPanel', item: 'preview' });
-    }
+    focusAction({ type: 'focusPanel', item: 'preview' });
   };
 
   return (

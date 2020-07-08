@@ -1,1 +1,1 @@
-export * from './GoToPalette'
+export * from './GoToPalette';

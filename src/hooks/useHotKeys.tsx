@@ -159,6 +159,7 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
   };
 
   const bindWindowHoyKeys = () => {
+    console.log('bindWindowHoyKeys -> data.window', data.window);
     forEach(keys(data.window), (commandName) => {
       const bindings = data.keymap[commandName];
 

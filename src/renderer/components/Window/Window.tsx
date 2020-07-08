@@ -7,12 +7,10 @@ import { ExplorerPanels, TerminalPanels } from '../panels';
 import './style.css';
 import { CommandPalette } from '../modals';
 import { PreviewPanel } from '../panels/PreviewPanel';
-import { GoToPalette } from '../modals/GoToPalette';
 
 const Window = () => {
   const { dispatch: keysAction } = useHotKeys();
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
-  const [isGotoPaletteOpen, setGotoPalette] = useState<boolean>(true);
   const openCommandPalette = () => {
     keysAction({
       type: 'activateArea',
@@ -70,7 +68,7 @@ const Window = () => {
     });
   }, []);
 
-  const initPaletteHandlers = (keys: KeyMap, options: Commands) => {
+  const initHotKeys = (keys: KeyMap, options: Commands) => {
     keysAction({
       type: 'setKeyMap',
       keymap: keys,
@@ -95,16 +93,9 @@ const Window = () => {
       </div>
       <CommandPalette
         commands={{ ...commands.default, ...commands.custom }}
-        initHotKeys={initPaletteHandlers}
+        initHotKeys={initHotKeys}
         isOpened={isCommandPaletteOpen}
         onClose={closeCommandPalette}
-      />
-      <GoToPalette
-        directoryManager={directoryManager}
-        isOpened={isGotoPaletteOpen}
-        onClose={() => setGotoPalette(false)}
-        onSelect={console.log}
-        path={'D:\\'}
       />
     </>
   );

@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
-import { map, keys } from 'lodash';
+import { map, keys, merge } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';
-import { IDirectoryManager } from '@fm/common';
-import { ErrorBoundary, Commands } from 'renderer/components';
+import { IDirectoryManager, KeyMap } from '@fm/common';
+import { ErrorBoundary, Commands, GoToPalette } from 'renderer/components';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useExplorers, useFocus, useCommands, useHotKeys } from '@fm/hooks';
@@ -18,11 +18,41 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { data: focus, dispatch: focusAction } = useFocus();
   const { dispatch: commandsAction } = useCommands();
   const { data: hotkeys, dispatch: keysAction } = useHotKeys();
+  const [isGotoPaletteOpen, setGotoPalette] = useState<boolean>(false);
+
+  const openGotoPalette = () => {
+    keysAction({
+      type: 'activateArea',
+      name: 'gotoPalette',
+    });
+    setGotoPalette(true);
+  };
+
+  const closeGotoPalette = () => {
+    setGotoPalette(false);
+  };
+
+  const handlers = {
+    openGoto: openGotoPalette,
+  };
 
   const onClose = (index: number) => () => {
     dispatch({
       type: 'destroy',
       index,
+    });
+  };
+
+  const initHotHeys = (keymap: KeyMap, commands: Commands) => {
+    keysAction({
+      type: 'setKeyMap',
+      keymap,
+    });
+
+    keysAction({
+      type: 'setArea',
+      handlers: commands,
+      name: 'gotoPalette',
     });
   };
 
@@ -37,8 +67,6 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     const panelChanged = hotkeys.activeArea && hotkeys.activeArea[0] !== name[0];
 
     if (indexChanged || panelChanged) {
-      console.log('focusItem -> options', options);
-
       focusAction({
         type: 'focusItem',
         index,
@@ -63,13 +91,13 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     });
   };
 
-  const setArea = (name: string, activate?: boolean) => (handlers: Commands, options: Commands) => {
+  const setArea = (name: string, activate?: boolean) => (commands: Commands, options: Commands) => {
     console.log(`Set Area ${name}`);
 
     keysAction({
       type: 'setArea',
       name,
-      handlers,
+      handlers: merge(commands, handlers),
       activate,
     });
 
@@ -119,6 +147,14 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
           );
         })}
       </SplitPanels>
+      <GoToPalette
+        initHotKeys={initHotHeys}
+        isOpened={isGotoPaletteOpen}
+        onClose={closeGotoPalette}
+        onSelect={console.log}
+        options={['D:\\', 'C:\\']}
+      />
+      z
     </DefaultPanel>
   );
 };
