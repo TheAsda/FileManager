@@ -1,3 +1,3 @@
 export * from './CommandPallete';
-export * from './SearchBar';
+export * from './GoToPalette';
 export * from './SelectPalette';
