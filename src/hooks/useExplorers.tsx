@@ -10,10 +10,7 @@ import { IExplorerManager, ExplorerPanelInfo, container, TYPES } from '@fm/commo
 import { map, noop } from 'lodash';
 import { normalizePath } from 'filemancore';
 
-type Action =
-  | { type: 'init'; state?: ExplorerPanelInfo[] }
-  | { type: 'spawn'; path?: string }
-  | { type: 'destroy'; index: number };
+type Action = { type: 'spawn'; path?: string } | { type: 'destroy'; index: number };
 
 const getExplorerManager = () => {
   return container.get<IExplorerManager>(TYPES.IExplorerManager);
@@ -21,25 +18,6 @@ const getExplorerManager = () => {
 
 const explorerReducer = (state: IExplorerManager[], action: Action) => {
   switch (action.type) {
-    case 'init': {
-      if (state.length > 0) {
-        return state;
-      }
-
-      if (action.state) {
-        return map(action.state, (item) => {
-          const manager = getExplorerManager();
-          if (item.initialDirectory) {
-            manager.setPath(item.initialDirectory);
-          } else {
-            manager.setPath(process.cwd());
-          }
-          return manager;
-        });
-      }
-
-      return [getExplorerManager()];
-    }
     case 'spawn': {
       if (state.length === 2) {
         return state;
@@ -78,14 +56,21 @@ const ExplorersProvider = ({
   children,
   initialState,
 }: PropsWithChildren<ExplorersProviderProps>) => {
-  const [data, dispatch] = useReducer(explorerReducer, []);
+  const [data, dispatch] = useReducer(explorerReducer, [], () => {
+    if (!initialState || initialState.length === 0) {
+      return [getExplorerManager()];
+    }
 
-  useEffect(() => {
-    dispatch({
-      type: 'init',
-      state: initialState,
+    return map(initialState, (item) => {
+      const manager = getExplorerManager();
+      if (item.initialDirectory) {
+        manager.setPath(item.initialDirectory);
+      } else {
+        manager.setPath(process.cwd());
+      }
+      return manager;
     });
-  }, []);
+  });
 
   return (
     <ExplorersContext.Provider value={{ data, dispatch }}>{children}</ExplorersContext.Provider>

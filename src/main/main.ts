@@ -18,6 +18,8 @@ const registerProtocol = () => {
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    minHeight: 600,
+    minWidth: 800,
     width: 1000,
     height: 800,
     webPreferences: {

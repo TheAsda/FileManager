@@ -125,7 +125,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       onSplit={splitExplorer}
       splitable={data.length < 2}
     >
-      <SplitPanels splitType="horizontal">
+      <SplitPanels minSize={200} splitType="horizontal">
         {map(data, (item, i) => {
           const name = `explorer${i}`;
           const focused = focus.focusedPanel === 'explorer' && focus.index === i;
@@ -141,7 +141,6 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
                 onFocus={focusItem(i, name)}
                 onPreview={props.onPreview}
                 registerHotKeys={setArea(name, focused)}
-                // focused={focused}
               />
             </ErrorBoundary>
           );

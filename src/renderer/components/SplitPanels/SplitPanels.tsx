@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from 'react';
-import { clone, fill, isArray, reduce, times, map, compact } from 'lodash';
+import { clone, fill, isArray, reduce, times, map, compact, isEqual } from 'lodash';
 import { Resizer } from './Resizer';
 import { SplitPanel } from './SplitPanel';
 import { SplitType } from './splitType';
@@ -14,7 +14,7 @@ interface SplitPanelsProps {
   className?: string;
 }
 
-interface SplitState {
+interface SplitPanelsState {
   sizes: number[];
   active: boolean;
   x: number;
@@ -22,12 +22,14 @@ interface SplitState {
   resizerIndex: number;
   minSize: number[];
   maxSize: number[];
+  initialMinSize?: number | number[];
+  initialMaxSize?: number | number[];
 }
 
 const DEFAULT_MIN_SIZE = 100;
 const DEFAULT_MAX_SIZE = 2000;
 
-class SplitPanels extends Component<SplitPanelsProps, SplitState> {
+class SplitPanels extends Component<SplitPanelsProps, SplitPanelsState> {
   private containerRef: null | HTMLDivElement;
 
   constructor(props: SplitPanelsProps) {
@@ -51,6 +53,8 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
           ? fill(props.maxSize, DEFAULT_MAX_SIZE, props.maxSize.length - 1, children.length)
           : props.maxSize
         : fill(Array(children.length), props.maxSize ?? DEFAULT_MAX_SIZE),
+      initialMaxSize: props.maxSize,
+      initialMinSize: props.minSize,
     };
 
     this.containerRef = null;
@@ -58,6 +62,37 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
 
   private get children() {
     return isArray(this.props.children) ? compact(this.props.children) : [this.props.children];
+  }
+
+  static getDerivedStateFromProps(
+    props: SplitPanelsProps,
+    state: SplitPanelsState
+  ): SplitPanelsState {
+    const children = isArray(props.children) ? props.children : [props.children];
+
+    if (
+      isEqual(props.maxSize, state.initialMaxSize) &&
+      isEqual(props.minSize, state.initialMinSize) &&
+      isEqual(children.length, state.sizes.length)
+    ) {
+      return state;
+    }
+
+    return {
+      ...state,
+      minSize: isArray(props.minSize)
+        ? props.minSize.length < children.length
+          ? fill(props.minSize, DEFAULT_MIN_SIZE, props.minSize.length - 1, children.length)
+          : props.minSize
+        : fill(Array(children.length), props.minSize ?? DEFAULT_MIN_SIZE),
+      maxSize: isArray(props.maxSize)
+        ? props.maxSize.length < children.length
+          ? fill(props.maxSize, DEFAULT_MAX_SIZE, props.maxSize.length - 1, children.length)
+          : props.maxSize
+        : fill(Array(children.length), props.maxSize ?? DEFAULT_MAX_SIZE),
+      initialMaxSize: props.maxSize,
+      initialMinSize: props.minSize,
+    };
   }
 
   componentDidUpdate() {
@@ -173,7 +208,7 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
 
   @autobind
   onResize() {
-    if (this.containerRef !== null) {
+    if (this.containerRef !== null && this.children.length !== 0) {
       let totalLength: number;
 
       const containerInfo = this.containerRef.getBoundingClientRect();
@@ -184,7 +219,7 @@ class SplitPanels extends Component<SplitPanelsProps, SplitState> {
         totalLength = containerInfo.height;
       }
 
-      totalLength -= (this.children.length - 1) * 2;
+      totalLength -= (this.children.length - 1) * 4;
 
       let sizes: number[];
       if (this.state.sizes.length !== 0) {

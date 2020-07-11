@@ -3,6 +3,7 @@
   flex-flow: row nowrap;
   width: 100%;
   height: 100%;
+  --resizer-size: 4px;
 }
 
 .split-panels--horizontal {
@@ -10,7 +11,7 @@
 }
 
 .split-panels_resizer {
-  width: 2px;
+  width: var(--resizer-size);
   height: 100%;
   background-color: black;
   cursor: col-resize;
@@ -18,7 +19,7 @@
 
 .split-panels_resizer--horizontal {
   width: 100%;
-  height: 2px;
+  height: var(--resizer-size);
   cursor: row-resize;
 }
 

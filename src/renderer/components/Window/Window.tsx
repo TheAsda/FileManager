@@ -84,7 +84,7 @@ const Window = () => {
     <>
       <div className="window">
         <FocusProvider>
-          <SplitPanels splitType="vertical">
+          <SplitPanels minSize={200} splitType="vertical">
             <ExplorerPanels directoryManager={directoryManager} onPreview={previewHandler} />
             {preview.display && <PreviewPanel onHide={togglePreview} path={preview.path} />}
             <TerminalPanels />
