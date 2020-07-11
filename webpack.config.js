@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { resolve } = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = [
   {
@@ -24,6 +25,11 @@ module.exports = [
     plugins: [
       new ForkTsCheckerWebpackPlugin({
         async: false,
+      }),
+      new CopyPlugin({
+        patterns: [
+          { from: 'app/icons', to: 'icons' },
+        ],
       }),
     ],
     node: {
