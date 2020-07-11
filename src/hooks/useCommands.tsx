@@ -21,7 +21,6 @@ interface CommandsState {
 }
 
 const commandsReducer = (state: CommandsState, action: Action): CommandsState => {
-  console.log('action', action);
   switch (action.type) {
     case 'add': {
       return { ...state, custom: merge(state.custom, action.items) };
@@ -53,7 +52,6 @@ const CommandsProvider = ({ children }: { children: ReactNode }) => {
     custom: {},
     default: {},
   });
-  console.log('CommandsProvider -> data', data);
 
   return <CommandsContext.Provider value={{ data, dispatch }}>{children}</CommandsContext.Provider>;
 };

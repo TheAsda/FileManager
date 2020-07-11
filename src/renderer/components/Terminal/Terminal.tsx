@@ -59,8 +59,6 @@ class Terminal extends Component<TerminalProps> {
 
   componentDidUpdate() {
     if (this.props.focused) {
-      console.log('Terminal');
-
       this.containerRef.current?.focus();
       this.terminal.focus();
     }

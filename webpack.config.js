@@ -27,9 +27,7 @@ module.exports = [
         async: false,
       }),
       new CopyPlugin({
-        patterns: [
-          { from: 'app/icons', to: 'icons' },
-        ],
+        patterns: [{ from: 'app/icons', to: 'icons' }],
       }),
     ],
     node: {

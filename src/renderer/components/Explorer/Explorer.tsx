@@ -1,6 +1,6 @@
 import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
 import React, { Component } from 'react';
-import { clamp, keys, noop } from 'lodash';
+import { clamp, noop } from 'lodash';
 import { DetailView } from './DetailView';
 import { StateLine } from './StateLine';
 import autobind from 'autobind-decorator';
@@ -27,7 +27,6 @@ interface ExplorerProps {
   closable: boolean;
   onFocus?: (options: Commands) => void;
   onBlur?: (options: Commands) => void;
-  removeCommands?: (options: string[]) => void;
   registerHotKeys: (handlers: Commands, options: Commands) => void;
   focused?: boolean;
 }
@@ -61,8 +60,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     this.props.registerHotKeys(this.handlers, this.options);
 
     if (this.props.focused) {
-      console.log('Explorer -> componentDidMount -> this.props', this.props);
-
       this.onFocus();
     }
   }
@@ -70,6 +67,12 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   componentDidUpdate() {
     if (this.props.focused) {
       this.onFocus();
+    }
+
+    if (!this.props.closable) {
+      delete this.options['Close panel'];
+    } else {
+      this.options['Close panel'] = this.onClose;
     }
   }
 
@@ -291,7 +294,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   @autobind
   onBlur() {
     this.props.onBlur && this.props.onBlur(this.options);
-    this.props.removeCommands && this.props.removeCommands(keys(this.options));
   }
 
   @autobind

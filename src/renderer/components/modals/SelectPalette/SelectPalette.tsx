@@ -46,7 +46,6 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
   }
 
   componentDidMount() {
-    console.log('Command palette mounted');
     this.props.initHotKeys(this.keyMap, this.handlers);
   }
 

@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useReducer,
-  useContext,
-  Dispatch,
-  PropsWithChildren,
-  useEffect,
-} from 'react';
+import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
 import { IExplorerManager, ExplorerPanelInfo, container, TYPES } from '@fm/common';
 import { map, noop } from 'lodash';
 import { normalizePath } from 'filemancore';

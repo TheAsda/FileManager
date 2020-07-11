@@ -54,8 +54,6 @@ interface HotKeysState {
 }
 
 const focusReducer = (state: HotKeysState, action: Action): HotKeysState => {
-  console.log('action', action);
-
   switch (action.type) {
     case 'setKeyMap': {
       return {
@@ -146,8 +144,6 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
     }
 
     const activeArea = data.areas[data.activeArea];
-    console.log('bindHotKeys -> data.activeArea', data.activeArea);
-    console.log('bindHotKeys -> data.areas', data.areas);
 
     const b = includes(data.globals, data.activeArea) ? bindGlobal : bind;
 
@@ -159,7 +155,6 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
   };
 
   const bindWindowHoyKeys = () => {
-    console.log('bindWindowHoyKeys -> data.window', data.window);
     forEach(keys(data.window), (commandName) => {
       const bindings = data.keymap[commandName];
 

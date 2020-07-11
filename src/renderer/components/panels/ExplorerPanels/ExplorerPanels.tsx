@@ -92,8 +92,6 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   };
 
   const setArea = (name: string, activate?: boolean) => (commands: Commands, options: Commands) => {
-    console.log(`Set Area ${name}`);
-
     keysAction({
       type: 'setArea',
       name,
