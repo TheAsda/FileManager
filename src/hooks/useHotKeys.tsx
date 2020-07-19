@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { KeyMap, Commands } from '@fm/common';
 import { noop, values, flatten, forEach, keys } from 'lodash';
-import { bind, unbind } from 'mousetrap';
+import { bind, unbind, bindGlobal } from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 
 type Action =
@@ -66,10 +66,8 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
     console.log('bindHotKeys -> data.hotKeys', data.hotKeys);
     forEach(keys(data.hotKeys), (commandName) => {
       const bindings = data.keymap[commandName];
-      console.log('bindHotKeys -> bindings', bindings);
-      console.log('bindHotKeys -> data.hotKeys[commandName]', data.hotKeys[commandName]);
 
-      bind(bindings, data.hotKeys[commandName]);
+      bindGlobal(bindings, data.hotKeys[commandName]);
     });
   };
 

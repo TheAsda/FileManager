@@ -20,18 +20,10 @@ interface SelectPaletteState {
 }
 
 class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
-  private keyMap: KeyMap = {
-    close: ['esc'],
-    nextItem: ['down'],
-    previousItem: ['up'],
-    selectItem: ['enter'],
-    complete: ['ctrl+space'],
-  };
-
   private handlers = {
     close: this.props.onClose,
-    moveUp: this.selectNextItem,
-    moveDown: this.selectPreviousItem,
+    moveDown: this.selectNextItem,
+    moveUp: this.selectPreviousItem,
     activate: this.selectItem,
     complete: this.complete,
   };
@@ -46,6 +38,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
     if (this.props.manager) {
       this.props.manager.setHotkeys(this.handlers);
+      console.log('SelectPalette -> constructor -> this.props.manager', this.props.manager);
     }
   }
 

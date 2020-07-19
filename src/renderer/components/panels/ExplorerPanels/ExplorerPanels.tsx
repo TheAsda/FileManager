@@ -23,7 +23,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const [isGotoPaletteOpen, setGotoPalette] = useState<boolean>(false);
   const gotoManager = useMemo(() => {
     return getIdentityManager();
-  }, undefined);
+  }, []);
 
   const openGotoPalette = () => {
     setGotoPalette(true);

@@ -1,7 +1,6 @@
 import React from 'react';
-import { keys, noop } from 'lodash';
+import { keys } from 'lodash';
 import { Commands, SelectPalette } from '../SelectPalette';
-import { KeyMap } from '@fm/common';
 import { HOHandlers } from 'renderer/components/common/HOHandlers';
 
 interface CommandPaletteProps extends HOHandlers {
@@ -21,6 +20,7 @@ const CommandPalette = (props: CommandPaletteProps) => {
       commands={props.commands}
       hotkeys={props.hotkeys}
       isOpened={props.isOpened}
+      manager={props.manager}
       onClose={props.onClose}
       onSelect={onSelect}
       options={keys(props.commands)}
