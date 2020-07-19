@@ -2,20 +2,22 @@ import React from 'react';
 import './style.css';
 import { KeyMap, Commands } from '@fm/common';
 import { SelectPalette } from '../SelectPalette';
+import { HOHandlers } from 'renderer/components/common/HOHandlers';
 
-interface GoToPaletteProps {
+interface GoToPaletteProps extends HOHandlers {
   isOpened: boolean;
   onClose: () => void;
   options: string[];
   onSelect: (path: string) => void;
-  initHotKeys: (keymap: KeyMap, commands: Commands) => void;
 }
 
 const GoToPalette = (props: GoToPaletteProps) => {
   return (
     <SelectPalette
-      initHotKeys={props.initHotKeys}
+      commands={props.commands}
+      hotkeys={props.hotkeys}
       isOpened={props.isOpened}
+      manager={props.manager}
       onClose={props.onClose}
       onSelect={props.onSelect}
       options={props.options}

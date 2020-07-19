@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
-import { clamp, findIndex, map } from 'lodash';
+import { clamp, findIndex, map, merge } from 'lodash';
 import './style.css';
 import { SelectPaletteItem } from './SelectPaletteItem';
 import Modal from 'react-modal';
 import { Commands, KeyMap } from '@fm/common';
+import { HOHandlers } from 'renderer/components/common/HOHandlers';
 
-interface SelectPaletteProps {
+interface SelectPaletteProps extends HOHandlers {
   options: string[];
   inputValue?: string;
   onSelect: (selectedItem: string) => void;
   onClose: () => void;
   isOpened: boolean;
-  initHotKeys: (keymap: KeyMap, commands: Commands) => void;
 }
 
 interface SelectPaletteState {
@@ -30,9 +30,9 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
   private handlers = {
     close: this.props.onClose,
-    nextItem: this.selectNextItem,
-    previousItem: this.selectPreviousItem,
-    selectItem: this.selectItem,
+    moveUp: this.selectNextItem,
+    moveDown: this.selectPreviousItem,
+    activate: this.selectItem,
     complete: this.complete,
   };
 
@@ -43,10 +43,10 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
     this.state = { selectedIndex: 0 };
     this.inputRef = null;
-  }
 
-  componentDidMount() {
-    this.props.initHotKeys(this.keyMap, this.handlers);
+    if (this.props.manager) {
+      this.props.manager.setHotkeys(this.handlers);
+    }
   }
 
   @autobind
@@ -105,7 +105,6 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
           onChange={this.handleInput}
           ref={(ref) => {
             this.inputRef = ref;
-            // ref && ref.focus();
           }}
           type="text"
         />

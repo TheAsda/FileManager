@@ -1,38 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
-import { map, keys, merge } from 'lodash';
+import { map, merge } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';
-import { IDirectoryManager, KeyMap } from '@fm/common';
-import { ErrorBoundary, Commands, GoToPalette } from 'renderer/components';
+import { IDirectoryManager } from '@fm/common';
+import { ErrorBoundary, GoToPalette } from 'renderer/components';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useExplorers, useFocus, useCommands, useHotKeys } from '@fm/hooks';
+import { useExplorers, useFocus, useCommands, useHotKeys, useManagers } from '@fm/hooks';
+import { HOHandlers } from 'renderer/components/common/HOHandlers';
 
-interface ExplorerPalensProps {
+interface ExplorerPalensProps extends HOHandlers {
   directoryManager: IDirectoryManager;
   onPreview?: (path: string) => void;
 }
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { data, dispatch } = useExplorers();
-  const { data: focus, dispatch: focusAction } = useFocus();
+  const { dispatch: focusAction } = useFocus();
   const { dispatch: commandsAction } = useCommands();
-  const { data: hotkeys, dispatch: keysAction } = useHotKeys();
+  const { getIdentityManager } = useManagers();
+  const { dispatch: keysAction } = useHotKeys();
   const [isGotoPaletteOpen, setGotoPalette] = useState<boolean>(false);
+  const gotoManager = useMemo(() => {
+    return getIdentityManager();
+  }, undefined);
 
   const openGotoPalette = () => {
-    keysAction({
-      type: 'activateArea',
-      name: 'gotoPalette',
-    });
     setGotoPalette(true);
+    keysAction({
+      type: 'setHotKeys',
+      hotkeys: gotoManager.getHotkeys(),
+    });
   };
 
   const closeGotoPalette = () => {
     setGotoPalette(false);
   };
 
-  const handlers = {
+  const hotkeys = {
     openGoto: openGotoPalette,
   };
 
@@ -43,79 +48,39 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     });
   };
 
-  const initHotHeys = (keymap: KeyMap, commands: Commands) => {
-    keysAction({
-      type: 'setKeyMap',
-      keymap,
-    });
-
-    keysAction({
-      type: 'setArea',
-      handlers: commands,
-      name: 'gotoPalette',
-    });
-  };
-
   const splitExplorer = () => {
     dispatch({
       type: 'spawn',
     });
   };
 
-  const focusItem = (index: number, name: string) => (options: Commands) => {
-    const indexChanged = focus.index !== index;
-    const panelChanged = hotkeys.activeArea && hotkeys.activeArea[0] !== name[0];
-
-    if (indexChanged || panelChanged) {
-      focusAction({
-        type: 'focusItem',
-        index,
-      });
-
-      keysAction({
-        type: 'activateArea',
-        name,
-      });
-
-      commandsAction({
-        type: 'add',
-        items: options,
-      });
-    }
-  };
-
-  const removeCommands = (options: string[]) => {
-    commandsAction({
-      type: 'remove',
-      items: options,
+  const focusItem = (index: number) => () => {
+    focusAction({
+      type: 'focusItem',
+      index,
     });
-  };
 
-  const setArea = (name: string, activate?: boolean) => (commands: Commands, options: Commands) => {
     keysAction({
-      type: 'setArea',
-      name,
-      handlers: merge(commands, handlers),
-      activate,
+      type: 'setHotKeys',
+      hotkeys: merge(data[index].getHotkeys(), props.hotkeys),
     });
 
-    if (activate) {
-      commandsAction({
-        type: 'add',
-        items: options,
-      });
-    }
+    commandsAction({
+      type: 'empty',
+    });
+
+    commandsAction({
+      type: 'add',
+      items: merge(data[index].getCommands(), props.commands),
+    });
   };
 
-  useEffect(() => {
-    const name = `explorer${focus.index}`;
-    if (focus.focusedPanel === 'explorer' && hotkeys.activeArea !== name) {
-      keysAction({
-        type: 'activateArea',
-        name,
-      });
-    }
-  }, [focus]);
+  // const removeCommands = (options: string[]) => {
+  //   commandsAction({
+  //     type: 'remove',
+  //     items: options,
+  //   });
+  // };
 
   return (
     <DefaultPanel
@@ -125,33 +90,30 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     >
       <SplitPanels minSize={200} splitType="horizontal">
         {map(data, (item, i) => {
-          const name = `explorer${i}`;
-          const focused = focus.focusedPanel === 'explorer' && focus.index === i;
-
           return (
             <ErrorBoundary key={item.getId()}>
               <Explorer
                 closable={data.length > 1}
+                commands={props.commands}
                 directoryManager={props.directoryManager}
                 explorerManager={item}
-                onBlur={(options) => removeCommands(keys(options))}
+                hotkeys={merge(hotkeys, props.hotkeys)}
+                // onBlur={(options) => removeCommands(keys(options))}
                 onClose={onClose(i)}
-                onFocus={focusItem(i, name)}
+                onFocus={focusItem(i)}
                 onPreview={props.onPreview}
-                registerHotKeys={setArea(name, focused)}
               />
             </ErrorBoundary>
           );
         })}
       </SplitPanels>
       <GoToPalette
-        initHotKeys={initHotHeys}
         isOpened={isGotoPaletteOpen}
+        manager={gotoManager}
         onClose={closeGotoPalette}
         onSelect={console.log}
         options={['D:\\', 'C:\\']}
       />
-      z
     </DefaultPanel>
   );
 };

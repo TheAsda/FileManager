@@ -23,6 +23,8 @@ const DEFAULT_KEYMAP: KeyMap = {
   scrollToTop: ['pageup'],
   scrollToBottom: ['pagedown'],
   openIntegratedTerminal: ['ctrl+`'],
+  close: ['esc'],
+  complete: ['ctrl+space'],
 };
 
 export { DEFAULT_KEYMAP };

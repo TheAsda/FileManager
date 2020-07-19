@@ -6,8 +6,11 @@ import { ErrorBoundary } from 'renderer/components/ErrorBoundary';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useTerminals, useFocus } from '@fm/hooks';
+import { HOHandlers } from 'renderer/components/common/HOHandlers';
 
-const TerminalPanels = () => {
+interface TerminalPanelsProps extends HOHandlers {}
+
+const TerminalPanels = (props: TerminalPanelsProps) => {
   const { data, dispatch } = useTerminals();
   const { data: focus, dispatch: focusAction } = useFocus();
 
@@ -64,4 +67,4 @@ const TerminalPanels = () => {
   );
 };
 
-export { TerminalPanels };
+export { TerminalPanels, TerminalPanelsProps };

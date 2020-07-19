@@ -36,7 +36,8 @@
       {
         "shorthandLast": true
       }
-    ]
+    ],
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {

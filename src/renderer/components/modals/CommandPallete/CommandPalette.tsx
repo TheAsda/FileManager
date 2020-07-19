@@ -1,13 +1,13 @@
 import React from 'react';
-import { keys } from 'lodash';
+import { keys, noop } from 'lodash';
 import { Commands, SelectPalette } from '../SelectPalette';
 import { KeyMap } from '@fm/common';
+import { HOHandlers } from 'renderer/components/common/HOHandlers';
 
-interface CommandPaletteProps {
+interface CommandPaletteProps extends HOHandlers {
   isOpened: boolean;
   onClose: () => void;
   commands: Commands;
-  initHotKeys: (keymap: KeyMap, commands: Commands) => void;
 }
 
 const CommandPalette = (props: CommandPaletteProps) => {
@@ -18,7 +18,8 @@ const CommandPalette = (props: CommandPaletteProps) => {
 
   return (
     <SelectPalette
-      initHotKeys={props.initHotKeys}
+      commands={props.commands}
+      hotkeys={props.hotkeys}
       isOpened={props.isOpened}
       onClose={props.onClose}
       onSelect={onSelect}

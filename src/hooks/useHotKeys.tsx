@@ -7,8 +7,8 @@ import React, {
   useEffect,
 } from 'react';
 import { KeyMap, Commands } from '@fm/common';
-import { noop, values, flatten, forEach, keys, filter, includes } from 'lodash';
-import { bind, bindGlobal, unbind } from 'mousetrap';
+import { noop, values, flatten, forEach, keys } from 'lodash';
+import { bind, unbind } from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 
 type Action =
@@ -17,40 +17,13 @@ type Action =
       keymap: KeyMap;
     }
   | {
-      type: 'setArea';
-      name: string;
-      handlers: Commands;
-      activate?: boolean;
-    }
-  | {
-      type: 'setGlobalArea';
-      name: string;
-      handlers: Commands;
-      activate?: boolean;
-    }
-  | {
-      type: 'unsetArea';
-      name: string;
-    }
-  | {
-      type: 'unsetGlobalArea';
-      name: string;
-    }
-  | {
-      type: 'activateArea';
-      name: string;
-    }
-  | {
-      type: 'setWindowCommands';
-      handlers: Commands;
+      type: 'setHotKeys';
+      hotkeys: Commands;
     };
 
 interface HotKeysState {
   keymap: KeyMap;
-  areas: { [name: string]: Commands };
-  activeArea: string | null;
-  globals: string[];
-  window: Commands;
+  hotKeys: Commands;
 }
 
 const focusReducer = (state: HotKeysState, action: Action): HotKeysState => {
@@ -64,101 +37,39 @@ const focusReducer = (state: HotKeysState, action: Action): HotKeysState => {
         },
       };
     }
-    case 'setArea': {
+    case 'setHotKeys': {
       return {
         ...state,
-        areas: {
-          ...state.areas,
-          [action.name]: action.handlers,
-        },
-        activeArea: action.activate ? action.name : state.activeArea,
+        hotKeys: action.hotkeys,
       };
     }
-    case 'setGlobalArea': {
-      return {
-        ...state,
-        areas: {
-          ...state.areas,
-          [action.name]: action.handlers,
-        },
-        activeArea: action.activate ? action.name : state.activeArea,
-        globals: [...state.globals, action.name],
-      };
-    }
-    case 'unsetArea': {
-      delete state.areas[action.name];
-      return {
-        ...state,
-        activeArea: state.activeArea === action.name ? null : state.activeArea,
-      };
-    }
-    case 'unsetGlobalArea': {
-      delete state.areas[action.name];
-      return {
-        ...state,
-        activeArea: state.activeArea === action.name ? null : state.activeArea,
-        globals: filter(state.globals, (item) => item !== action.name),
-      };
-    }
-    case 'activateArea': {
-      return {
-        ...state,
-        activeArea: action.name,
-      };
-    }
-    case 'setWindowCommands': {
-      return {
-        ...state,
-        window: {
-          ...state.window,
-          ...action.handlers,
-        },
-      };
-    }
+    default:
+      return state;
   }
 };
 
 const HotKeysContext = createContext<{ data: HotKeysState; dispatch: Dispatch<Action> }>({
   data: {
-    activeArea: null,
-    areas: {},
     keymap: {},
-    globals: [],
-    window: {},
+    hotKeys: {},
   },
   dispatch: noop,
 });
 
 const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [data, dispatch] = useReducer(focusReducer, {
-    activeArea: null,
-    areas: {},
     keymap: {},
-    globals: [],
-    window: {},
+    hotKeys: {},
   });
 
   const bindHotKeys = () => {
-    if (!data.activeArea) {
-      return;
-    }
-
-    const activeArea = data.areas[data.activeArea];
-
-    const b = includes(data.globals, data.activeArea) ? bindGlobal : bind;
-
-    forEach(keys(activeArea), (commandName) => {
+    console.log('bindHotKeys -> data.hotKeys', data.hotKeys);
+    forEach(keys(data.hotKeys), (commandName) => {
       const bindings = data.keymap[commandName];
+      console.log('bindHotKeys -> bindings', bindings);
+      console.log('bindHotKeys -> data.hotKeys[commandName]', data.hotKeys[commandName]);
 
-      b(bindings, activeArea[commandName]);
-    });
-  };
-
-  const bindWindowHoyKeys = () => {
-    forEach(keys(data.window), (commandName) => {
-      const bindings = data.keymap[commandName];
-
-      bindGlobal(bindings, data.window[commandName]);
+      bind(bindings, data.hotKeys[commandName]);
     });
   };
 
@@ -169,11 +80,8 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
 
   useEffect(() => {
     unbindAll();
-    bindWindowHoyKeys();
     bindHotKeys();
-  }, [data.activeArea, data.areas]);
-
-  useEffect(bindWindowHoyKeys, [data.window]);
+  }, [data.hotKeys]);
 
   return <HotKeysContext.Provider value={{ data, dispatch }}>{children}</HotKeysContext.Provider>;
 };

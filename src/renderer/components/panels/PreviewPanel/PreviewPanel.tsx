@@ -2,8 +2,9 @@ import React from 'react';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useFocus } from '@fm/hooks';
+import { HOHandlers } from 'renderer/components/common/HOHandlers';
 
-interface PreviewPanelProps {
+interface PreviewPanelProps extends HOHandlers {
   onHide?: () => void;
   path?: string | null;
 }

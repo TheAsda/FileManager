@@ -16,6 +16,7 @@ import {
   IExplorerManager,
 } from '@fm/common';
 import { TYPES } from './types';
+import { IIdentityManager, IdentityManager } from 'common/managers/IdentityManager';
 
 const container = new Container({ defaultScope: 'Singleton' });
 
@@ -26,5 +27,6 @@ container.bind<IKeysManager>(TYPES.IKeysManager).to(KeysManager);
 container.bind<IThemesManager>(TYPES.IThemesManager).to(ThemesManager);
 container.bind<ITerminalManager>(TYPES.ITerminalManager).to(TerminalManager).inTransientScope();
 container.bind<IExplorerManager>(TYPES.IExplorerManager).to(ExplorerManager).inTransientScope();
+container.bind<IIdentityManager>(TYPES.IIdentityManager).to(IdentityManager).inTransientScope();
 
 export { container };

@@ -1,6 +1,6 @@
 import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
 import React, { Component } from 'react';
-import { clamp, noop } from 'lodash';
+import { clamp, noop, merge } from 'lodash';
 import { DetailView } from './DetailView';
 import { StateLine } from './StateLine';
 import autobind from 'autobind-decorator';
@@ -10,6 +10,7 @@ import { Commands } from '../modals';
 import { ExplorerCommands } from './explorerCommands';
 import { normalizePath } from 'filemancore';
 import { join } from 'path';
+import { HOHandlers } from '../common/HOHandlers';
 
 interface ExplorerState {
   selectedIndex: number;
@@ -19,15 +20,14 @@ interface ExplorerState {
   editType?: 'create' | 'rename';
 }
 
-interface ExplorerProps {
+interface ExplorerProps extends HOHandlers {
   directoryManager: IDirectoryManager;
   explorerManager: IExplorerManager;
   onPreview?: (path: string) => void;
   onClose?: () => void;
   closable: boolean;
-  onFocus?: (options: Commands) => void;
+  onFocus?: () => void;
   onBlur?: (options: Commands) => void;
-  registerHotKeys: (handlers: Commands, options: Commands) => void;
   focused?: boolean;
 }
 
@@ -53,11 +53,13 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       'Send item to trash': this.sendToTrash,
       'Open in terminal': noop,
     };
+
+    this.props.explorerManager.setCommands(merge(this.options, props.commands));
+    this.props.explorerManager.setHotkeys(merge(this.handlers, props.hotkeys));
   }
 
   componentDidMount() {
     this.onDirectoryChange();
-    this.props.registerHotKeys(this.handlers, this.options);
 
     if (this.props.focused) {
       this.onFocus();
@@ -136,20 +138,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     this.props.explorerManager.setPath(normalizePath(join(this.selectedItem.path, '..')));
     this.onDirectoryChange();
   }
-
-  // @autobind
-  // enterDirectory() {
-  //   if (this.state.selectedIndex === -1) {
-  //     return;
-  //   }
-  //   if (this.selectedItem.attributes.directory) {
-  //     this.props.explorerManager.enterDirectory(this.selectedItem.name);
-  //     this.onDirectoryChange();
-  //   } else {
-  //     this.props.onPreview &&
-  //       this.props.onPreview(this.props.explorerManager.getPath() + this.selectedItem.name);
-  //   }
-  // }
 
   @autobind
   async onEditEnd(name: string | null) {
@@ -298,7 +286,8 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   onFocus() {
-    this.props.onFocus && this.props.onFocus(this.options);
+    console.log('focus');
+    this.props.onFocus && this.props.onFocus();
   }
 
   handlers = {

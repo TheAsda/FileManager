@@ -1,6 +1,7 @@
 import { ISettingsManager, IThemesManager, IKeysManager, IDirectoryManager } from '@fm/common';
 import { container, TYPES } from '../common/ioc';
 import React, { createContext, useContext } from 'react';
+import { IIdentityManager } from 'common/managers/IdentityManager';
 
 const settingsManager = container.get<ISettingsManager>(TYPES.ISettingsManager);
 const keysManager = container.get<IKeysManager>(TYPES.IKeysManager);
@@ -12,11 +13,13 @@ const ManagersContext = createContext<{
   keysManager: IKeysManager;
   themesManager: IThemesManager;
   directoryManager: IDirectoryManager;
+  getIdentityManager: () => IIdentityManager;
 }>({
   settingsManager,
   keysManager,
   themesManager,
   directoryManager,
+  getIdentityManager: () => container.get<IIdentityManager>(TYPES.IIdentityManager),
 });
 
 const useManagers = () => useContext(ManagersContext);
@@ -29,6 +32,7 @@ const ManagersProvider = ({ children }: { children: JSX.Element }) => {
         settingsManager,
         themesManager,
         directoryManager,
+        getIdentityManager: () => container.get<IIdentityManager>(TYPES.IIdentityManager),
       }}
     >
       {children}

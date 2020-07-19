@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useManagers, usePreview, FocusProvider, useCommands, useHotKeys } from '@fm/hooks';
-import { Commands, KeyMap } from '@fm/common';
 import { noop } from 'lodash';
 import { SplitPanels } from '../SplitPanels';
 import { ExplorerPanels, TerminalPanels } from '../panels';
@@ -12,10 +11,6 @@ const Window = () => {
   const { dispatch: keysAction } = useHotKeys();
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
   const openCommandPalette = () => {
-    keysAction({
-      type: 'activateArea',
-      name: 'commandPalette',
-    });
     setCommandPalette(true);
   };
 
@@ -51,7 +46,7 @@ const Window = () => {
 
   const switchPane = noop;
 
-  const handlers = {
+  const hotkeys = {
     switchPane,
     togglePreview,
     openCommandPalette,
@@ -62,38 +57,28 @@ const Window = () => {
       type: 'setKeyMap',
       keymap: keysManager.getKeyMap(),
     });
-    keysAction({
-      type: 'setWindowCommands',
-      handlers,
-    });
   }, []);
-
-  const initHotKeys = (keys: KeyMap, options: Commands) => {
-    keysAction({
-      type: 'setKeyMap',
-      keymap: keys,
-    });
-    keysAction({
-      type: 'setGlobalArea',
-      handlers: options,
-      name: 'commandPalette',
-    });
-  };
 
   return (
     <>
       <div className="window">
         <FocusProvider>
           <SplitPanels minSize={200} splitType="vertical">
-            <ExplorerPanels directoryManager={directoryManager} onPreview={previewHandler} />
-            {preview.display && <PreviewPanel onHide={togglePreview} path={preview.path} />}
-            <TerminalPanels />
+            <ExplorerPanels
+              directoryManager={directoryManager}
+              hotkeys={hotkeys}
+              onPreview={previewHandler}
+            />
+            {preview.display && (
+              <PreviewPanel hotkeys={hotkeys} onHide={togglePreview} path={preview.path} />
+            )}
+            <TerminalPanels hotkeys={hotkeys} />
           </SplitPanels>
         </FocusProvider>
       </div>
       <CommandPalette
-        commands={{ ...commands.default, ...commands.custom }}
-        initHotKeys={initHotKeys}
+        commands={commands}
+        hotkeys={hotkeys}
         isOpened={isCommandPaletteOpen}
         onClose={closeCommandPalette}
       />
