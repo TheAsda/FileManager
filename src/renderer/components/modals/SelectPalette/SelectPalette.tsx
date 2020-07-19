@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
-import { clamp, findIndex, map, includes } from 'lodash';
+import { clamp, map, includes, isEqual, indexOf } from 'lodash';
 import './style.css';
 import { SelectPaletteItem } from './SelectPaletteItem';
 import Modal from 'react-modal';
 import { HOHandlers } from 'renderer/components/common/HOHandlers';
+import Fuse from 'fuse.js';
 
 interface SelectPaletteProps extends HOHandlers {
   options: string[];
@@ -16,6 +17,8 @@ interface SelectPaletteProps extends HOHandlers {
 
 interface SelectPaletteState {
   selectedIndex: number;
+  options: string[];
+  allOptions: string[];
 }
 
 class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
@@ -28,16 +31,33 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
   };
 
   private inputRef: HTMLInputElement | null;
+  private fuse: Fuse<string, Fuse.IFuseOptions<string>>;
 
   constructor(props: SelectPaletteProps) {
     super(props);
 
-    this.state = { selectedIndex: 0 };
+    this.state = { selectedIndex: 0, options: props.options, allOptions: props.options };
     this.inputRef = null;
+    this.fuse = new Fuse(props.options, {
+      findAllMatches: true,
+    });
 
     if (this.props.manager) {
       this.props.manager.setHotkeys(this.handlers);
       console.log('SelectPalette -> constructor -> this.props.manager', this.props.manager);
+    }
+  }
+
+  componentDidUpdate() {
+    if (!isEqual(this.props.options, this.state.allOptions)) {
+      this.setState((state) => ({
+        ...state,
+        allOptions: this.props.options,
+        options: this.props.options,
+      }));
+      this.fuse = new Fuse(this.props.options, {
+        findAllMatches: true,
+      });
     }
   }
 
@@ -72,16 +92,23 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
   @autobind
   handleInput() {
-    if (!this.inputRef || this.inputRef.value.length === 0) {
+    if (!this.inputRef) {
       return;
     }
 
-    const regExp = new RegExp(this.inputRef.value, 'ig');
-    const newIndex = findIndex(this.props.options, (item) => regExp.test(item));
-
-    if (newIndex !== -1) {
-      this.setState({ selectedIndex: newIndex });
+    const oldOption = this.state.options[this.state.selectedIndex];
+    const result = this.fuse.search(this.inputRef.value);
+    let resultStrings = map(result, 'item');
+    if (resultStrings.length === 0) {
+      resultStrings = this.state.allOptions;
     }
+    const newIndex = indexOf(resultStrings, oldOption);
+
+    this.setState((state) => ({
+      ...state,
+      options: resultStrings,
+      selectedIndex: newIndex === -1 ? 0 : newIndex,
+    }));
   }
 
   render() {
@@ -107,7 +134,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
           }}
           type="text"
         />
-        {map(this.props.options, (option, i) => (
+        {map(this.state.options, (option, i) => (
           <SelectPaletteItem
             command={option}
             key={option}
