@@ -44,7 +44,6 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
     if (this.props.manager) {
       this.props.manager.setHotkeys(this.handlers);
-      console.log('SelectPalette -> constructor -> this.props.manager', this.props.manager);
     }
   }
 

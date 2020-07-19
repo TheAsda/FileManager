@@ -7,7 +7,7 @@ interface InputModalProps {
   onClose: () => void;
   title?: string;
   subtitle?: string;
-  initialValue: string;
+  initialValue?: string;
   onAccept: (value: string) => void;
 }
 

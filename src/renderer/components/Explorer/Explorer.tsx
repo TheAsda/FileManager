@@ -28,11 +28,14 @@ interface ExplorerProps extends HOHandlers {
   closable: boolean;
   onFocus?: () => void;
   onBlur?: (options: Commands) => void;
+  onMove?: (files: FileInfo[]) => void;
+  onCopy?: (files: FileInfo[]) => void;
   focused?: boolean;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
   private options: ExplorerCommands;
+  private handlers: Commands;
 
   constructor(props: ExplorerProps) {
     super(props);
@@ -41,6 +44,20 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       selectedIndex: 0,
       viewType: 'detail',
       directoryState: [],
+    };
+
+    this.handlers = {
+      moveDown: this.selectNextItem,
+      moveUp: this.selectPreviousItem,
+      moveBack: this.exitDirectory,
+      openDirectory: this.activateItem,
+      newFile: this.createFile,
+      newFolder: this.createFolder,
+      rename: this.rename,
+      delete: this.del,
+      sendToTrash: this.sendToTrash,
+      copy: this.copy,
+      move: this.move,
     };
 
     this.options = {
@@ -52,6 +69,8 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       'Rename item': this.rename,
       'Send item to trash': this.sendToTrash,
       'Open in terminal': noop,
+      'Copy item': this.copy,
+      'Move item': this.move,
     };
 
     this.props.explorerManager.setCommands(merge(this.options, props.commands));
@@ -80,6 +99,16 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   private get selectedItem(): FileInfo {
     return this.state.directoryState[this.state.selectedIndex];
+  }
+
+  @autobind
+  copy() {
+    this.props.onCopy && this.props.onCopy([this.selectedItem]);
+  }
+
+  @autobind
+  move() {
+    this.props.onMove && this.props.onMove([this.selectedItem]);
   }
 
   @autobind
@@ -289,18 +318,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     console.log('focus');
     this.props.onFocus && this.props.onFocus();
   }
-
-  handlers = {
-    moveDown: this.selectNextItem,
-    moveUp: this.selectPreviousItem,
-    moveBack: this.exitDirectory,
-    openDirectory: this.activateItem,
-    newFile: this.createFile,
-    newFolder: this.createFolder,
-    rename: this.rename,
-    delete: this.del,
-    sendToTrash: this.sendToTrash,
-  };
 
   render() {
     return (

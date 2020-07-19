@@ -99,7 +99,7 @@ class DirectoryManager implements IDirectoryManager {
   async copyItems(itemsToCopy: FileInfo[], destinationFolder: string): Promise<void> {
     this.logger.log(`Copying ${itemsToCopy.length} items to ${destinationFolder}`);
     const itemsCopying = map(itemsToCopy, async (item) =>
-      this.copyItem(item.path, destinationFolder)
+      this.copyItem(item.path + item.name, destinationFolder)
     );
 
     await Promise.all(itemsCopying);
@@ -172,8 +172,9 @@ class DirectoryManager implements IDirectoryManager {
       copyFileSync(itemPath, destinationFilePath);
       return Promise.resolve();
     } catch {
-      this.logger.error(`Cannot copy ${itemPath} to ${destinationFolder}`);
-      return Promise.reject();
+      const errorMessage = `Cannot copy ${itemPath} to ${destinationFolder}`;
+      this.logger.error(errorMessage);
+      return Promise.reject(errorMessage);
     }
   }
 

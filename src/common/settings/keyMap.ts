@@ -25,6 +25,7 @@ const DEFAULT_KEYMAP: KeyMap = {
   openIntegratedTerminal: ['ctrl+`'],
   close: ['esc'],
   complete: ['ctrl+space'],
+  move: ['f5'],
 };
 
 export { DEFAULT_KEYMAP };
