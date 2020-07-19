@@ -4,7 +4,7 @@ import { noop } from 'lodash';
 import { SplitPanels } from '../SplitPanels';
 import { ExplorerPanels, TerminalPanels } from '../panels';
 import './style.css';
-import { CommandPalette, Commands } from '../modals';
+import { CommandPalette } from '../modals';
 import { PreviewPanel } from '../panels/PreviewPanel';
 
 const Window = () => {
@@ -20,11 +20,17 @@ const Window = () => {
     keysAction({
       type: 'setHotKeys',
       hotkeys: commandPaletteManager.getHotkeys(),
+      push: true,
     });
   };
 
   const closeCommandPalette = () => {
     setCommandPalette(false);
+
+    keysAction({
+      type: 'setHotKeys',
+      pop: true,
+    });
   };
 
   const { data: preview, dispatch: previewAction } = usePreview();

@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { KeyMap, Commands } from '@fm/common';
 import { noop, values, flatten, forEach, keys } from 'lodash';
-import { bind, unbind, bindGlobal } from 'mousetrap';
+import { unbind, bindGlobal } from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 
 type Action =
@@ -19,11 +19,16 @@ type Action =
   | {
       type: 'setHotKeys';
       hotkeys: Commands;
+      push?: boolean;
+    }
+  | {
+      type: 'setHotKeys';
+      pop: true;
     };
 
 interface HotKeysState {
   keymap: KeyMap;
-  hotKeys: Commands;
+  hotKeys: Commands[];
 }
 
 const focusReducer = (state: HotKeysState, action: Action): HotKeysState => {
@@ -38,10 +43,17 @@ const focusReducer = (state: HotKeysState, action: Action): HotKeysState => {
       };
     }
     case 'setHotKeys': {
-      return {
-        ...state,
-        hotKeys: action.hotkeys,
-      };
+      if ('pop' in action) {
+        return {
+          ...state,
+          hotKeys: state.hotKeys.slice(0, state.hotKeys.length - 1),
+        };
+      } else {
+        return {
+          ...state,
+          hotKeys: action.push ? [...state.hotKeys, action.hotkeys] : [action.hotkeys],
+        };
+      }
     }
     default:
       return state;
@@ -51,7 +63,7 @@ const focusReducer = (state: HotKeysState, action: Action): HotKeysState => {
 const HotKeysContext = createContext<{ data: HotKeysState; dispatch: Dispatch<Action> }>({
   data: {
     keymap: {},
-    hotKeys: {},
+    hotKeys: [],
   },
   dispatch: noop,
 });
@@ -59,15 +71,16 @@ const HotKeysContext = createContext<{ data: HotKeysState; dispatch: Dispatch<Ac
 const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [data, dispatch] = useReducer(focusReducer, {
     keymap: {},
-    hotKeys: {},
+    hotKeys: [],
   });
 
   const bindHotKeys = () => {
+    const lastHotKeys = data.hotKeys[data.hotKeys.length - 1];
     console.log('bindHotKeys -> data.hotKeys', data.hotKeys);
-    forEach(keys(data.hotKeys), (commandName) => {
+    forEach(keys(lastHotKeys), (commandName) => {
       const bindings = data.keymap[commandName];
 
-      bindGlobal(bindings, data.hotKeys[commandName]);
+      bindGlobal(bindings, lastHotKeys[commandName]);
     });
   };
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import './style.css';
-import { KeyMap, Commands } from '@fm/common';
 import { SelectPalette } from '../SelectPalette';
 import { HOHandlers } from 'renderer/components/common/HOHandlers';
 

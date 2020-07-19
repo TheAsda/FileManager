@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
-import { clamp, findIndex, map, merge } from 'lodash';
+import { clamp, findIndex, map, includes } from 'lodash';
 import './style.css';
 import { SelectPaletteItem } from './SelectPaletteItem';
 import Modal from 'react-modal';
-import { Commands, KeyMap } from '@fm/common';
 import { HOHandlers } from 'renderer/components/common/HOHandlers';
 
 interface SelectPaletteProps extends HOHandlers {
@@ -98,6 +97,13 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
           onChange={this.handleInput}
           ref={(ref) => {
             this.inputRef = ref;
+            ref?.focus();
+            ref &&
+              ref.addEventListener('keydown', (event) => {
+                if (includes([38, 40], event.keyCode)) {
+                  event.preventDefault();
+                }
+              });
           }}
           type="text"
         />
@@ -105,6 +111,15 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
           <SelectPaletteItem
             command={option}
             key={option}
+            onSelect={() => {
+              this.setState(
+                (state) => ({
+                  ...state,
+                  selectedIndex: i,
+                }),
+                this.selectItem
+              );
+            }}
             selected={i === this.state.selectedIndex}
           />
         ))}
