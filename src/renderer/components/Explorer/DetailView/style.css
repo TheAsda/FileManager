@@ -27,6 +27,10 @@
   cursor: pointer;
 }
 
+.detail-view__row:hover {
+  background-color: cornflowerblue;
+}
+
 .detail-view__row--selected {
   background-color: var(--additional-background-color);
 }

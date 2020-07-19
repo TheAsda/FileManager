@@ -9,3 +9,15 @@
 .select-palette__search {
   width: 100%;
 }
+
+.select-palette__item {
+  cursor: pointer;
+}
+
+.select-palette__item:hover {
+  background-color: chartreuse;
+}
+
+.select-palette__item--selected {
+  background-color: aqua;
+}

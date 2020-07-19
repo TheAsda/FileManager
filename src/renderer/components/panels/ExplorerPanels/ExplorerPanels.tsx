@@ -13,6 +13,7 @@ import { InputModal } from 'renderer/components/modals/InputModal';
 interface ExplorerPalensProps extends HOHandlers {
   directoryManager: IDirectoryManager;
   onPreview?: (path: string) => void;
+  onTerminalOpen?: (path: string) => void;
 }
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
