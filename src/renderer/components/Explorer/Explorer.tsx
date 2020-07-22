@@ -1,6 +1,6 @@
 import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
 import React, { Component } from 'react';
-import { clamp, noop, merge } from 'lodash';
+import { clamp, noop, merge, filter, concat, sortBy } from 'lodash';
 import { DetailView } from './DetailView';
 import { StateLine } from './StateLine';
 import autobind from 'autobind-decorator';
@@ -18,6 +18,7 @@ interface ExplorerState {
   directoryState: FileInfo[];
   editableIndex?: number;
   editType?: 'create' | 'rename';
+  autoPreview: boolean;
 }
 
 interface ExplorerProps extends HOHandlers {
@@ -44,6 +45,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       selectedIndex: 0,
       viewType: 'detail',
       directoryState: [],
+      autoPreview: true,
     };
 
     this.handlers = {
@@ -71,6 +73,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       'Open in terminal': noop,
       'Copy item': this.copy,
       'Move item': this.move,
+      'Toggle auto preview': this.toggleAutoPreview,
     };
 
     this.props.explorerManager.setCommands(merge(this.options, props.commands));
@@ -117,9 +120,14 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       this.setState((state) => ({
         ...state,
         selectedIndex: 0,
-        directoryState: data,
+        directoryState: this.sortFilterItems(data),
       }));
     });
+  }
+
+  @autobind
+  toggleAutoPreview() {
+    this.setState((state) => ({ ...state, autoPreview: !state.autoPreview }));
   }
 
   @autobind
@@ -139,9 +147,16 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     if (this.state.editType !== undefined && index !== this.state.editableIndex) {
       return;
     }
+    const newIndex = clamp(index, 0, this.state.directoryState.length - 1);
+    const newSelectedItem = this.state.directoryState[newIndex];
+
+    if (this.state.autoPreview && newSelectedItem.attributes.directory === false) {
+      this.props.onPreview && this.props.onPreview(newSelectedItem);
+    }
+
     this.setState((state) => ({
       ...state,
-      selectedIndex: clamp(index, 0, state.directoryState.length - 1),
+      selectedIndex: newIndex,
     }));
   }
 
@@ -221,6 +236,12 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     }
   }
 
+  sortFilterItems(items: FileInfo[]): FileInfo[] {
+    const folders = filter(items, ['attributes.directory', true]);
+    const files = filter(items, ['attributes.directory', false]);
+    return concat(sortBy(folders, 'name'), sortBy(files, 'name'));
+  }
+
   @autobind
   private async updateDirectoryState() {
     const newDirectoryState = await this.props.directoryManager.listDirectory(
@@ -231,7 +252,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       ...state,
       editableIndex: undefined,
       editType: undefined,
-      directoryState: newDirectoryState,
+      directoryState: this.sortFilterItems(newDirectoryState),
       selectedIndex: 0,
     }));
   }
