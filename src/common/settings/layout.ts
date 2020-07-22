@@ -6,6 +6,7 @@ const DEFAULT_LAYOUT: Layout = {
     panels: [
       {
         type: 'explorer',
+        initialDirectory: 'D:\\YandexDisk\\Всякое\\Фотолаборатория Аяза',
       },
       {
         type: 'explorer',

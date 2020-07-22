@@ -81,14 +81,18 @@ const Window = () => {
               hotkeys={handlers}
               onPreview={previewHandler}
             />
-            {preview.display && (
-              <PreviewPanel
-                direcoryManager={directoryManager}
-                hotkeys={handlers}
-                onHide={togglePreview}
-                item={preview.item}
-              />
-            )}
+            {preview.display &&
+              (({ width }) => {
+                return (
+                  <PreviewPanel
+                    direcoryManager={directoryManager}
+                    hotkeys={handlers}
+                    onHide={togglePreview}
+                    item={preview.item}
+                    width={width}
+                  />
+                );
+              })}
             <TerminalPanels hotkeys={handlers} />
           </SplitPanels>
         </FocusProvider>

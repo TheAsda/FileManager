@@ -1,5 +1,5 @@
-import React, { Component, ReactNode } from 'react';
-import { clone, fill, isArray, reduce, times, map, compact, isEqual } from 'lodash';
+import React, { Component, ReactNode, isValidElement, cloneElement } from 'react';
+import { clone, fill, isArray, reduce, times, map, compact, isEqual, isFunction } from 'lodash';
 import { Resizer } from './Resizer';
 import { SplitPanel } from './SplitPanel';
 import { SplitType } from './splitType';
@@ -9,7 +9,7 @@ import autobind from 'autobind-decorator';
 interface SplitPanelsProps {
   minSize?: number | number[];
   maxSize?: number | number[];
-  children: ReactNode | ReactNode[];
+  children: ((data: { width?: number }) => ReactNode) | ReactNode | ReactNode[];
   splitType: SplitType;
   className?: string;
 }
@@ -255,7 +255,7 @@ class SplitPanels extends Component<SplitPanelsProps, SplitPanelsState> {
           (acc, cur, i) => {
             acc.push(
               <SplitPanel key={i} size={this.state.sizes[i]} type={this.props.splitType}>
-                {cur}
+                {isFunction(cur) ? cur({ width: this.state.sizes[i] }) : cur}
               </SplitPanel>
             );
 

@@ -37,7 +37,8 @@
         "shorthandLast": true
       }
     ],
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "react/display-name": "off"
   },
   "settings": {
     "react": {

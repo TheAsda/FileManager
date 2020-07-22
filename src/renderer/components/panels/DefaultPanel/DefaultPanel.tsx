@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, forwardRef } from 'react';
 import './style.css';
 
 interface DefaultPanelProps {
@@ -8,16 +8,18 @@ interface DefaultPanelProps {
   onFocus?: () => void;
 }
 
-const DefaultPanel = (props: PropsWithChildren<DefaultPanelProps>) => {
-  return (
-    <div className="default-panel" onClick={props.onFocus}>
-      <div className="default-panel__header">
-        {props.splitable && <button onClick={props.onSplit}>Split</button>}
-        <button onClick={props.onHide}>Hide</button>
+const DefaultPanel = forwardRef<HTMLDivElement, PropsWithChildren<DefaultPanelProps>>(
+  (props, ref) => {
+    return (
+      <div className="default-panel" onClick={props.onFocus} ref={ref}>
+        <div className="default-panel__header">
+          {props.splitable && <button onClick={props.onSplit}>Split</button>}
+          <button onClick={props.onHide}>Hide</button>
+        </div>
+        <div className="default-panel__content">{props.children}</div>
       </div>
-      <div className="default-panel__content">{props.children}</div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 export { DefaultPanel, DefaultPanelProps };
