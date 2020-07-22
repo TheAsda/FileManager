@@ -15,16 +15,10 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   const { data: focus, dispatch: focusAction } = useFocus();
 
   const onClose = (index: number) => () => {
+    console.log('onClose -> index', index);
     dispatch({
       type: 'destroy',
-      index,
-    });
-  };
-
-  const onExit = (index: number) => () => {
-    dispatch({
-      type: 'exit',
-      index,
+      id: data[index].getId(),
     });
   };
 
@@ -55,7 +49,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
                 closable={data.length > 1}
                 focused={focus.focusedPanel === 'terminal' && focus.index === i}
                 onClose={onClose(i)}
-                onExit={onExit(i)}
+                onExit={onClose(i)}
                 onFocus={focusItem(i)}
                 terminalManager={item}
               />

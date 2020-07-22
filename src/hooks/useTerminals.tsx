@@ -8,12 +8,10 @@ import React, {
 } from 'react';
 import { container, TYPES, ITerminalManager, TerminalPanelInfo } from '@fm/common';
 import { map, isString, noop, filter } from 'lodash';
+import { act } from '@testing-library/react-hooks';
+import { id } from 'inversify';
 
-type Action =
-  | { type: 'init'; state?: TerminalPanelInfo[] }
-  | { type: 'spawn'; path?: string }
-  | { type: 'destroy'; index: number }
-  | { type: 'exit'; index: number };
+type Action = { type: 'spawn'; path?: string } | { type: 'destroy'; id: number };
 
 const getTerminalManager = () => {
   return container.get<ITerminalManager>(TYPES.ITerminalManager);
@@ -21,25 +19,6 @@ const getTerminalManager = () => {
 
 const terminalReducer = (state: ITerminalManager[], action: Action) => {
   switch (action.type) {
-    case 'init': {
-      if (state.length > 0) {
-        return state;
-      }
-
-      if (action.state) {
-        return map(action.state, (item) => {
-          const manager = getTerminalManager();
-          if (item.initialDirectory) {
-            manager.changeDirectory(item.initialDirectory);
-          } else {
-            manager.changeDirectory(process.cwd());
-          }
-          return manager;
-        });
-      }
-
-      return [getTerminalManager()];
-    }
     case 'spawn': {
       if (state.length === 2) {
         return state;
@@ -54,20 +33,13 @@ const terminalReducer = (state: ITerminalManager[], action: Action) => {
       return [...state, manager];
     }
     case 'destroy': {
-      if (action.index > 1) {
-        return state;
-      }
-
-      state[action.index].destroy();
-
-      return filter(state, (_, i) => i !== action.index);
-    }
-    case 'exit': {
-      if (action.index > 1) {
-        return state;
-      }
-
-      return filter(state, (_, i) => i !== action.index);
+      return filter(state, (item) => {
+        if (item.getId() === action.id) {
+          item.destroy();
+          return false;
+        }
+        return true;
+      });
     }
   }
 };
@@ -85,14 +57,21 @@ const TerminalsProvider = ({
   children,
   initialState,
 }: PropsWithChildren<TerminalsProviderProps>) => {
-  const [data, dispatch] = useReducer(terminalReducer, []);
+  const [data, dispatch] = useReducer(terminalReducer, [], () => {
+    if (!initialState || initialState.length === 0) {
+      return [getTerminalManager()];
+    }
 
-  useEffect(() => {
-    dispatch({
-      type: 'init',
-      state: initialState,
+    return map(initialState, (item) => {
+      const manager = getTerminalManager();
+      if (item.initialDirectory) {
+        manager.changeDirectory(item.initialDirectory);
+      } else {
+        manager.changeDirectory(process.cwd());
+      }
+      return manager;
     });
-  }, []);
+  });
 
   return (
     <TerminalsContext.Provider value={{ data, dispatch }}>{children}</TerminalsContext.Provider>

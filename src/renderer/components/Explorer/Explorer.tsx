@@ -319,6 +319,15 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     this.props.onFocus && this.props.onFocus();
   }
 
+  @autobind
+  onClick(index: number) {
+    if (this.state.selectedIndex === index) {
+      this.activateItem();
+    } else {
+      this.selectItem(index);
+    }
+  }
+
   render() {
     return (
       <PathWrapper
@@ -333,11 +342,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
               editableIndex={this.state.editableIndex}
               onEditEnd={this.onEditEnd}
               onExit={this.exitDirectory}
-              onItemClick={(i) => this.selectItem(i)}
-              onItemDoubleClick={(i) => {
-                this.selectItem(i);
-                this.activateItem();
-              }}
+              onItemClick={this.onClick}
               selectedIndex={this.state.selectedIndex}
             />
           ) : null}
