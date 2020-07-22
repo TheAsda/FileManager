@@ -23,7 +23,7 @@ interface ExplorerState {
 interface ExplorerProps extends HOHandlers {
   directoryManager: IDirectoryManager;
   explorerManager: IExplorerManager;
-  onPreview?: (path: string) => void;
+  onPreview?: (item: FileInfo) => void;
   onClose?: () => void;
   closable: boolean;
   onFocus?: () => void;
@@ -150,7 +150,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     if (this.selectedItem.attributes.directory) {
       this.activateDirectory();
     } else {
-      // TODO: open file
+      this.props.onPreview && this.props.onPreview(this.selectedItem);
     }
   }
 

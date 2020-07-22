@@ -12,7 +12,7 @@ import { InputModal } from 'renderer/components/modals/InputModal';
 
 interface ExplorerPalensProps extends HOHandlers {
   directoryManager: IDirectoryManager;
-  onPreview?: (path: string) => void;
+  onPreview?: (item: FileInfo) => void;
   onTerminalOpen?: (path: string) => void;
 }
 
@@ -26,6 +26,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const gotoManager = useMemo(() => {
     return getIdentityManager();
   }, []);
+
   const [inputModalState, setInputModalState] = useState<{
     isShown: boolean;
     title?: string;

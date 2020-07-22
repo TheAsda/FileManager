@@ -76,7 +76,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
   @autobind
   selectItem() {
-    const selectedItem = this.props.options[this.state.selectedIndex];
+    const selectedItem = this.state.options[this.state.selectedIndex];
     this.props.onSelect(selectedItem);
   }
 

@@ -4,8 +4,9 @@ import { noop } from 'lodash';
 import { SplitPanels } from '../SplitPanels';
 import { ExplorerPanels, TerminalPanels } from '../panels';
 import './style.css';
-import { CommandPalette } from '../modals';
+import { CommandPalette, Commands } from '../modals';
 import { PreviewPanel } from '../panels/PreviewPanel';
+import { FileInfo } from '@fm/common';
 
 const Window = () => {
   const { directoryManager, keysManager, getIdentityManager } = useManagers();
@@ -37,24 +38,17 @@ const Window = () => {
 
   const { data: commands } = useCommands();
 
-  const previewHandler = (path: string) => {
+  const previewHandler = (item: FileInfo) => {
     previewAction({
-      type: 'display',
-      path: path,
+      type: 'setPath',
+      item,
     });
   };
 
   const togglePreview = () => {
-    if (preview.display) {
-      previewAction({
-        type: 'destroy',
-      });
-    } else {
-      previewAction({
-        type: 'display',
-        path: null,
-      });
-    }
+    previewAction({
+      type: 'toggle',
+    });
   };
 
   const switchPane = noop;
@@ -63,6 +57,10 @@ const Window = () => {
     switchPane,
     togglePreview,
     openCommandPalette,
+  };
+
+  const coms: Commands = {
+    'Toggle preview': togglePreview,
   };
 
   useEffect(() => {
@@ -78,12 +76,18 @@ const Window = () => {
         <FocusProvider>
           <SplitPanels minSize={200} splitType="vertical">
             <ExplorerPanels
+              commands={coms}
               directoryManager={directoryManager}
               hotkeys={handlers}
               onPreview={previewHandler}
             />
             {preview.display && (
-              <PreviewPanel hotkeys={handlers} onHide={togglePreview} path={preview.path} />
+              <PreviewPanel
+                direcoryManager={directoryManager}
+                hotkeys={handlers}
+                onHide={togglePreview}
+                item={preview.item}
+              />
             )}
             <TerminalPanels hotkeys={handlers} />
           </SplitPanels>

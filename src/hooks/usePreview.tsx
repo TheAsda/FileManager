@@ -7,36 +7,27 @@ import React, {
   useEffect,
 } from 'react';
 import { noop } from 'lodash';
-import { PreviewPanelInfo } from '@fm/common';
+import { PreviewPanelInfo, FileInfo } from '@fm/common';
 
-type Action =
-  | { type: 'init'; display?: boolean }
-  | { type: 'display'; path: string | null }
-  | { type: 'destroy' };
+type Action = { type: 'setPath'; item: FileInfo } | { type: 'toggle' };
 
 interface ReducerState {
-  path: string | null;
+  item: FileInfo | null;
   display: boolean;
 }
 
 const previewReducer = (state: ReducerState, action: Action): ReducerState => {
   switch (action.type) {
-    case 'init': {
+    case 'toggle': {
       return {
-        path: null,
-        display: action.display ?? false,
+        ...state,
+        display: !state.display,
       };
     }
-    case 'display': {
+    case 'setPath': {
       return {
         display: true,
-        path: action.path,
-      };
-    }
-    case 'destroy': {
-      return {
-        path: null,
-        display: false,
+        item: action.item,
       };
     }
   }
@@ -45,7 +36,7 @@ const previewReducer = (state: ReducerState, action: Action): ReducerState => {
 const PreviewContext = createContext<{ data: ReducerState; dispatch: Dispatch<Action> }>({
   data: {
     display: false,
-    path: null,
+    item: null,
   },
   dispatch: noop,
 });
@@ -55,17 +46,19 @@ interface PreviewProviderProps {
 }
 
 const PreviewProvider = ({ children, initialState }: PropsWithChildren<PreviewProviderProps>) => {
-  const [data, dispatch] = useReducer(previewReducer, {
-    path: null,
-    display: false,
-  });
-
-  useEffect(() => {
-    dispatch({
-      type: 'init',
-      display: initialState !== undefined,
-    });
-  }, []);
+  const [data, dispatch] = useReducer(
+    previewReducer,
+    {
+      item: null,
+      display: false,
+    },
+    (): ReducerState => {
+      return {
+        display: initialState !== undefined,
+        item: null,
+      };
+    }
+  );
 
   return <PreviewContext.Provider value={{ data, dispatch }}>{children}</PreviewContext.Provider>;
 };

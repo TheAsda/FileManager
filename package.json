@@ -76,6 +76,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",
+    "react-monaco-editor": "^0.39.1",
     "reflect-metadata": "^0.1.13",
     "trash": "^6.1.1",
     "xterm": "^4.6.0",

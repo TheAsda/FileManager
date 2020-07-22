@@ -11,6 +11,8 @@ interface CommandPaletteProps extends HOHandlers {
 
 const CommandPalette = (props: CommandPaletteProps) => {
   const onSelect = (selectedItem: string) => {
+    console.log(selectedItem);
+
     props.commands[selectedItem]();
     props.onClose();
   };
