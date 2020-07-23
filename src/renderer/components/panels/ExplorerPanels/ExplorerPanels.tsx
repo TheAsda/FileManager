@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { map, merge, noop } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';
@@ -18,7 +18,7 @@ interface ExplorerPalensProps extends HOHandlers {
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { data, dispatch } = useExplorers();
-  const { dispatch: focusAction } = useFocus();
+  const { dispatch: focusAction, data: focus } = useFocus();
   const { dispatch: commandsAction } = useCommands();
   const { getIdentityManager } = useManagers();
   const { dispatch: keysAction } = useHotKeys();
@@ -84,10 +84,12 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   };
 
   const focusItem = (index: number) => () => {
-    focusAction({
-      type: 'focusItem',
-      index,
-    });
+    if (focus.focusedPanel !== 'explorer' && focus.index !== index) {
+      focusAction({
+        type: 'focusItem',
+        index,
+      });
+    }
 
     keysAction({
       type: 'setHotKeys',
@@ -152,6 +154,13 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       title: filesToCopy.length === 1 ? `Move ${filesToCopy[0].name}` : 'Move items',
     });
   };
+
+  useEffect(() => {
+    if (focus.focusedPanel === 'explorer' && focus.index !== undefined) {
+      console.log('ExplorerPanels -> focus.index', focus.index);
+      focusItem(focus.index)();
+    }
+  }, [focus]);
 
   return (
     <DefaultPanel

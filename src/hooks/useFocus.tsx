@@ -60,6 +60,7 @@ const focusReducer = (state: FocusState, action: Action): FocusState => {
           return {
             ...state,
             focusedPanel: 'preview',
+            index: undefined,
           };
         }
         case 'preview': {
