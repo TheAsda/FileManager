@@ -9,6 +9,9 @@ module.exports = [
     mode: 'development',
     entry: './src/main/main.ts',
     target: 'electron-main',
+    externals: {
+      'electron-reload': 'commonjs2 electron-reload',
+    },
     module: {
       rules: [
         {
@@ -43,6 +46,7 @@ module.exports = [
       trash: 'commonjs2 trash',
       'node-pty': 'commonjs2 node-pty',
       bunyan: 'commonjs2 bunyan',
+      filemancore: 'commonjs2 filemancore',
     },
     module: {
       rules: [
@@ -79,19 +83,19 @@ module.exports = [
       new ForkTsCheckerWebpackPlugin({
         async: false,
       }),
-      new CircularDependencyPlugin({
-        // exclude detection of files based on a RegExp
-        exclude: /a\.js|node_modules/,
-        // include specific files based on a RegExp
-        include: /src/,
-        // add errors to webpack instead of warnings
-        failOnError: false,
-        // allow import cycles that include an asyncronous import,
-        // e.g. via import(/* webpackMode: "weak" */ './file.js')
-        allowAsyncCycles: false,
-        // set the current working directory for displaying module paths
-        cwd: process.cwd(),
-      }),
+      // new CircularDependencyPlugin({
+      //   // exclude detection of files based on a RegExp
+      //   exclude: /a\.js|node_modules/,
+      //   // include specific files based on a RegExp
+      //   include: /src/,
+      //   // add errors to webpack instead of warnings
+      //   failOnError: false,
+      //   // allow import cycles that include an asyncronous import,
+      //   // e.g. via import(/* webpackMode: "weak" */ './file.js')
+      //   allowAsyncCycles: false,
+      //   // set the current working directory for displaying module paths
+      //   cwd: process.cwd(),
+      // }),
     ],
     resolve: {
       extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],

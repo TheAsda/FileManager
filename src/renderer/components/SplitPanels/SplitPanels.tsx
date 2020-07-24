@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, isValidElement, cloneElement } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { clone, fill, isArray, reduce, times, map, compact, isEqual, isFunction } from 'lodash';
 import { Resizer } from './Resizer';
 import { SplitPanel } from './SplitPanel';

@@ -31,6 +31,7 @@ interface ExplorerProps extends HOHandlers {
   onBlur?: (options: Commands) => void;
   onMove?: (files: FileInfo[]) => void;
   onCopy?: (files: FileInfo[]) => void;
+  openInTerminal?: (path: string) => void;
   focused?: boolean;
 }
 
@@ -70,7 +71,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       'Reload directory': this.updateDirectoryState,
       'Rename item': this.rename,
       'Send item to trash': this.sendToTrash,
-      'Open in terminal': noop,
+      'Open in terminal': this.openInTerminal,
       'Copy item': this.copy,
       'Move item': this.move,
       'Toggle auto preview': this.toggleAutoPreview,
@@ -102,6 +103,11 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   private get selectedItem(): FileInfo {
     return this.state.directoryState[this.state.selectedIndex];
+  }
+
+  @autobind
+  openInTerminal() {
+    this.props.openInTerminal && this.props.openInTerminal(this.selectedItem.path);
   }
 
   @autobind

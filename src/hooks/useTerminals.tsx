@@ -1,15 +1,6 @@
-import React, {
-  createContext,
-  useReducer,
-  useContext,
-  Dispatch,
-  PropsWithChildren,
-  useEffect,
-} from 'react';
+import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
 import { container, TYPES, ITerminalManager, TerminalPanelInfo } from '@fm/common';
 import { map, isString, noop, filter } from 'lodash';
-import { act } from '@testing-library/react-hooks';
-import { id } from 'inversify';
 
 type Action = { type: 'spawn'; path?: string } | { type: 'destroy'; id: number };
 

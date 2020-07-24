@@ -31,6 +31,7 @@ interface FocusState {
 }
 
 const focusReducer = (state: FocusState, action: Action): FocusState => {
+  console.log('action', action);
   switch (action.type) {
     case 'focusPanel': {
       return {
@@ -95,7 +96,6 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
     focusedPanel: 'explorer',
     index: 0,
   });
-  console.log('FocusProvider -> data', data);
 
   const handleKey = (event: KeyboardEvent) => {
     if (event.keyCode === 9) {

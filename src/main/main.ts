@@ -1,6 +1,11 @@
 import { app, BrowserWindow, protocol } from 'electron';
 import { resolve, join } from 'path';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('electron-reload')(__dirname, {
+  electron: join(__dirname, 'node_modules', '.bin', 'electron'),
+});
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: BrowserWindow | null;

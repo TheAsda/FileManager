@@ -1,11 +1,4 @@
-import React, {
-  Dispatch,
-  createContext,
-  useReducer,
-  useContext,
-  PropsWithChildren,
-  useEffect,
-} from 'react';
+import React, { Dispatch, createContext, useReducer, useContext, PropsWithChildren } from 'react';
 import { noop } from 'lodash';
 import { PreviewPanelInfo, FileInfo } from '@fm/common';
 

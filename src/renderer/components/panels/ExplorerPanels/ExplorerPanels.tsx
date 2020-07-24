@@ -13,15 +13,15 @@ import { InputModal } from 'renderer/components/modals/InputModal';
 interface ExplorerPalensProps extends HOHandlers {
   directoryManager: IDirectoryManager;
   onPreview?: (item: FileInfo) => void;
-  onTerminalOpen?: (path: string) => void;
+  openInTerminal?: (path: string) => void;
 }
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { data, dispatch } = useExplorers();
   const { dispatch: focusAction, data: focus } = useFocus();
   const { dispatch: commandsAction } = useCommands();
-  const { getIdentityManager } = useManagers();
   const { dispatch: keysAction } = useHotKeys();
+  const { getIdentityManager } = useManagers();
   const [isGotoPaletteOpen, setGotoPalette] = useState<boolean>(false);
   const gotoManager = useMemo(() => {
     return getIdentityManager();
@@ -155,12 +155,11 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     });
   };
 
-  useEffect(() => {
-    if (focus.focusedPanel === 'explorer' && focus.index !== undefined) {
-      console.log('ExplorerPanels -> focus.index', focus.index);
-      focusItem(focus.index)();
-    }
-  }, [focus]);
+  // useEffect(() => {
+  //   if (focus.focusedPanel === 'explorer' && focus.index !== undefined) {
+  //     focusItem(focus.index)();
+  //   }
+  // }, [focus]);
 
   return (
     <DefaultPanel
@@ -183,6 +182,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
                 onFocus={focusItem(i)}
                 onMove={onMove(i)}
                 onPreview={props.onPreview}
+                openInTerminal={props.openInTerminal}
               />
             </ErrorBoundary>
           );

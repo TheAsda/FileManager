@@ -1,7 +1,7 @@
 import { ITerminalManager } from './ITerminalManager';
 import { IPty, spawn } from 'node-pty';
 import { injectable } from 'inversify';
-import { platform, homedir, EOL } from 'os';
+import { platform, homedir } from 'os';
 import { Terminal } from 'xterm';
 import { IdentityManager } from '../IdentityManager';
 
@@ -35,7 +35,7 @@ class TerminalManager extends IdentityManager implements ITerminalManager {
   }
 
   changeDirectory(path: string): void {
-    const cdCommand = `cd '${path}'${EOL}`;
+    const cdCommand = `cd "${path}"\r`;
     this.process.write(cdCommand);
   }
 
@@ -47,7 +47,7 @@ class TerminalManager extends IdentityManager implements ITerminalManager {
   }
 
   destroy(): void {
-    this.process.write(`exit${EOL}`);
+    this.process.write(`exit \r`);
   }
 }
 

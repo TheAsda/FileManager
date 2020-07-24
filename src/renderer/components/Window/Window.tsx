@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useManagers, usePreview, FocusProvider, useCommands, useHotKeys } from '@fm/hooks';
+import {
+  useManagers,
+  usePreview,
+  FocusProvider,
+  useCommands,
+  useHotKeys,
+  useTerminals,
+} from '@fm/hooks';
 import { noop } from 'lodash';
 import { SplitPanels } from '../SplitPanels';
 import { ExplorerPanels, TerminalPanels } from '../panels';
@@ -13,7 +20,15 @@ const Window = () => {
   const commandPaletteManager = useMemo(() => {
     return getIdentityManager();
   }, []);
+  const { data: terminals } = useTerminals();
   const { dispatch: keysAction } = useHotKeys();
+  const [terminalSelect, setTerminalSelect] = useState<{
+    isShown: boolean;
+    onSelect: (index: number) => void;
+  }>({
+    isShown: false,
+    onSelect: noop,
+  });
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
   const openCommandPalette = () => {
     setCommandPalette(true);
@@ -51,10 +66,24 @@ const Window = () => {
     });
   };
 
-  const switchPane = noop;
+  const closeSelect = () => {
+    setTerminalSelect({
+      isShown: false,
+      onSelect: noop,
+    });
+  };
+
+  const openInTerminal = (path: string) => {
+    setTerminalSelect({
+      isShown: true,
+      onSelect: (index: number) => {
+        terminals[index].changeDirectory(path);
+        closeSelect();
+      },
+    });
+  };
 
   const handlers = {
-    switchPane,
     togglePreview,
     openCommandPalette,
   };
@@ -80,6 +109,7 @@ const Window = () => {
               directoryManager={directoryManager}
               hotkeys={handlers}
               onPreview={previewHandler}
+              openInTerminal={openInTerminal}
             />
             {preview.display &&
               (({ width }) => {
@@ -87,13 +117,19 @@ const Window = () => {
                   <PreviewPanel
                     direcoryManager={directoryManager}
                     hotkeys={handlers}
-                    onHide={togglePreview}
                     item={preview.item}
+                    onHide={togglePreview}
                     width={width}
                   />
                 );
               })}
-            <TerminalPanels hotkeys={handlers} />
+            <TerminalPanels
+              commands={coms}
+              hotkeys={handlers}
+              onSelect={terminalSelect.onSelect}
+              onSelectClose={closeSelect}
+              selectModeActivated={terminalSelect.isShown}
+            />
           </SplitPanels>
         </FocusProvider>
       </div>

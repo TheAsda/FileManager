@@ -1,5 +1,5 @@
 import React from 'react';
-import { useManagers, usePreview } from '@fm/hooks';
+import { usePreview } from '@fm/hooks';
 import './style.css';
 import { includes } from 'lodash';
 import { ignoredExtentions, imageExtentions } from './fileExtentions';
@@ -31,9 +31,9 @@ const Preview = (props: PreviewProps) => {
             <TransformComponent>
               <div style={{ width: props.width, height: '100vh' }}>
                 <img
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                   alt={data.item.name}
                   src={data.item.path + data.item.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               </div>
             </TransformComponent>
@@ -42,11 +42,11 @@ const Preview = (props: PreviewProps) => {
       } else {
         return (
           <MonacoEditor
-            value={props.directoryManager.readFileSync(data.item.path + data.item.name)}
+            height="100%"
             options={{
               readOnly: true,
             }}
-            height="100%"
+            value={props.directoryManager.readFileSync(data.item.path + data.item.name)}
             width="100%"
           ></MonacoEditor>
         );
