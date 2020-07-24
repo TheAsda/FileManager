@@ -3,7 +3,6 @@ import { useManagers, usePreview } from '@fm/hooks';
 import './style.css';
 import { includes } from 'lodash';
 import { ignoredExtentions, imageExtentions } from './fileExtentions';
-import { container } from 'common/ioc';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import MonacoEditor from 'react-monaco-editor';
 import { extname } from 'path';
