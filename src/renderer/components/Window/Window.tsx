@@ -11,7 +11,7 @@ import { noop } from 'lodash';
 import { SplitPanels } from '../SplitPanels';
 import { ExplorerPanels, TerminalPanels } from '../panels';
 import './style.css';
-import { CommandPalette, Commands } from '../modals';
+import { CommandPalette, Commands, Popup } from '../modals';
 import { PreviewPanel } from '../panels/PreviewPanel';
 import { FileInfo } from '@fm/common';
 
@@ -139,6 +139,7 @@ const Window = () => {
         manager={commandPaletteManager}
         onClose={closeCommandPalette}
       />
+      <Popup />
     </>
   );
 };
