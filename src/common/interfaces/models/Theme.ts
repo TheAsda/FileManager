@@ -1,7 +1,7 @@
 interface Theme {
-  primaryColor: string;
-  primaryBackgroundColor: string;
-  additionalBackgroundColor: string;
+  'primary-color': string;
+  'primary-background-color': string;
+  'additional-background-color': string;
 }
 
 export { Theme };

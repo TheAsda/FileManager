@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
 import { Theme } from '@fm/common';
+import { toPairs, forEach } from 'lodash';
 
 interface CSSApplicatorProps {
   theme: Theme;
@@ -19,15 +20,9 @@ class CSSApplicator extends Component<CSSApplicatorProps> {
 
   @autobind
   updateCSSVariables() {
-    document.documentElement.style.setProperty('--primary-color', this.props.theme.primaryColor);
-    document.documentElement.style.setProperty(
-      '--primary-background-color',
-      this.props.theme.primaryBackgroundColor
-    );
-    document.documentElement.style.setProperty(
-      '--additional-background-color',
-      this.props.theme.additionalBackgroundColor
-    );
+    forEach(toPairs(this.props.theme), (pair) => {
+      document.documentElement.style.setProperty(`--${pair[0]}`, pair[1]);
+    });
   }
 
   render() {
