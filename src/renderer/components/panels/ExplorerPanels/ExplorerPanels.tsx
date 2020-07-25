@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { map, merge, noop } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';
@@ -6,7 +6,7 @@ import { IDirectoryManager, FileInfo } from '@fm/common';
 import { ErrorBoundary, GoToPalette } from 'renderer/components';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useExplorers, useFocus, useCommands, useHotKeys, useManagers } from '@fm/hooks';
+import { useExplorers, useFocus, useCommands, useHotKeys, useManagers, useCache } from '@fm/hooks';
 import { HOHandlers } from 'renderer/components/common/HOHandlers';
 import { InputModal } from 'renderer/components/modals/InputModal';
 
@@ -22,7 +22,13 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { dispatch: commandsAction } = useCommands();
   const { dispatch: keysAction } = useHotKeys();
   const { getIdentityManager } = useManagers();
-  const [isGotoPaletteOpen, setGotoPalette] = useState<boolean>(false);
+  const cacheManager = useCache();
+  const [isGotoPaletteOpen, setGotoPalette] = useState<{
+    isShown: boolean;
+    panelIndex?: number;
+  }>({
+    isShown: false,
+  });
   const gotoManager = useMemo(() => {
     return getIdentityManager();
   }, []);
@@ -49,7 +55,10 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   };
 
   const openGotoPalette = () => {
-    setGotoPalette(true);
+    setGotoPalette({
+      isShown: true,
+      panelIndex: focus.index,
+    });
     keysAction({
       type: 'setHotKeys',
       hotkeys: gotoManager.getHotkeys(),
@@ -58,7 +67,10 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   };
 
   const closeGotoPalette = () => {
-    setGotoPalette(false);
+    setGotoPalette({
+      isShown: false,
+      panelIndex: undefined,
+    });
 
     keysAction({
       type: 'setHotKeys',
@@ -84,7 +96,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   };
 
   const focusItem = (index: number) => () => {
-    if (focus.focusedPanel !== 'explorer' && focus.index !== index) {
+    if (focus.focusedPanel === 'explorer' && focus.index !== index) {
       focusAction({
         type: 'focusItem',
         index,
@@ -155,11 +167,12 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     });
   };
 
-  // useEffect(() => {
-  //   if (focus.focusedPanel === 'explorer' && focus.index !== undefined) {
-  //     focusItem(focus.index)();
-  //   }
-  // }, [focus]);
+  const onGotoSelect = (path: string) => {
+    if (focus.index !== undefined) {
+      data[focus.index].setPath(path);
+    }
+    closeGotoPalette();
+  };
 
   return (
     <DefaultPanel
@@ -179,6 +192,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
                 hotkeys={merge(hotkeys, props.hotkeys)}
                 onClose={onClose(i)}
                 onCopy={onCopy(i)}
+                onDirectoryChange={(path) => cacheManager.addToCache(path)}
                 onFocus={focusItem(i)}
                 onMove={onMove(i)}
                 onPreview={props.onPreview}
@@ -197,11 +211,11 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
         title={inputModalState.title}
       />
       <GoToPalette
-        isOpened={isGotoPaletteOpen}
+        isOpened={isGotoPaletteOpen.isShown}
         manager={gotoManager}
         onClose={closeGotoPalette}
-        onSelect={console.log}
-        options={['D:\\', 'C:\\']}
+        onSelect={onGotoSelect}
+        options={[...cacheManager.cache]}
       />
     </DefaultPanel>
   );

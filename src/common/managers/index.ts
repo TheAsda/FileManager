@@ -5,3 +5,4 @@ export * from './SettingsManager';
 export * from './ThemesManager';
 export * from './TerminalManager';
 export * from './ExplorerManager';
+export * from './CacheManager';

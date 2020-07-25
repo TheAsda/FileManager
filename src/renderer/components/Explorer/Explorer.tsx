@@ -1,6 +1,6 @@
 import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
 import React, { Component } from 'react';
-import { clamp, noop, merge, filter, concat, sortBy } from 'lodash';
+import { clamp, merge, filter, concat, sortBy } from 'lodash';
 import { DetailView } from './DetailView';
 import { StateLine } from './StateLine';
 import autobind from 'autobind-decorator';
@@ -8,11 +8,12 @@ import './style.css';
 import { PathWrapper } from '../PathWrapper';
 import { Commands } from '../modals';
 import { ExplorerCommands } from './explorerCommands';
-import { normalizePath } from 'filemancore';
+import { normalizePath, openWithDefaultApp } from 'filemancore';
 import { join } from 'path';
 import { HOHandlers } from '../common/HOHandlers';
 
 interface ExplorerState {
+  currentPath: string;
   selectedIndex: number;
   viewType: 'detail' | 'folder';
   directoryState: FileInfo[];
@@ -32,6 +33,7 @@ interface ExplorerProps extends HOHandlers {
   onMove?: (files: FileInfo[]) => void;
   onCopy?: (files: FileInfo[]) => void;
   openInTerminal?: (path: string) => void;
+  onDirectoryChange?: (path: string) => void;
   focused?: boolean;
 }
 
@@ -47,6 +49,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       viewType: 'detail',
       directoryState: [],
       autoPreview: true,
+      currentPath: props.explorerManager.getPath(),
     };
 
     this.handlers = {
@@ -75,6 +78,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       'Copy item': this.copy,
       'Move item': this.move,
       'Toggle auto preview': this.toggleAutoPreview,
+      'Open item': this.openItem,
     };
 
     this.props.explorerManager.setCommands(merge(this.options, props.commands));
@@ -94,6 +98,10 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       this.onFocus();
     }
 
+    if (this.props.explorerManager.getPath() !== this.state.currentPath) {
+      this.onDirectoryChange();
+    }
+
     if (!this.props.closable) {
       delete this.options['Close panel'];
     } else {
@@ -103,6 +111,15 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   private get selectedItem(): FileInfo {
     return this.state.directoryState[this.state.selectedIndex];
+  }
+
+  @autobind
+  openItem() {
+    if (this.selectedItem.attributes.directory) {
+      this.activateDirectory();
+    } else {
+      openWithDefaultApp(this.selectedItem.path + this.selectedItem.name);
+    }
   }
 
   @autobind
@@ -127,6 +144,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         ...state,
         selectedIndex: 0,
         directoryState: this.sortFilterItems(data),
+        currentPath: this.props.explorerManager.getPath(),
       }));
     });
   }
@@ -180,6 +198,8 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     this.props.explorerManager.setPath(
       normalizePath(join(this.selectedItem.path, this.selectedItem.name))
     );
+    this.props.onDirectoryChange &&
+      this.props.onDirectoryChange(this.props.explorerManager.getPath());
     this.onDirectoryChange();
   }
 

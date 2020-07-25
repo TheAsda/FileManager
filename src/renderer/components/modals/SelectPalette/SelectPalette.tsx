@@ -49,14 +49,12 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
   componentDidUpdate() {
     if (!isEqual(this.props.options, this.state.allOptions)) {
+      this.fuse.setCollection(this.props.options);
       this.setState((state) => ({
         ...state,
         allOptions: this.props.options,
         options: this.props.options,
       }));
-      this.fuse = new Fuse(this.props.options, {
-        findAllMatches: true,
-      });
     }
   }
 
@@ -97,6 +95,8 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
 
     const oldOption = this.state.options[this.state.selectedIndex];
     const result = this.fuse.search(this.inputRef.value);
+    console.log('SelectPalette -> handleInput -> this.fuse', this.fuse);
+    console.log('SelectPalette -> handleInput -> result', result);
     let resultStrings = map(result, 'item');
     if (resultStrings.length === 0) {
       resultStrings = this.state.allOptions;

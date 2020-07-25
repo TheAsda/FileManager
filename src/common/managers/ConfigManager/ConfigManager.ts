@@ -3,7 +3,7 @@ import electron from 'electron';
 import { join } from 'path';
 import { ILogManager } from '../LogManager/ILogManager';
 import { IDirectoryManager } from '../DirectoryManager/IDirectoryManager';
-const app = electron.app || electron.remote.app;
+const app = electron.app || electron.remote?.app;
 
 @injectable()
 abstract class ConfigManager {
@@ -30,6 +30,27 @@ abstract class ConfigManager {
       this.Logger.error(`Cannot parse config from ${fullPath}`);
 
       return null;
+    }
+  }
+
+  /**
+   * Write config file
+   *
+   * @param fileName the name of the config file
+   */
+  protected async saveFile<T>(fileName: string, config: T): Promise<void> {
+    const fullPath = join(app.getPath('userData'), fileName);
+
+    try {
+      await this.DirectotyManager.writeFile(fullPath, JSON.stringify(config));
+      this.Logger.log(`File saved to ${fullPath}`);
+
+      return Promise.resolve();
+    } catch {
+      const errorMessage = `Cannot write ${fullPath}`;
+
+      this.Logger.error(errorMessage);
+      return Promise.reject();
     }
   }
 }

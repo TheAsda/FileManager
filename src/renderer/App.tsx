@@ -1,7 +1,6 @@
 import React from 'react';
 import { Window } from './components';
 import {
-  CacheProvider,
   ManagersProvider,
   useManagers,
   ExplorersProvider,
@@ -25,9 +24,7 @@ const App = () => {
             <TerminalsProvider initialState={DEFAULT_LAYOUT.terminals.panels}>
               <PreviewProvider initialState={DEFAULT_LAYOUT.preview.panel}>
                 <CommandsProvider>
-                  <CacheProvider>
-                    <Window />
-                  </CacheProvider>
+                  <Window />
                 </CommandsProvider>
               </PreviewProvider>
             </TerminalsProvider>

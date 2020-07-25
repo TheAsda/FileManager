@@ -86,6 +86,14 @@ interface IDirectoryManager {
   readFileSync(filePath: string): string;
 
   /**
+   * Writes specified content to the given file
+   *
+   * @param filePath the path to the file to write
+   * @param content the content that should be written to the file
+   */
+  writeFile(filePath: string, content: string): Promise<void>;
+
+  /**
    * Starts watching pathToWatch and attaches listener to changes
    *
    * @param pathToWatch the path to begin watching

@@ -12,10 +12,11 @@ import {
   unlinkSync,
   watch,
   writeFileSync,
+  writeFile,
 } from 'fs';
 import { inject, injectable } from 'inversify';
 import { basename, join } from 'path';
-import { map } from 'lodash';
+import { map, noop } from 'lodash';
 import trash from 'trash';
 import { listDir, moveFile } from 'filemancore';
 
@@ -121,6 +122,20 @@ class DirectoryManager implements IDirectoryManager {
   readFileSync(filePath: string): string {
     this.logger.log(`Reading file ${filePath}`);
     return readFileSync(filePath, { encoding: 'utf-8' });
+  }
+
+  /** @inheritdoc */
+  async writeFile(filePath: string, content: string): Promise<void> {
+    this.logger.log(`Writing file ${filePath}`);
+
+    writeFile(
+      filePath,
+      content,
+      {
+        encoding: 'utf8',
+      },
+      noop
+    );
   }
 
   /** @inheritdoc */

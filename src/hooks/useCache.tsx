@@ -1,41 +1,15 @@
-import React, { useContext, createContext, useState } from 'react';
-import { FileInfo } from '@fm/common';
-import { constant, noop } from 'lodash';
+import { useMemo } from 'react';
+import { ICacheManager } from '@fm/common';
+import { TYPES, container } from '../common/ioc';
 
-interface Cache {
-  [path: string]: FileInfo[];
-}
+const cacheManager = container.get<ICacheManager>(TYPES.ICacheManager);
 
-const CacheContext = createContext<{
-  storage: Cache;
-  updateStorage: (path: string, data: FileInfo[]) => void;
-  getCached: (path: string) => FileInfo[] | null;
-}>({ storage: {}, getCached: constant(null), updateStorage: noop });
+const useCache = () => {
+  const manager = useMemo(() => {
+    return cacheManager;
+  }, []);
 
-const useCache = () => useContext(CacheContext);
-
-const CacheProvider = ({ children }: { children: JSX.Element }) => {
-  const [cache, setCache] = useState<Cache>({});
-
-  const updateStorage = (path: string, data: FileInfo[]) => {
-    if (cache[path] === undefined) {
-      setCache({ ...cache, [path]: data });
-    }
-  };
-
-  const getCached = (path: string): FileInfo[] | null => {
-    if (cache[path]) {
-      return cache[path];
-    }
-
-    return null;
-  };
-
-  return (
-    <CacheContext.Provider value={{ storage: cache, updateStorage, getCached }}>
-      {children}
-    </CacheContext.Provider>
-  );
+  return manager;
 };
 
-export { useCache, CacheProvider, Cache };
+export { useCache };
