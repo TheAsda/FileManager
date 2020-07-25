@@ -20,6 +20,7 @@ interface ExplorerState {
   editableIndex?: number;
   editType?: 'create' | 'rename';
   autoPreview: boolean;
+  focused: boolean;
 }
 
 interface ExplorerProps extends HOHandlers {
@@ -50,6 +51,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       directoryState: [],
       autoPreview: true,
       currentPath: props.explorerManager.getPath(),
+      focused: props.focused ?? false,
     };
 
     this.handlers = {
@@ -94,8 +96,10 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   }
 
   componentDidUpdate() {
-    if (this.props.focused) {
+    if (!this.state.focused && this.props.focused) {
       this.onFocus();
+    } else if (this.state.focused && !this.props.focused) {
+      this.onBlur();
     }
 
     if (this.props.explorerManager.getPath() !== this.state.currentPath) {
@@ -358,12 +362,13 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   @autobind
   onBlur() {
     this.props.onBlur && this.props.onBlur(this.options);
+    this.setState((state) => ({ ...state, focused: false }));
   }
 
   @autobind
   onFocus() {
-    console.log('focus');
     this.props.onFocus && this.props.onFocus();
+    this.setState((state) => ({ ...state, focused: true }));
   }
 
   @autobind

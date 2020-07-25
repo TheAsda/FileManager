@@ -96,6 +96,7 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
     focusedPanel: 'explorer',
     index: 0,
   });
+  console.log('FocusProvider -> data', data);
 
   const handleKey = (event: KeyboardEvent) => {
     if (event.keyCode === 9) {
@@ -108,7 +109,7 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
           return;
         }
 
-        if (data.focusedPanel === 'explorer') {
+        if (data.focusedPanel !== 'preview') {
           dispatch({
             type: 'toggleItem',
           });

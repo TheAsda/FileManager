@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { map, merge, noop } from 'lodash';
 import { Explorer } from 'renderer/components/Explorer';
@@ -182,6 +182,8 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     >
       <SplitPanels minSize={200} splitType="horizontal">
         {map(data, (item, i) => {
+          const isFocused = focus.focusedPanel === 'explorer' && focus.index === i;
+
           return (
             <ErrorBoundary key={item.getId()}>
               <Explorer
@@ -189,6 +191,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
                 commands={props.commands}
                 directoryManager={props.directoryManager}
                 explorerManager={item}
+                focused={isFocused}
                 hotkeys={merge(hotkeys, props.hotkeys)}
                 onClose={onClose(i)}
                 onCopy={onCopy(i)}

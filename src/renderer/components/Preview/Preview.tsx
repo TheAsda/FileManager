@@ -1,20 +1,50 @@
-import React from 'react';
-import { usePreview } from '@fm/hooks';
+import React, { useState, useEffect } from 'react';
+import { usePreview, useCommands, useHotKeys } from '@fm/hooks';
 import './style.css';
-import { includes } from 'lodash';
+import { includes, merge } from 'lodash';
 import { ignoredExtentions, imageExtentions } from './fileExtentions';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import MonacoEditor from 'react-monaco-editor';
 import { extname } from 'path';
 import { IDirectoryManager } from '@fm/common';
+import { HOHandlers } from '../common/HOHandlers';
 
-interface PreviewProps {
+interface PreviewProps extends HOHandlers {
   width?: number;
   directoryManager: IDirectoryManager;
+  focused?: boolean;
 }
 
 const Preview = (props: PreviewProps) => {
   const { data } = usePreview();
+  const [focused, setFocused] = useState<boolean>(false);
+  const { dispatch: commandsAction } = useCommands();
+  const { dispatch: keysAction } = useHotKeys();
+
+  useEffect(() => {
+    if (!focused && props.focused) {
+      onFocus();
+      setFocused(true);
+    } else if (focused && !props.focused) {
+      setFocused(false);
+    }
+  }, [props.focused]);
+
+  const onFocus = () => {
+    keysAction({
+      type: 'setHotKeys',
+      hotkeys: merge({}, props.hotkeys),
+    });
+
+    commandsAction({
+      type: 'empty',
+    });
+
+    commandsAction({
+      type: 'add',
+      items: merge({}, props.commands),
+    });
+  };
 
   if (data.item) {
     const extention = extname(data.item.name);
