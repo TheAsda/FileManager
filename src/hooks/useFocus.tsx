@@ -129,4 +129,4 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
 
 const useFocus = () => useContext(FocusContext);
 
-export { FocusProvider, useFocus };
+export { FocusProvider, useFocus, FocusState, Action };

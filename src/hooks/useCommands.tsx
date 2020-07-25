@@ -44,4 +44,4 @@ const CommandsProvider = ({ children }: { children: ReactNode }) => {
 
 const useCommands = () => useContext(CommandsContext);
 
-export { CommandsProvider, useCommands };
+export { CommandsProvider, useCommands, Action };

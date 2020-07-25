@@ -16,7 +16,8 @@
     "build": "yarn webpack && electron-builder",
     "build:win": "yarn webpack && electron-builder --win",
     "build:linux": "yarn webpack && electron-builder --linux",
-    "postinstall": "electron-rebuild"
+    "postinstall": "electron-rebuild",
+    "test": "jest"
   },
   "build": {
     "appId": "com.electron.filemanager",
@@ -58,6 +59,7 @@
     "jest": "^26.0.1",
     "node-loader": "1.0.0",
     "prettier": "^2.0.5",
+    "react-test-renderer": "^16.13.1",
     "style-loader": "^1.2.1",
     "ts-jest": "^26.0.0",
     "ts-loader": "^8.0.0",

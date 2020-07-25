@@ -99,4 +99,4 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
 
 const useHotKeys = () => useContext(HotKeysContext);
 
-export { HotKeysProvider, useHotKeys };
+export { HotKeysProvider, useHotKeys, Action, HotKeysState };
