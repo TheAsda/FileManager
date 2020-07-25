@@ -83,8 +83,8 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       'Open item': this.openItem,
     };
 
-    this.props.explorerManager.setCommands(merge(this.options, props.commands));
-    this.props.explorerManager.setHotkeys(merge(this.handlers, props.hotkeys));
+    props.explorerManager.setCommands(merge(this.options, props.commands));
+    props.explorerManager.setHotkeys(merge(this.handlers, props.hotkeys));
   }
 
   componentDidMount() {

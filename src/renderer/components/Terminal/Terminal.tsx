@@ -1,13 +1,17 @@
 import React, { Component, RefObject, createRef } from 'react';
 import { FitAddon } from 'xterm-addon-fit';
-import { ITerminalManager } from '@fm/common';
+import { ITerminalManager, Commands } from '@fm/common';
 import { Terminal as XTerm } from 'xterm';
 import 'xterm/css/xterm.css';
 import './style.css';
 import autobind from 'autobind-decorator';
 import { PathWrapper } from '../PathWrapper';
+import { HOHandlers } from '../common/HOHandlers';
+import { merge, noop } from 'lodash';
+import { TerminalCommands } from './terminalCommands';
+import ResizeObserver from 'rc-resize-observer';
 
-interface TerminalProps {
+interface TerminalProps extends HOHandlers {
   terminalManager: ITerminalManager;
   initialDirectory?: string;
   onExit?: (exitCode: number) => void;
@@ -16,6 +20,7 @@ interface TerminalProps {
   onFocus?: () => void;
   onBlur?: () => void;
   focused?: boolean;
+  onReload?: () => void;
 }
 
 interface TerminalState {
@@ -27,6 +32,8 @@ class Terminal extends Component<TerminalProps, TerminalState> {
   private terminal: XTerm;
   private TerminalManager: ITerminalManager;
   private fitAddon: FitAddon;
+  private options: TerminalCommands;
+  private handlers: Commands;
 
   constructor(props: TerminalProps) {
     super(props);
@@ -46,34 +53,44 @@ class Terminal extends Component<TerminalProps, TerminalState> {
     this.state = {
       focused: false,
     };
+
+    this.handlers = {};
+
+    this.options = {
+      'Close panel': this.props.onClose ?? noop,
+      'Reload terminal': this.props.onReload ?? noop,
+    };
+
+    props.terminalManager.setCommands(merge(this.options, props.commands));
+    props.terminalManager.setHotkeys(merge(this.handlers, props.hotkeys));
   }
 
   componentDidMount() {
     if (this.containerRef.current !== null) {
       this.terminal.loadAddon(this.fitAddon);
       this.terminal.open(this.containerRef.current);
+      this.terminal.attachCustomKeyEventHandler((event) => {
+        if (event.ctrlKey && event.key === 'p') {
+          return false;
+        }
+        return true;
+      });
       this.TerminalManager.attach(this.terminal, this.props.onExit);
       this.props.initialDirectory &&
         this.TerminalManager.changeDirectory(this.props.initialDirectory);
       this.terminal.onResize((size) => {
         this.TerminalManager.resize(size, this.terminal);
       });
-
-      window.addEventListener('resize', this.resize);
-
-      this.resize();
     }
   }
 
   componentDidUpdate() {
     if (!this.state.focused && this.props.focused) {
       this.onFocus();
-    } else if (this.state.focused && !this.props.focused) {
-      this.onBlur();
-    }
-    if (this.props.focused) {
       this.containerRef.current?.focus();
       this.terminal.focus();
+    } else if (this.state.focused && !this.props.focused) {
+      this.onBlur();
     }
   }
 
@@ -94,6 +111,7 @@ class Terminal extends Component<TerminalProps, TerminalState> {
 
   @autobind
   onBlur() {
+    this.terminal.blur();
     this.props.onBlur && this.props.onBlur();
     this.setState((state) => ({ ...state, focused: false }));
   }
@@ -101,7 +119,9 @@ class Terminal extends Component<TerminalProps, TerminalState> {
   render() {
     return (
       <PathWrapper closable={this.props.closable} onClose={this.props.onClose} path={''}>
-        <div className="terminal" ref={this.containerRef} />
+        <ResizeObserver onResize={this.resize}>
+          <div className="terminal" ref={this.containerRef} />
+        </ResizeObserver>
       </PathWrapper>
     );
   }

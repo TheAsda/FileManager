@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { Terminal } from 'renderer/components/Terminal';
 import { map, merge } from 'lodash';
 import { ErrorBoundary } from 'renderer/components/ErrorBoundary';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useTerminals, useFocus, useHotKeys, useCommands } from '@fm/hooks';
+import { useTerminals, useFocus, useHotKeys, useCommands, useManagers, useCache } from '@fm/hooks';
 import { HOHandlers } from 'renderer/components/common/HOHandlers';
 import { SelectPanel } from '../SelectPanel';
 import { bind, unbind } from 'mousetrap';
+import { GoToPalette } from 'renderer/components';
 
 interface TerminalPanelsProps extends HOHandlers {
   selectModeActivated?: boolean;
@@ -18,9 +19,44 @@ interface TerminalPanelsProps extends HOHandlers {
 
 const TerminalPanels = (props: TerminalPanelsProps) => {
   const { data, dispatch } = useTerminals();
+  const { getIdentityManager } = useManagers();
   const { data: focus, dispatch: focusAction } = useFocus();
   const { dispatch: commandsAction } = useCommands();
   const { dispatch: keysAction } = useHotKeys();
+  const [isGotoPaletteOpen, setGotoPalette] = useState<{
+    isShown: boolean;
+    panelIndex?: number;
+  }>({
+    isShown: false,
+  });
+  const gotoManager = useMemo(() => {
+    return getIdentityManager();
+  }, []);
+  const cacheManager = useCache();
+
+  const closeGotoPalette = () => {
+    setGotoPalette({
+      isShown: false,
+      panelIndex: undefined,
+    });
+
+    keysAction({
+      type: 'setHotKeys',
+      pop: true,
+    });
+  };
+
+  const openGotoPalette = () => {
+    setGotoPalette({
+      isShown: true,
+      panelIndex: focus.index,
+    });
+    keysAction({
+      type: 'setHotKeys',
+      hotkeys: gotoManager.getHotkeys(),
+      push: true,
+    });
+  };
 
   const onClose = (index: number) => () => {
     dispatch({
@@ -75,6 +111,17 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   //   }
   // }, [focus]);
 
+  const hotkeys = {
+    openGoto: openGotoPalette,
+  };
+
+  const onGotoSelect = (path: string) => {
+    if (focus.index !== undefined) {
+      data[focus.index].changeDirectory(path);
+    }
+    closeGotoPalette();
+  };
+
   return (
     <DefaultPanel
       onFocus={() => focusAction({ type: 'focusPanel', item: 'terminal' })}
@@ -90,6 +137,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
               <Terminal
                 closable={data.length > 1}
                 focused={focused}
+                hotkeys={hotkeys}
                 onClose={onClose(i)}
                 onExit={onClose(i)}
                 onFocus={focusItem(i)}
@@ -106,6 +154,13 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
           );
         })}
       </SplitPanels>
+      <GoToPalette
+        isOpened={isGotoPaletteOpen.isShown}
+        manager={gotoManager}
+        onClose={closeGotoPalette}
+        onSelect={onGotoSelect}
+        options={[...cacheManager.cache]}
+      />
     </DefaultPanel>
   );
 };
