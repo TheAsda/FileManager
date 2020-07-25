@@ -9,7 +9,7 @@ import React, {
 import { PanelType } from '../common';
 import { noop } from 'lodash';
 
-type Action =
+type FocusAction =
   | {
       type: 'focusPanel';
       item: PanelType;
@@ -30,7 +30,7 @@ interface FocusState {
   index?: number;
 }
 
-const focusReducer = (state: FocusState, action: Action): FocusState => {
+const focusReducer = (state: FocusState, action: FocusAction): FocusState => {
   console.log('action', action);
   switch (action.type) {
     case 'focusPanel': {
@@ -83,7 +83,7 @@ const focusReducer = (state: FocusState, action: Action): FocusState => {
   }
 };
 
-const FocusContext = createContext<{ data: FocusState; dispatch: Dispatch<Action> }>({
+const FocusContext = createContext<{ data: FocusState; dispatch: Dispatch<FocusAction> }>({
   data: {
     focusedPanel: 'explorer',
     index: 0,
@@ -129,4 +129,4 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
 
 const useFocus = () => useContext(FocusContext);
 
-export { FocusProvider, useFocus, FocusState, Action };
+export { FocusProvider, useFocus, FocusState, FocusAction };

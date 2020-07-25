@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { HotKeysProvider, useHotKeys, HotKeysState, Action } from '../useHotKeys';
+import { HotKeysProvider, useHotKeys, HotKeysState, HotKeysAction } from '../useHotKeys';
 import { act, renderHook, HookResult } from '@testing-library/react-hooks';
 import { KeyMap, Commands } from '@fm/common';
 import { noop } from 'lodash';
@@ -12,7 +12,7 @@ describe('useHotKeys hook tests', () => {
 
   let result: HookResult<{
     data: HotKeysState;
-    dispatch: React.Dispatch<Action>;
+    dispatch: React.Dispatch<HotKeysAction>;
   }>;
 
   beforeEach(() => {

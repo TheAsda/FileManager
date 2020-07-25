@@ -11,7 +11,7 @@ import { noop, values, flatten, forEach, keys } from 'lodash';
 import { unbind, bindGlobal } from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 
-type Action =
+type HotKeysAction =
   | {
       type: 'setKeyMap';
       keymap: KeyMap;
@@ -31,7 +31,7 @@ interface HotKeysState {
   hotKeys: Commands[];
 }
 
-const focusReducer = (state: HotKeysState, action: Action): HotKeysState => {
+const focusReducer = (state: HotKeysState, action: HotKeysAction): HotKeysState => {
   switch (action.type) {
     case 'setKeyMap': {
       return {
@@ -60,7 +60,7 @@ const focusReducer = (state: HotKeysState, action: Action): HotKeysState => {
   }
 };
 
-const HotKeysContext = createContext<{ data: HotKeysState; dispatch: Dispatch<Action> }>({
+const HotKeysContext = createContext<{ data: HotKeysState; dispatch: Dispatch<HotKeysAction> }>({
   data: {
     keymap: {},
     hotKeys: [],
@@ -99,4 +99,4 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
 
 const useHotKeys = () => useContext(HotKeysContext);
 
-export { HotKeysProvider, useHotKeys, Action, HotKeysState };
+export { HotKeysProvider, useHotKeys, HotKeysAction, HotKeysState };

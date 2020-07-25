@@ -1,5 +1,5 @@
 {
-  "primaryColor": "#161616",
-  "primaryBackgroundColor": "#b8b8b8",
-  "additionalBackgroundColor": "#929292"
+  "primary-color": "#161616",
+  "primary-background-color": "#b8b8b8",
+  "additional-background-color": "#929292"
 }

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { FocusProvider, useFocus, FocusState, Action } from '../useFocus';
+import { FocusProvider, useFocus, FocusState, FocusAction } from '../useFocus';
 import { renderHook, act, HookResult } from '@testing-library/react-hooks';
 
 describe('useFocus hook tests', () => {
@@ -9,7 +9,7 @@ describe('useFocus hook tests', () => {
 
   let result: HookResult<{
     data: FocusState;
-    dispatch: React.Dispatch<Action>;
+    dispatch: React.Dispatch<FocusAction>;
   }>;
 
   beforeEach(() => {

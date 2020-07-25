@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext, Dispatch, ReactNode } fro
 import { noop, merge, forEach } from 'lodash';
 import { Commands } from 'renderer/components';
 
-type Action =
+type CommandsAction =
   | {
       type: 'add';
       items: Commands;
@@ -15,7 +15,7 @@ type Action =
       type: 'empty';
     };
 
-const commandsReducer = (state: Commands, action: Action): Commands => {
+const commandsReducer = (state: Commands, action: CommandsAction): Commands => {
   switch (action.type) {
     case 'add': {
       return merge(state, action.items);
@@ -31,7 +31,7 @@ const commandsReducer = (state: Commands, action: Action): Commands => {
   }
 };
 
-const CommandsContext = createContext<{ data: Commands; dispatch: Dispatch<Action> }>({
+const CommandsContext = createContext<{ data: Commands; dispatch: Dispatch<CommandsAction> }>({
   data: {},
   dispatch: noop,
 });
@@ -44,4 +44,4 @@ const CommandsProvider = ({ children }: { children: ReactNode }) => {
 
 const useCommands = () => useContext(CommandsContext);
 
-export { CommandsProvider, useCommands, Action };
+export { CommandsProvider, useCommands, CommandsAction };

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { act, renderHook, HookResult } from '@testing-library/react-hooks';
-import { CommandsProvider, useCommands, Action } from '../useCommands';
+import { CommandsProvider, useCommands, CommandsAction } from '../useCommands';
 import { Commands } from '@fm/common';
 import { noop } from 'lodash';
 
@@ -11,7 +11,7 @@ describe('useCommands hook test', () => {
 
   let result: HookResult<{
     data: Commands;
-    dispatch: React.Dispatch<Action>;
+    dispatch: React.Dispatch<CommandsAction>;
   }>;
 
   const testCommands: Commands = {
