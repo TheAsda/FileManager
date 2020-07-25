@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { SplitPanels } from 'renderer/components/SplitPanels';
 import { Terminal } from 'renderer/components/Terminal';
-import { map, merge, noop } from 'lodash';
+import { map, merge } from 'lodash';
 import { ErrorBoundary } from 'renderer/components/ErrorBoundary';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useTerminals, useFocus, useHotKeys, useCommands } from '@fm/hooks';
 import { HOHandlers } from 'renderer/components/common/HOHandlers';
-import { SelectPalette, Commands } from 'renderer/components/modals';
 import { SelectPanel } from '../SelectPanel';
 import { bind, unbind } from 'mousetrap';
 
@@ -37,7 +36,6 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   };
 
   const focusItem = (index: number) => () => {
-    console.log('focusItem -> index', index);
     focusAction({
       type: 'focusItem',
       index,
@@ -85,10 +83,13 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
     >
       <SplitPanels className="terminal-panels" splitType="horizontal">
         {map(data, (item, i) => {
+          const focused = focus.focusedPanel === 'terminal' && focus.index === i;
+
           return (
             <ErrorBoundary key={item.getId()}>
               <Terminal
                 closable={data.length > 1}
+                focused={focused}
                 onClose={onClose(i)}
                 onExit={onClose(i)}
                 onFocus={focusItem(i)}

@@ -14,10 +14,15 @@ interface TerminalProps {
   onClose?: () => void;
   closable: boolean;
   onFocus?: () => void;
+  onBlur?: () => void;
   focused?: boolean;
 }
 
-class Terminal extends Component<TerminalProps> {
+interface TerminalState {
+  focused: boolean;
+}
+
+class Terminal extends Component<TerminalProps, TerminalState> {
   private containerRef: RefObject<HTMLDivElement>;
   private terminal: XTerm;
   private TerminalManager: ITerminalManager;
@@ -38,6 +43,9 @@ class Terminal extends Component<TerminalProps> {
       },
     });
     this.fitAddon = new FitAddon();
+    this.state = {
+      focused: false,
+    };
   }
 
   componentDidMount() {
@@ -58,6 +66,11 @@ class Terminal extends Component<TerminalProps> {
   }
 
   componentDidUpdate() {
+    if (!this.state.focused && this.props.focused) {
+      this.onFocus();
+    } else if (this.state.focused && !this.props.focused) {
+      this.onBlur();
+    }
     if (this.props.focused) {
       this.containerRef.current?.focus();
       this.terminal.focus();
@@ -73,10 +86,22 @@ class Terminal extends Component<TerminalProps> {
     window.removeEventListener('resize', this.resize);
   }
 
+  @autobind
+  onFocus() {
+    this.props.onFocus && this.props.onFocus();
+    this.setState((state) => ({ ...state, focused: true }));
+  }
+
+  @autobind
+  onBlur() {
+    this.props.onBlur && this.props.onBlur();
+    this.setState((state) => ({ ...state, focused: false }));
+  }
+
   render() {
     return (
       <PathWrapper closable={this.props.closable} onClose={this.props.onClose} path={''}>
-        <div className="terminal" onFocus={this.props.onFocus} ref={this.containerRef} />
+        <div className="terminal" ref={this.containerRef} />
       </PathWrapper>
     );
   }
