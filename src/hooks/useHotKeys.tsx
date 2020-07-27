@@ -80,6 +80,11 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
     forEach(keys(lastHotKeys), (commandName) => {
       const bindings = data.keymap[commandName];
 
+      if (!bindings) {
+        console.log(`Haven't found bindings for ${commandName}`);
+        return;
+      }
+
       bindGlobal(bindings, lastHotKeys[commandName]);
     });
   };

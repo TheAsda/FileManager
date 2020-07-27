@@ -1,16 +1,21 @@
 import { app, BrowserWindow, protocol } from 'electron';
 import { resolve, join } from 'path';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('electron-reload')(__dirname, {
-  electron: join(__dirname, 'node_modules', '.bin', 'electron'),
-});
+app.allowRendererProcessReuse = false;
+
+const mode = process.env.NODE_ENV || 'production';
+
+if (mode !== 'production') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('electron-reload')(__dirname, {
+    electron: join(__dirname, 'node_modules', '.bin', 'electron'),
+  });
+  app.setPath('userData', resolve('./resources'));
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: BrowserWindow | null;
-app.allowRendererProcessReuse = false;
-app.setPath('userData', resolve('./resources'));
 
 const registerProtocol = () => {
   protocol.registerFileProtocol('icons', (req, callback) => {
@@ -35,8 +40,10 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if (mode !== 'production') {
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+  }
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
