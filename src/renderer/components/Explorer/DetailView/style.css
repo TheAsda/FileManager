@@ -4,7 +4,9 @@
   text-align: left;
   --detail-view-row-height: 1.5rem;
   padding: 0 0.5rem;
-  overflow: auto;
+  display: grid;
+  grid-template-rows: var(--detail-view-row-height) calc(100% - var(--detail-view-row-height));
+  grid-template-columns: 100%;
 }
 
 .detail-view__header,
@@ -27,7 +29,15 @@
   cursor: pointer;
 }
 
-.detail-view__row:hover {
+.detail-view__body {
+  overflow: auto;
+}
+
+.detail-view__body::-webkit-scrollbar {
+  width: 0;
+}
+
+.detail-view__body .detail-view__row:hover {
   background-color: cornflowerblue;
 }
 
