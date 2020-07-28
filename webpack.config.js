@@ -32,6 +32,9 @@ const mainConfig = {
   node: {
     __dirname: false,
   },
+  resolve: {
+    extensions: ['.js', '.ts'],
+  },
 };
 
 const rendererConfig = {
