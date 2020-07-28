@@ -10,20 +10,21 @@ interface PanelInfoBase {
 
 interface ExplorerPanelInfo extends PanelInfoBase {
   type: 'explorer';
-  initialDirectory?: string;
+  directory?: string;
 }
 
 interface ExplorerPanel extends ExplorerPanelInfo, PanelBase {}
 
 interface TerminalPanelInfo extends PanelInfoBase {
   type: 'terminal';
-  initialDirectory?: string;
+  directory?: string;
 }
 
 interface TerminalPanel extends TerminalPanelInfo, PanelBase {}
 
 interface PreviewPanelInfo extends PanelInfoBase {
   type: 'preview';
+  directory?: string;
 }
 
 interface PreviewPanel extends PreviewPanelInfo, PanelBase {}

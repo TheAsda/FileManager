@@ -2,16 +2,19 @@ import { ExplorerPanelInfo, PreviewPanelInfo, TerminalPanelInfo } from './Panel'
 
 interface Layout {
   explorers: {
-    hidden: boolean;
+    hidden?: boolean;
     panels: ExplorerPanelInfo[];
+    sizes?: number[];
   };
   preview: {
-    hidden: boolean;
+    hidden?: boolean;
     panel?: PreviewPanelInfo;
+    size?: number;
   };
   terminals: {
-    hidden: boolean;
+    hidden?: boolean;
     panels: TerminalPanelInfo[];
+    sizes?: number[];
   };
 }
 

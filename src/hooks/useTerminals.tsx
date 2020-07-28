@@ -55,8 +55,8 @@ const TerminalsProvider = ({
 
     return map(initialState, (item) => {
       const manager = getTerminalManager();
-      if (item.initialDirectory) {
-        manager.changeDirectory(item.initialDirectory);
+      if (item.directory) {
+        manager.changeDirectory(item.directory);
       } else {
         manager.changeDirectory(process.cwd());
       }

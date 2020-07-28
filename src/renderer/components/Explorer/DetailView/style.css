@@ -2,11 +2,9 @@
   width: 100%;
   height: 100%;
   text-align: left;
-  --detail-view-row-height: 1.5rem;
   padding: 0 0.5rem;
-  display: grid;
-  grid-template-rows: var(--detail-view-row-height) calc(100% - var(--detail-view-row-height));
-  grid-template-columns: 100%;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .detail-view__header,
@@ -21,7 +19,6 @@
 
 .detail-view__row {
   width: 100%;
-  height: var(--detail-view-row-height);
   display: grid;
   grid-template-rows: 100%;
   grid-template-columns: 50% 20% 30%;
@@ -38,11 +35,11 @@
 }
 
 .detail-view__body .detail-view__row:hover {
-  background-color: cornflowerblue;
+  background-color: var(--explorer-hover-color);
 }
 
 .detail-view__row--selected {
-  background-color: var(--additional-background-color);
+  background-color: var(--explorer-selected-color);
 }
 
 .detail-view__item {
@@ -56,7 +53,7 @@
 }
 
 .detail-view__item > img {
-  height: calc(var(--detail-view-row-height) - 10%);
+  height: var(--explorer-font-size);
   margin-right: 10px;
 }
 

@@ -25,7 +25,7 @@ class CacheManager extends ConfigManager implements ICacheManager {
 
   async addToCache(path: string): Promise<void> {
     if (!includes(this.cacheList, path)) {
-      this.Logger.log(`Adding "${path}" to cache`);
+      this._logger.log(`Adding "${path}" to cache`);
       this.cacheList.push(path);
       await this.debouncedSave();
     }
@@ -42,7 +42,7 @@ class CacheManager extends ConfigManager implements ICacheManager {
 
   async save(): Promise<void> {
     if (!isEqual(this.cache, this.initialCache)) {
-      this.Logger.log('Saving cache');
+      this._logger.log('Saving cache');
       await this.saveFile(cacheFileName, this.cacheList);
       this.initialCache = this.cacheList;
     }

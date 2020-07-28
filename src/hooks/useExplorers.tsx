@@ -56,8 +56,8 @@ const ExplorersProvider = ({
 
     return map(initialState, (item) => {
       const manager = getExplorerManager();
-      if (item.initialDirectory) {
-        manager.setPath(item.initialDirectory);
+      if (item.directory) {
+        manager.setPath(item.directory);
       } else {
         manager.setPath(process.cwd());
       }

@@ -1,10 +1,12 @@
 .explorer {
   height: 100%;
   width: 100%;
-  background-color: var(--primary-background-color);
-  color: var(--primary-color);
+  background-color: var(--explorer-background-color);
+  color: var(--explorer-text-color);
   display: grid;
   grid-template-rows: calc(100% - 20px) 20px;
+  font-size: var(--explorer-font-size);
+  font-family: var(--explorer-font-family);
 }
 
 .explorer__footer {

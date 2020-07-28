@@ -46,7 +46,27 @@ class Terminal extends Component<TerminalProps, TerminalState> {
       fontSize: 15,
       rendererType: 'dom', // default is canvas
       theme: {
-        background: '#212533',
+        background: 'var(--terminal-background-color)',
+        black: 'var(--terminal-black-color)',
+        blue: 'var(--terminal-blue-color)',
+        brightBlack: 'var(--terminal-brightBlack-color)',
+        brightBlue: 'var(--terminal-brightBlue-color)',
+        brightCyan: 'var(--terminal-brightCyan-color)',
+        brightGreen: 'var(--terminal-brightGreen-color)',
+        brightMagenta: 'var(--terminal-brightMagenta-color)',
+        brightRed: 'var(--terminal-brightRed-color)',
+        brightWhite: 'var(--terminal-brightWhite-color)',
+        brightYellow: 'var(--terminal-brightYellow-color)',
+        cursor: 'var(--terminal-cursor-color)',
+        cursorAccent: 'var(--terminal-cursorAccent-color)',
+        cyan: 'var(--terminal-cyan-color)',
+        foreground: 'var(--terminal-foreground-color)',
+        green: 'var(--terminal-green-color)',
+        magenta: 'var(--terminal-magenta-color)',
+        red: 'var(--terminal-red-color)',
+        selection: 'var(--terminal-selection-color)',
+        white: 'var(--terminal-white-color)',
+        yellow: 'var(--terminal-yellow-color)',
       },
     });
     this.fitAddon = new FitAddon();

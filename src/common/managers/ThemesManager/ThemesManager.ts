@@ -30,13 +30,45 @@ class ThemesManager extends ConfigManager implements IThemesManager {
       this.Theme = this.retrieve(this.SettingsManager.getSettings().theme);
     }
 
+    if (!this.Theme['explorer-background-color']) {
+      this.Theme['explorer-background-color'] = this.Theme['primary-background-color'];
+    }
+    if (!this.Theme['explorer-text-color']) {
+      this.Theme['explorer-text-color'] = this.Theme['primary-text-color'];
+    }
+    if (!this.Theme['explorer-font-family']) {
+      this.Theme['explorer-font-family'] = this.Theme['preview-font-family'];
+    }
+    if (!this.Theme['explorer-font-size']) {
+      this.Theme['explorer-font-size'] = this.Theme['primary-font-size'];
+    }
+
+    if (!this.Theme['preview-background-color']) {
+      this.Theme['preview-background-color'] = this.Theme['primary-background-color'];
+    }
+    if (!this.Theme['preview-font-family']) {
+      this.Theme['preview-font-family'] = this.Theme['primary-font-family'];
+    }
+    if (!this.Theme['preview-font-size']) {
+      this.Theme['preview-font-size'] = this.Theme['primary-font-size'];
+    }
+    if (!this.Theme['preview-text-color']) {
+      this.Theme['preview-text-color'] = this.Theme['primary-text-color'];
+    }
+
     return this.Theme;
   }
 
   private retrieve(themeName: string): Theme {
-    const userTheme = this.parseFile<Theme>(`/themes/${themeName}.json`);
+    const themePath = `/themes/${themeName}.json`;
+    const userTheme = this.parseFile<Theme>(themePath);
 
-    return userTheme ? merge(DEFAULT_THEME, userTheme) : DEFAULT_THEME;
+    if (!userTheme) {
+      this.saveFile('/themes/default.json', DEFAULT_THEME);
+      return DEFAULT_THEME;
+    }
+
+    return merge(DEFAULT_THEME, userTheme);
   }
 }
 

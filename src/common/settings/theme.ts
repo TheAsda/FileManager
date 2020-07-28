@@ -1,9 +1,13 @@
 import { Theme } from 'common/interfaces';
 
 const DEFAULT_THEME: Theme = {
-  'primary-color': '#CDD1C4',
+  'primary-text-color': '#CDD1C4',
   'primary-background-color': '#30323D',
-  'additional-background-color': '#5C80BC',
+  'primary-font-family': 'Maven Pro',
+  'primary-font-size': '15px',
+
+  'explorer-hover-color': '#4a4c56',
+  'explorer-selected-color': '#70727e',
 };
 
 export { DEFAULT_THEME };

@@ -21,6 +21,7 @@ class KeysManager extends ConfigManager implements IKeysManager {
 
   /** Returns default and users key map settings */
   getKeyMap(): KeyMap {
+    this._logger.log('Getting key map');
     if (!this.KeyMap) {
       this.KeyMap = this.retrieve();
     }
@@ -30,6 +31,7 @@ class KeysManager extends ConfigManager implements IKeysManager {
 
   /** Loads key maps */
   private retrieve(): KeyMap {
+    this._logger.log('Loading keymap');
     const userKeys = this.parseFile<KeyMap>('keymap.json');
 
     return userKeys ? merge(userKeys, DEFAULT_KEYMAP) : DEFAULT_KEYMAP;

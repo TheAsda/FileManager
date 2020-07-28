@@ -8,11 +8,11 @@ const app = electron.app || electron.remote?.app;
 @injectable()
 abstract class ConfigManager {
   /** Path to config file */
-  protected DirectotyManager: IDirectoryManager;
-  protected Logger: ILogManager;
+  protected _directotyManager: IDirectoryManager;
+  protected _logger: ILogManager;
   constructor(logger: ILogManager, directoryManager: IDirectoryManager) {
-    this.DirectotyManager = directoryManager;
-    this.Logger = logger;
+    this._directotyManager = directoryManager;
+    this._logger = logger;
   }
 
   /**
@@ -22,12 +22,12 @@ abstract class ConfigManager {
     const fullPath = join(app.getPath('userData'), fileName);
 
     try {
-      const userData = this.DirectotyManager.readFileSync(fullPath);
-      this.Logger.log(`Retrieving config from ${fullPath}`);
+      const userData = this._directotyManager.readFileSync(fullPath);
+      this._logger.log(`Retrieving config from ${fullPath}`);
 
       return JSON.parse(userData);
     } catch {
-      this.Logger.error(`Cannot parse config from ${fullPath}`);
+      this._logger.error(`Cannot parse config from ${fullPath}`);
 
       return null;
     }
@@ -42,14 +42,14 @@ abstract class ConfigManager {
     const fullPath = join(app.getPath('userData'), fileName);
 
     try {
-      await this.DirectotyManager.writeFile(fullPath, JSON.stringify(config));
-      this.Logger.log(`File saved to ${fullPath}`);
+      await this._directotyManager.writeFile(fullPath, JSON.stringify(config));
+      this._logger.log(`File saved to ${fullPath}`);
 
       return Promise.resolve();
     } catch {
       const errorMessage = `Cannot write ${fullPath}`;
 
-      this.Logger.error(errorMessage);
+      this._logger.error(errorMessage);
       return Promise.reject();
     }
   }

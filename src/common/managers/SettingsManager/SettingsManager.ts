@@ -20,6 +20,7 @@ class SettingsManager extends ConfigManager implements ISettingsManager {
 
   /** @inheritdoc */
   getSettings(): Settings {
+    this._logger.log('Getting settings');
     if (!this.Settings) {
       this.Settings = this.retrieve();
     }
@@ -28,6 +29,7 @@ class SettingsManager extends ConfigManager implements ISettingsManager {
   }
 
   private retrieve(): Settings {
+    this._logger.log('Loading settings');
     const userSettings = this.parseFile<Settings>('settings.json');
 
     return userSettings ? merge(DEFAULT_SETTINGS, userSettings) : DEFAULT_SETTINGS;
