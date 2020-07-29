@@ -48,12 +48,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: flex;
+  display: grid;
+  grid-template-columns: var(--explorer-font-size) calc(100% - var(--explorer-font-size));
+  grid-template-rows: 100%;
   align-items: center;
+  gap: 10px;
+  margin: 5px;
 }
 
 .detail-view__item > img {
-  height: var(--explorer-font-size);
   margin-right: 10px;
 }
 
