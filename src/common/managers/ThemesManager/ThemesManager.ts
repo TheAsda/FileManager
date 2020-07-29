@@ -3,10 +3,10 @@ import { Theme, DEFAULT_THEME } from '@fm/common';
 import { IThemesManager } from './IThemesManager';
 import { ISettingsManager } from '../SettingsManager/ISettingsManager';
 import { ConfigManager } from '../ConfigManager/ConfigManager';
-import { TYPES } from 'common/ioc';
 import { ILogManager } from '../LogManager/ILogManager';
 import { IDirectoryManager } from '../DirectoryManager/IDirectoryManager';
 import { merge } from 'lodash';
+import { TYPES } from '../../ioc';
 
 @injectable()
 class ThemesManager extends ConfigManager implements IThemesManager {

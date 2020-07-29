@@ -47,6 +47,13 @@
     "import/resolver": {
       "webpack": {
         "config": "webpack.config.js"
+      },
+      "alias": {
+        "map": [
+          ["@fm/common", "src/common"],
+          ["@fm/hooks", "src/hooks"]
+        ],
+        "extensions": [".ts", ".tsx", ".js", ".jsx", ".json"]
       }
     },
     "import/ignore": ["node_modules"]

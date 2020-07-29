@@ -2,8 +2,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { resolve } = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
+const { readFileSync } = require('fs');
 const WebpackDefinePlugin = require('webpack').DefinePlugin;
+
+const env = readFileSync('./.env', { encoding: 'utf8' })
+  .split('\n')
+  .reduce((acc, cur) => {
+    const pair = cur.split('=');
+    acc[`process.env.${pair[0]}`] = JSON.stringify(pair[1]);
+    return acc;
+  }, {});
 
 const mainConfig = {
   entry: './src/main/main.ts',
@@ -24,9 +32,6 @@ const mainConfig = {
   plugins: [
     new ForkTsCheckerWebpackPlugin({
       async: false,
-    }),
-    new CopyPlugin({
-      patterns: [{ from: 'app/icons', to: 'icons' }],
     }),
   ],
   node: {
@@ -92,17 +97,24 @@ const rendererConfig = {
   },
 };
 
-module.exports = (env, argv) => {
+module.exports = (_, argv) => {
   const mode = argv.mode || 'development';
 
   mainConfig.mode = mode;
   mainConfig.plugins.push(
     new WebpackDefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
+      ...env,
     })
   );
 
   rendererConfig.mode = mode;
+  rendererConfig.plugins.push(
+    new WebpackDefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(mode),
+      ...env,
+    })
+  );
 
   if (mode !== 'production') {
     mainConfig.externals = {

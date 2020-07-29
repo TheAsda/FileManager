@@ -2,16 +2,20 @@ import { app, protocol } from 'electron';
 import { resolve, join } from 'path';
 import { Window } from './Window';
 import { hotReaload } from './hotReload';
+import { init } from '@sentry/electron';
 
 const mode = process.env.NODE_ENV || 'production';
 const isDev = () => mode !== 'production';
 
-app.allowRendererProcessReuse = false;
-
 if (isDev()) {
+  init({
+    dsn: process.env.SENTRY_DSN,
+  });
   hotReaload();
   app.setPath('userData', resolve('./resources'));
 }
+
+app.allowRendererProcessReuse = false;
 
 const registerIconsProtocol = () => {
   protocol.registerFileProtocol('icons', (req, callback) => {
