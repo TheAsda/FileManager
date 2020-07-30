@@ -1,8 +1,7 @@
 import { isEqual, includes, debounce } from 'lodash';
-import { ConfigManager } from '../ConfigManager';
 import { ICacheManager } from './ICacheManager';
 import { injectable, inject } from 'inversify';
-import { TYPES } from 'common/ioc';
+import { TYPES } from '../../ioc';
 import { ILogManager } from '../LogManager';
 import { IDirectoryManager } from '../DirectoryManager';
 import electron from 'electron';

@@ -3,4 +3,9 @@ export * from './panels';
 export * from './modals';
 export * from './SplitPanels';
 export * from './ErrorBoundary';
-export * from './common/FolderIcon'
+export * from './common';
+export * from './Explorer';
+export * from './Terminal';
+export * from './CSSApplicator';
+export * from './PathWrapper';
+export * from './Preview';

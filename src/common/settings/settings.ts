@@ -1,4 +1,4 @@
-import { Settings } from 'common/interfaces';
+import { Settings } from '@fm/common';
 import { DEFAULT_LAYOUT } from './layout';
 
 const DEFAULT_SETTINGS: Settings = {

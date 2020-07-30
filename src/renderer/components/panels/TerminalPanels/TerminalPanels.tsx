@@ -1,15 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { SplitPanels } from 'renderer/components/SplitPanels';
-import { Terminal } from 'renderer/components/Terminal';
 import { map, merge } from 'lodash';
-import { ErrorBoundary } from 'renderer/components/ErrorBoundary';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useTerminals, useFocus, useHotKeys, useCommands, useManagers, useCache } from '@fm/hooks';
-import { HOHandlers } from 'renderer/components/common/HOHandlers';
 import { SelectPanel } from '../SelectPanel';
 import { bind, unbind } from 'mousetrap';
-import { GoToPalette } from 'renderer/components';
+import { HOHandlers, ErrorBoundary, SplitPanels, GoToPalette, Terminal } from '@fm/components';
 
 interface TerminalPanelsProps extends HOHandlers {
   selectModeActivated?: boolean;

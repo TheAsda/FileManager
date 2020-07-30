@@ -7,7 +7,7 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import MonacoEditor from 'react-monaco-editor';
 import { extname } from 'path';
 import { IDirectoryManager } from '@fm/common';
-import { HOHandlers } from '../common/HOHandlers';
+import { HOHandlers } from '@fm/components';
 
 interface PreviewProps extends HOHandlers {
   width?: number;

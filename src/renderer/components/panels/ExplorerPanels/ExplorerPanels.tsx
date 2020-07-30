@@ -1,14 +1,17 @@
 import React, { useState, useMemo } from 'react';
-import { SplitPanels } from 'renderer/components/SplitPanels';
 import { map, merge, noop } from 'lodash';
-import { Explorer } from 'renderer/components/Explorer';
 import { IDirectoryManager, FileInfo } from '@fm/common';
-import { ErrorBoundary, GoToPalette } from 'renderer/components';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useExplorers, useFocus, useCommands, useHotKeys, useManagers, useCache } from '@fm/hooks';
-import { HOHandlers } from 'renderer/components/common/HOHandlers';
-import { InputModal } from 'renderer/components/modals/InputModal';
+import {
+  SplitPanels,
+  ErrorBoundary,
+  GoToPalette,
+  HOHandlers,
+  Explorer,
+  InputModal,
+} from '@fm/components';
 
 interface ExplorerPalensProps extends HOHandlers {
   directoryManager: IDirectoryManager;

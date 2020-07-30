@@ -8,12 +8,16 @@ import {
   useTerminals,
 } from '@fm/hooks';
 import { noop } from 'lodash';
-import { SplitPanels } from '../SplitPanels';
-import { ExplorerPanels, TerminalPanels } from '../panels';
 import './style.css';
-import { CommandPalette, Commands, Popup } from '../modals';
-import { PreviewPanel } from '../panels/PreviewPanel';
-import { FileInfo } from '@fm/common';
+import { FileInfo, Commands } from '@fm/common';
+import {
+  SplitPanels,
+  ExplorerPanels,
+  TerminalPanels,
+  CommandPalette,
+  Popup,
+  PreviewPanel,
+} from '@fm/components';
 
 const Window = () => {
   const { directoryManager, keysManager, getIdentityManager } = useManagers();

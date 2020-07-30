@@ -4,7 +4,7 @@ import { clamp, map, includes, isEqual, indexOf } from 'lodash';
 import './style.css';
 import { SelectPaletteItem } from './SelectPaletteItem';
 import Modal from 'react-modal';
-import { HOHandlers } from 'renderer/components/common/HOHandlers';
+import { HOHandlers } from '@fm/components';
 import Fuse from 'fuse.js';
 
 interface SelectPaletteProps extends HOHandlers {

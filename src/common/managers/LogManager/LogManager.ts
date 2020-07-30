@@ -1,6 +1,8 @@
 import { ILogManager } from './ILogManager';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 import Logger, { createLogger, LoggerOptions } from 'bunyan';
+import { TYPES } from '../../ioc';
+import { ISettingsManager } from '../SettingsManager';
 
 const loggerOptions: LoggerOptions = {
   name: 'Logger',
@@ -10,8 +12,8 @@ const loggerOptions: LoggerOptions = {
 class LogManager implements ILogManager {
   private Logger: Logger;
 
-  constructor() {
-    this.Logger = createLogger({ ...loggerOptions, level: 'info' });
+  constructor(@inject(TYPES.ISettingsManager) settingsManager: ISettingsManager) {
+    this.Logger = createLogger({ ...loggerOptions, level: settingsManager.getSettings().logLevel });
   }
 
   /** @inheritdoc */

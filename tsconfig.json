@@ -17,7 +17,8 @@
     "baseUrl": "src",
     "paths": {
       "@fm/common": ["common"],
-      "@fm/hooks": ["hooks"]
+      "@fm/hooks": ["renderer/hooks"],
+      "@fm/components": ["renderer/components"]
     },
     "sourceMap": true
   },

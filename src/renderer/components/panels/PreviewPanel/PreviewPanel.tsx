@@ -2,9 +2,8 @@ import React from 'react';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useFocus } from '@fm/hooks';
-import { HOHandlers } from 'renderer/components/common/HOHandlers';
 import { FileInfo, IDirectoryManager } from '@fm/common';
-import { Preview } from 'renderer/components/Preview';
+import { HOHandlers, Preview } from '@fm/components';
 
 interface PreviewPanelProps extends HOHandlers {
   onHide?: () => void;

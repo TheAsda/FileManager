@@ -1,6 +1,5 @@
 import { IExplorerManager } from './IExplorerManager';
 import { injectable } from 'inversify';
-import { execSync } from 'child_process';
 import { forEach } from 'lodash';
 import { IdentityManager } from '../IdentityManager';
 
@@ -26,15 +25,6 @@ class ExplorerManager extends IdentityManager implements IExplorerManager {
 
   private onPathChange() {
     forEach(this.pathHandlers, (handler) => handler(this.getPath()));
-  }
-
-  openFile(fullPath: string): Promise<void> {
-    try {
-      execSync(fullPath);
-      return Promise.resolve();
-    } catch (err) {
-      return Promise.reject('Cannot open file');
-    }
   }
 
   on(event: 'pathChange', handler: (path: string) => void): void {

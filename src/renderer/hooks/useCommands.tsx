@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, Dispatch, ReactNode } from 'react';
 import { noop, merge, forEach } from 'lodash';
-import { Commands } from 'renderer/components';
+import { Commands } from '@fm/common';
 
 type CommandsAction =
   | {

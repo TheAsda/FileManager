@@ -5,8 +5,6 @@ interface IExplorerManager extends IIdentityManager {
 
   getPath(): string;
 
-  openFile(fullPath: string): Promise<void>;
-
   on(event: 'pathChange', handler: (path: string) => void): void;
 }
 

@@ -1,4 +1,4 @@
-import { Commands } from 'renderer/components/modals';
+import { Commands } from '@fm/components';
 
 interface ExplorerCommands extends Commands {
   'New file': () => void;

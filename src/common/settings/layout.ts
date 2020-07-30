@@ -1,4 +1,4 @@
-import { Layout } from 'common/interfaces';
+import { Layout } from '@fm/common';
 
 const DEFAULT_LAYOUT: Layout = {
   explorers: {

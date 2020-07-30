@@ -1,7 +1,7 @@
 import React from 'react';
 import { keys } from 'lodash';
 import { Commands, SelectPalette } from '../SelectPalette';
-import { HOHandlers } from 'renderer/components/common/HOHandlers';
+import { HOHandlers } from '@fm/components';
 
 interface CommandPaletteProps extends HOHandlers {
   isOpened: boolean;

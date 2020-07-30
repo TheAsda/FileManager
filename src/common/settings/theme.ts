@@ -1,4 +1,4 @@
-import { Theme } from 'common/interfaces';
+import { Theme } from '@fm/common';
 
 const DEFAULT_THEME: Theme = {
   'primary-text-color': '#CDD1C4',

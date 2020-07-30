@@ -91,7 +91,8 @@ const rendererConfig = {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
     alias: {
       '@fm/common': resolve(__dirname, 'src/common'),
-      '@fm/hooks': resolve(__dirname, 'src/hooks'),
+      '@fm/hooks': resolve(__dirname, 'src/renderer/hooks'),
+      '@fm/components': resolve(__dirname, 'src/renderer/components'),
     },
     modules: ['src', 'node_modules'],
   },

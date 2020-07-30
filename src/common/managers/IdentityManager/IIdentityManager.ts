@@ -1,4 +1,4 @@
-import { Commands } from 'common/interfaces';
+import { Commands } from '@fm/common';
 
 interface IIdentityManager {
   setId(id: number): void;

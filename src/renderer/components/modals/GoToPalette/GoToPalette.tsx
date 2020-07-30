@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 import { SelectPalette } from '../SelectPalette';
-import { HOHandlers } from 'renderer/components/common/HOHandlers';
+import { HOHandlers } from '@fm/components';
 
 interface GoToPaletteProps extends HOHandlers {
   isOpened: boolean;

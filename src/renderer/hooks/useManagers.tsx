@@ -1,7 +1,12 @@
-import { ISettingsManager, IThemesManager, IKeysManager, IDirectoryManager } from '@fm/common';
-import { container, TYPES } from '../common/ioc';
+import {
+  ISettingsManager,
+  IThemesManager,
+  IKeysManager,
+  IDirectoryManager,
+  IIdentityManager,
+} from '@fm/common';
+import { container, TYPES } from '../../common/ioc';
 import React, { createContext, useContext } from 'react';
-import { IIdentityManager } from 'common/managers/IdentityManager';
 
 const settingsManager = container.get<ISettingsManager>(TYPES.ISettingsManager);
 const keysManager = container.get<IKeysManager>(TYPES.IKeysManager);

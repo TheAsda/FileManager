@@ -1,40 +1,33 @@
-import { ConfigManager } from '../ConfigManager';
 import { injectable, inject } from 'inversify';
 import { KeyMap, DEFAULT_KEYMAP } from '@fm/common';
-import { merge } from 'lodash';
+import { TYPES } from '../../ioc';
+import { merge, isEmpty } from 'lodash';
 import { IKeysManager } from './IKeysManager';
-import { TYPES } from 'common/ioc';
-import { IDirectoryManager } from '../DirectoryManager';
 import { ILogManager } from '../LogManager';
+import Store from 'electron-store';
 
 @injectable()
-class KeysManager extends ConfigManager implements IKeysManager {
-  /** Keymap for manager */
-  private KeyMap?: KeyMap;
+class KeysManager implements IKeysManager {
+  private logger: ILogManager;
+  private store: Store<KeyMap>;
 
-  constructor(
-    @inject(TYPES.ILogManager) logger: ILogManager,
-    @inject(TYPES.IDirectoryManager) directoryManager: IDirectoryManager
-  ) {
-    super('keymap', logger, directoryManager);
+  constructor(@inject(TYPES.ILogManager) logger: ILogManager) {
+    this.logger = logger;
+    this.store = new Store<KeyMap>({
+      name: 'keymap',
+    });
   }
 
-  /** Returns default and users key map settings */
+  /** @inheritdoc */
   getKeyMap(): KeyMap {
-    this._logger.log('Getting key map');
-    if (!this.KeyMap) {
-      this.KeyMap = this.retrieve();
+    this.logger.log('Getting key map');
+
+    if (isEmpty(this.store.store)) {
+      this.store.set(DEFAULT_KEYMAP);
+      return DEFAULT_KEYMAP;
     }
 
-    return this.KeyMap;
-  }
-
-  /** Loads key maps */
-  private retrieve(): KeyMap {
-    this._logger.log('Loading keymap');
-    const userKeys = this.getConfig<KeyMap>();
-
-    return userKeys ? merge(userKeys, DEFAULT_KEYMAP) : DEFAULT_KEYMAP;
+    return merge(DEFAULT_KEYMAP, this.store.store);
   }
 }
 

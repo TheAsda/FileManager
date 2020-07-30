@@ -50,8 +50,9 @@
       },
       "alias": {
         "map": [
-          ["@fm/common", "src/common"],
-          ["@fm/hooks", "src/hooks"]
+          ["@fm/common", "./src/common"],
+          ["@fm/hooks", "./src/renderer/hooks"],
+          ["@fm/components", "./src/renderer/components"]
         ],
         "extensions": [".ts", ".tsx", ".js", ".jsx", ".json"]
       }

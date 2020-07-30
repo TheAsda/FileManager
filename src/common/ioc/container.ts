@@ -16,15 +16,16 @@ import {
   IExplorerManager,
   ICacheManager,
   CacheManager,
+  IIdentityManager,
+  IdentityManager,
 } from '@fm/common';
 import { TYPES } from './types';
-import { IIdentityManager, IdentityManager } from 'common/managers/IdentityManager';
 
 const container = new Container({ defaultScope: 'Singleton' });
 
 container.bind<IDirectoryManager>(TYPES.IDirectoryManager).to(DirectoryManager).inTransientScope();
-container.bind<ILogManager>(TYPES.ILogManager).to(LogManager);
 container.bind<ISettingsManager>(TYPES.ISettingsManager).to(SettingsManager);
+container.bind<ILogManager>(TYPES.ILogManager).to(LogManager);
 container.bind<IKeysManager>(TYPES.IKeysManager).to(KeysManager);
 container.bind<IThemesManager>(TYPES.IThemesManager).to(ThemesManager);
 container.bind<ICacheManager>(TYPES.ICacheManager).to(CacheManager);

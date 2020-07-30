@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { extname } from 'path';
 import { FileIcon, defaultStyles, DefaultExtensionType } from 'react-file-icon';
-import { FolderIcon } from 'renderer/components';
-
+import { FolderIcon } from '@fm/components';
 
 interface DetailViewItemProps {
   name: string;

@@ -1,5 +1,5 @@
 import { Commands } from '../modals';
-import { IIdentityManager } from 'common/managers/IdentityManager';
+import { IIdentityManager } from '@fm/common';
 
 interface HOHandlers {
   commands?: Commands;
