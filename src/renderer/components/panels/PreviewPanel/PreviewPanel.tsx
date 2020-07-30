@@ -2,13 +2,12 @@ import React from 'react';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useFocus } from '@fm/hooks';
-import { FileInfo, IDirectoryManager } from '@fm/common';
+import { FileInfo } from '@fm/common';
 import { HOHandlers, Preview } from '@fm/components';
 
 interface PreviewPanelProps extends HOHandlers {
   onHide?: () => void;
   item?: FileInfo | null;
-  direcoryManager: IDirectoryManager;
   width?: number;
 }
 
@@ -21,11 +20,7 @@ const PreviewPanel = (props: PreviewPanelProps) => {
 
   return (
     <DefaultPanel onFocus={onFocus} onHide={props.onHide} splitable={false}>
-      <Preview
-        directoryManager={props.direcoryManager}
-        focused={focus.focusedPanel === 'preview'}
-        width={props.width}
-      />
+      <Preview focused={focus.focusedPanel === 'preview'} width={props.width} />
     </DefaultPanel>
   );
 };

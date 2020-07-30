@@ -1,1 +1,1 @@
-export * from './SelectPanel'
+export * from './SelectPanel';

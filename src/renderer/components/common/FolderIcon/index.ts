@@ -1,1 +1,1 @@
-export * from './FolderIcon'
+export * from './FolderIcon';

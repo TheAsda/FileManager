@@ -1,1 +1,1 @@
-export * from './InputModal'
+export * from './InputModal';

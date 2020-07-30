@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { usePreview, useCommands, useHotKeys } from '@fm/hooks';
+import { usePreview, useCommands, useHotKeys, useManagers } from '@fm/hooks';
 import './style.css';
 import { includes, merge } from 'lodash';
 import { ignoredExtentions, imageExtentions } from './fileExtentions';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import MonacoEditor from 'react-monaco-editor';
 import { extname } from 'path';
-import { IDirectoryManager } from '@fm/common';
 import { HOHandlers } from '@fm/components';
 
 interface PreviewProps extends HOHandlers {
   width?: number;
-  directoryManager: IDirectoryManager;
   focused?: boolean;
 }
 
@@ -20,6 +18,7 @@ const Preview = (props: PreviewProps) => {
   const [focused, setFocused] = useState<boolean>(false);
   const { dispatch: commandsAction } = useCommands();
   const { dispatch: keysAction } = useHotKeys();
+  const { directoryManager } = useManagers();
 
   useEffect(() => {
     if (!focused && props.focused) {
@@ -76,7 +75,7 @@ const Preview = (props: PreviewProps) => {
             options={{
               readOnly: true,
             }}
-            value={props.directoryManager.readFileSync(data.item.path + data.item.name)}
+            value={directoryManager.readFileSync(data.item.path + data.item.name)}
             width="100%"
           ></MonacoEditor>
         );

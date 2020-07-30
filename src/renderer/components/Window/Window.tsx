@@ -20,7 +20,7 @@ import {
 } from '@fm/components';
 
 const Window = () => {
-  const { directoryManager, keysManager, getIdentityManager } = useManagers();
+  const { keysManager, getIdentityManager } = useManagers();
   const commandPaletteManager = useMemo(() => {
     return getIdentityManager();
   }, []);
@@ -110,7 +110,6 @@ const Window = () => {
           <SplitPanels minSize={200} splitType="vertical">
             <ExplorerPanels
               commands={coms}
-              directoryManager={directoryManager}
               hotkeys={handlers}
               onPreview={previewHandler}
               openInTerminal={openInTerminal}
@@ -119,7 +118,6 @@ const Window = () => {
               (({ width }) => {
                 return (
                   <PreviewPanel
-                    direcoryManager={directoryManager}
                     hotkeys={handlers}
                     item={preview.item}
                     onHide={togglePreview}

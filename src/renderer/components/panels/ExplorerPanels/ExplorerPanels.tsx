@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { map, merge, noop } from 'lodash';
-import { IDirectoryManager, FileInfo } from '@fm/common';
+import { FileInfo } from '@fm/common';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useExplorers, useFocus, useCommands, useHotKeys, useManagers, useCache } from '@fm/hooks';
@@ -14,7 +14,6 @@ import {
 } from '@fm/components';
 
 interface ExplorerPalensProps extends HOHandlers {
-  directoryManager: IDirectoryManager;
   onPreview?: (item: FileInfo) => void;
   openInTerminal?: (path: string) => void;
 }
@@ -24,7 +23,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { dispatch: focusAction, data: focus } = useFocus();
   const { dispatch: commandsAction } = useCommands();
   const { dispatch: keysAction } = useHotKeys();
-  const { getIdentityManager } = useManagers();
+  const { getIdentityManager, directoryManager } = useManagers();
   const cacheManager = useCache();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
@@ -136,7 +135,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     setInputModalState({
       isShown: true,
       onAccept: (path: string) => {
-        props.directoryManager.copyItems(filesToCopy, path);
+        directoryManager.copyItems(filesToCopy, path);
         resetInputModal();
       },
       onDecline: () => {
@@ -159,7 +158,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     setInputModalState({
       isShown: true,
       onAccept: (path: string) => {
-        props.directoryManager.moveItems(filesToCopy, path);
+        directoryManager.moveItems(filesToCopy, path);
         resetInputModal();
       },
       onDecline: () => {
@@ -192,7 +191,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
               <Explorer
                 closable={data.length > 1}
                 commands={props.commands}
-                directoryManager={props.directoryManager}
+                directoryManager={directoryManager}
                 explorerManager={item}
                 focused={isFocused}
                 hotkeys={merge(hotkeys, props.hotkeys)}
