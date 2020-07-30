@@ -16,7 +16,7 @@ class KeysManager extends ConfigManager implements IKeysManager {
     @inject(TYPES.ILogManager) logger: ILogManager,
     @inject(TYPES.IDirectoryManager) directoryManager: IDirectoryManager
   ) {
-    super(logger, directoryManager);
+    super('keymap', logger, directoryManager);
   }
 
   /** Returns default and users key map settings */
@@ -32,7 +32,7 @@ class KeysManager extends ConfigManager implements IKeysManager {
   /** Loads key maps */
   private retrieve(): KeyMap {
     this._logger.log('Loading keymap');
-    const userKeys = this.parseFile<KeyMap>('keymap.json');
+    const userKeys = this.getConfig<KeyMap>();
 
     return userKeys ? merge(userKeys, DEFAULT_KEYMAP) : DEFAULT_KEYMAP;
   }

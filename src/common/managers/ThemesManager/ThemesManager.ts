@@ -19,7 +19,7 @@ class ThemesManager extends ConfigManager implements IThemesManager {
     @inject(TYPES.IDirectoryManager) directoryManager: IDirectoryManager,
     @inject(TYPES.ISettingsManager) settingsManager: ISettingsManager
   ) {
-    super(logger, directoryManager);
+    super(settingsManager.getSettings().theme, logger, directoryManager);
 
     this.SettingsManager = settingsManager;
   }
@@ -27,7 +27,7 @@ class ThemesManager extends ConfigManager implements IThemesManager {
   /** @inheritdoc */
   getTheme(): Theme {
     if (!this.Theme) {
-      this.Theme = this.retrieve(this.SettingsManager.getSettings().theme);
+      this.Theme = this.retrieve();
     }
 
     if (!this.Theme['explorer-background-color']) {
@@ -59,12 +59,10 @@ class ThemesManager extends ConfigManager implements IThemesManager {
     return this.Theme;
   }
 
-  private retrieve(themeName: string): Theme {
-    const themePath = `/themes/${themeName}.json`;
-    const userTheme = this.parseFile<Theme>(themePath);
+  private retrieve(): Theme {
+    const userTheme = this.getConfig<Theme>();
 
     if (!userTheme) {
-      this.saveFile('/themes/default.json', DEFAULT_THEME);
       return DEFAULT_THEME;
     }
 

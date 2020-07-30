@@ -15,7 +15,7 @@ class SettingsManager extends ConfigManager implements ISettingsManager {
     @inject(TYPES.ILogManager) logger: ILogManager,
     @inject(TYPES.IDirectoryManager) directoryManager: IDirectoryManager
   ) {
-    super(logger, directoryManager);
+    super('settings', logger, directoryManager);
   }
 
   /** @inheritdoc */
@@ -30,7 +30,7 @@ class SettingsManager extends ConfigManager implements ISettingsManager {
 
   private retrieve(): Settings {
     this._logger.log('Loading settings');
-    const userSettings = this.parseFile<Settings>('settings.json');
+    const userSettings = this.getConfig<Settings>();
 
     return userSettings ? merge(DEFAULT_SETTINGS, userSettings) : DEFAULT_SETTINGS;
   }
