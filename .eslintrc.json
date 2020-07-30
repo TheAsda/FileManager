@@ -45,9 +45,6 @@
       "version": "detect"
     },
     "import/resolver": {
-      "webpack": {
-        "config": "webpack.config.js"
-      },
       "alias": {
         "map": [
           ["@fm/common", "./src/common"],
