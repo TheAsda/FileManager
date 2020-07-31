@@ -9,6 +9,8 @@ interface ITerminalManager extends IIdentityManager {
   resize(size: { cols: number; rows: number }, terminal: Terminal): void;
 
   destroy(): void;
+
+  getDirectory(): string;
 }
 
 export { ITerminalManager };

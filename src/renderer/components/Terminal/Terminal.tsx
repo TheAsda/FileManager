@@ -138,7 +138,11 @@ class Terminal extends Component<TerminalProps, TerminalState> {
 
   render() {
     return (
-      <PathWrapper closable={this.props.closable} onClose={this.props.onClose} path={''}>
+      <PathWrapper
+        closable={this.props.closable}
+        onClose={this.props.onClose}
+        path={this.props.terminalManager.getDirectory()}
+      >
         <ResizeObserver onResize={this.resize}>
           <div className="terminal" ref={this.containerRef} />
         </ResizeObserver>
