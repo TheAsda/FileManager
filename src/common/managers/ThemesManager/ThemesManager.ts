@@ -37,33 +37,33 @@ class ThemesManager implements IThemesManager {
       theme = merge(DEFAULT_THEME, theme);
     }
 
-    if (!theme['explorer-background-color']) {
-      theme['explorer-background-color'] = theme['primary-background-color'];
-    }
-    if (!theme['explorer-text-color']) {
-      theme['explorer-text-color'] = theme['primary-text-color'];
-    }
-    if (!theme['explorer-font-family']) {
-      theme['explorer-font-family'] = theme['preview-font-family'];
-    }
-    if (!theme['explorer-font-size']) {
-      theme['explorer-font-size'] = theme['primary-font-size'];
-    }
+    return {
+      ...theme,
+      'explorer-background-color':
+        theme['explorer-background-color'] ?? theme['primary-background-color'],
+      'explorer-text-color': theme['explorer-text-color'] ?? theme['primary-text-color'],
+      'explorer-font-family': theme['explorer-font-family'] ?? theme['preview-font-family'],
+      'explorer-font-size': theme['explorer-font-size'] ?? theme['primary-font-size'],
+      'explorer-hover-color': theme['explorer-hover-color'] ?? theme['primary-hover-color'],
+      'explorer-selected-color':
+        theme['explorer-selected-color'] ?? theme['primary-selected-color'],
 
-    if (!theme['preview-background-color']) {
-      theme['preview-background-color'] = theme['primary-background-color'];
-    }
-    if (!theme['preview-font-family']) {
-      theme['preview-font-family'] = theme['primary-font-family'];
-    }
-    if (!theme['preview-font-size']) {
-      theme['preview-font-size'] = theme['primary-font-size'];
-    }
-    if (!theme['preview-text-color']) {
-      theme['preview-text-color'] = theme['primary-text-color'];
-    }
+      'preview-background-color':
+        theme['preview-background-color'] ?? theme['primary-background-color'],
+      'preview-font-family': theme['preview-font-family'] ?? theme['primary-font-family'],
+      'preview-font-size': theme['preview-font-size'] ?? theme['primary-font-size'],
+      'preview-text-color': theme['preview-text-color'] ?? theme['primary-text-color'],
 
-    return theme;
+      'palette-background-color':
+        theme['palette-background-color'] ?? theme['primary-background-color'],
+      'palette-font-family': theme['palette-font-family'] ?? theme['primary-font-family'],
+      'palette-font-size': theme['palette-font-size'] ?? theme['primary-font-size'],
+      'palette-text-color': theme['palette-text-color'] ?? theme['primary-text-color'],
+      'palette-hover-color': theme['palette-hover-color'] ?? theme['primary-hover-color'],
+      'palette-selected-color': theme['palette-selected-color'] ?? theme['primary-selected-color'],
+      'palette-additional-color':
+        theme['palette-additional-color'] ?? theme['primary-additional-color'],
+    };
   }
 }
 

@@ -114,25 +114,28 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
     return (
       <Modal
         ariaHideApp={false}
+        className="select-palette"
         isOpen={this.props.isOpened}
         onRequestClose={this.props.onClose}
         shouldCloseOnOverlayClick={true}
       >
-        <input
-          className="select-palette__search"
-          onChange={this.handleInput}
-          ref={(ref) => {
-            this.inputRef = ref;
-            ref?.focus();
-            ref &&
-              ref.addEventListener('keydown', (event) => {
-                if (includes([38, 40], event.keyCode)) {
-                  event.preventDefault();
-                }
-              });
-          }}
-          type="text"
-        />
+        <div className="select-palette__header">
+          <input
+            className="select-palette__search"
+            onChange={this.handleInput}
+            ref={(ref) => {
+              this.inputRef = ref;
+              ref?.focus();
+              ref &&
+                ref.addEventListener('keydown', (event) => {
+                  if (includes([38, 40], event.keyCode)) {
+                    event.preventDefault();
+                  }
+                });
+            }}
+            type="text"
+          />
+        </div>
         {map(this.state.options, (option, i) => (
           <SelectPaletteItem
             command={option}

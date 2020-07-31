@@ -1,13 +1,21 @@
 .select-palette {
-  background-color: var(--primary-background-color);
-  color: var(--primary-color);
-  width: 100%;
-  height: 100%;
-  z-index: 100;
+  background-color: var(--palette-background-color);
+  color: var(--palette-text-color);
+  margin: 0 80px;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.select-palette__header {
+  --space-size: 5px;
+  border-bottom: 2px solid var(--palette-additional-color);
+  padding-bottom: var(--space-size);
+  margin-bottom: var(--space-size);
 }
 
 .select-palette__search {
   width: 100%;
+  outline: none;
 }
 
 .select-palette__item {
@@ -15,9 +23,9 @@
 }
 
 .select-palette__item:hover {
-  background-color: chartreuse;
+  background-color: var(--palette-hover-color);
 }
 
 .select-palette__item--selected {
-  background-color: aqua;
+  background-color: var(--palette-selected-color);
 }
