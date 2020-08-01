@@ -18,6 +18,7 @@ import {
   Popup,
   PreviewPanel,
 } from '@fm/components';
+import { remote } from 'electron';
 
 const Window = () => {
   const { keysManager, getIdentityManager } = useManagers();
@@ -94,6 +95,9 @@ const Window = () => {
 
   const coms: Commands = {
     'Toggle preview': togglePreview,
+    'Reload window': () => {
+      remote.getCurrentWindow().reload();
+    },
   };
 
   useEffect(() => {

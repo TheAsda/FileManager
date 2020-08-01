@@ -20,7 +20,7 @@ class ThemesManager implements IThemesManager {
     this.settingsManager = settingsManager;
     this.logger = logger;
     this.store = new Store<Theme>({
-      name: settingsManager.getSettings().theme,
+      name: 'themes/' + settingsManager.getSettings().theme,
     });
   }
 
@@ -31,18 +31,28 @@ class ThemesManager implements IThemesManager {
     let theme = this.store.store;
 
     if (isEmpty(theme)) {
-      this.store.set(DEFAULT_THEME);
+      this.store.set(this.fillTheme(DEFAULT_THEME));
       theme = DEFAULT_THEME;
     } else {
       theme = merge(DEFAULT_THEME, theme);
     }
 
+    return this.fillTheme(theme);
+  }
+
+  changeTheme(theme: string): void {
+    this.store = new Store<Theme>({
+      name: 'themes/' + theme,
+    });
+  }
+
+  private fillTheme(theme: Theme): Theme {
     return {
       ...theme,
       'explorer-background-color':
         theme['explorer-background-color'] ?? theme['primary-background-color'],
       'explorer-text-color': theme['explorer-text-color'] ?? theme['primary-text-color'],
-      'explorer-font-family': theme['explorer-font-family'] ?? theme['preview-font-family'],
+      'explorer-font-family': theme['explorer-font-family'] ?? theme['primary-font-family'],
       'explorer-font-size': theme['explorer-font-size'] ?? theme['primary-font-size'],
       'explorer-hover-color': theme['explorer-hover-color'] ?? theme['primary-hover-color'],
       'explorer-selected-color':
