@@ -1,17 +1,8 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { resolve } = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
-const { readFileSync } = require('fs');
 const WebpackDefinePlugin = require('webpack').DefinePlugin;
-
-const env = readFileSync('./.env', { encoding: 'utf8' })
-  .split('\n')
-  .reduce((acc, cur) => {
-    const pair = cur.split('=');
-    acc[`process.env.${pair[0]}`] = JSON.stringify(pair[1]);
-    return acc;
-  }, {});
+const Dotenv = require('dotenv-webpack');
 
 const mainConfig = {
   entry: './src/main/main.ts',
@@ -33,6 +24,7 @@ const mainConfig = {
     new ForkTsCheckerWebpackPlugin({
       async: false,
     }),
+    new Dotenv(),
   ],
   node: {
     __dirname: false,
@@ -86,6 +78,7 @@ const rendererConfig = {
     new ForkTsCheckerWebpackPlugin({
       async: false,
     }),
+    new Dotenv(),
   ],
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
@@ -105,7 +98,6 @@ module.exports = (_, argv) => {
   mainConfig.plugins.push(
     new WebpackDefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
-      ...env,
     })
   );
 
@@ -113,7 +105,6 @@ module.exports = (_, argv) => {
   rendererConfig.plugins.push(
     new WebpackDefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
-      ...env,
     })
   );
 
