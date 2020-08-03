@@ -14,7 +14,7 @@ if (isDev()) {
     });
   }
   hotReaload();
-  app.setPath('userData', resolve('./resources'));
+  app.setPath('userData', resolve('./devAppData'));
 }
 
 app.allowRendererProcessReuse = false;
