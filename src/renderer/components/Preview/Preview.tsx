@@ -13,7 +13,7 @@ interface PreviewProps extends HOHandlers {
 }
 
 const Preview = (props: PreviewProps) => {
-  const { data } = usePreview();
+  const { item } = usePreview();
   const [focused, setFocused] = useState<boolean>(false);
   const { dispatch: commandsAction } = useCommands();
   const { dispatch: keysAction } = useHotKeys();
@@ -58,8 +58,8 @@ const Preview = (props: PreviewProps) => {
     });
   };
 
-  if (data.item) {
-    const extention = extname(data.item.name);
+  if (item) {
+    const extention = extname(item.name);
 
     if (!includes(ignoredExtentions, extention)) {
       if (includes(imageExtentions, extention)) {
@@ -74,8 +74,8 @@ const Preview = (props: PreviewProps) => {
               <TransformComponent>
                 <div style={{ width: props.width, height: '100vh' }}>
                   <img
-                    alt={data.item.name}
-                    src={data.item.path + data.item.name}
+                    alt={item.name}
+                    src={item.path + item.name}
                     style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                   />
                 </div>
@@ -84,7 +84,7 @@ const Preview = (props: PreviewProps) => {
           </div>
         );
       } else {
-        const text = directoryManager.readFileSync(data.item.path + data.item.name);
+        const text = directoryManager.readFileSync(item.path + item.name);
 
         return (
           <div className="preview" style={{ fontSize }}>

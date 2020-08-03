@@ -1,4 +1,4 @@
-import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
+import { FileInfo, IDirectoryManager, IExplorerManager, ISettingsManager } from '@fm/common';
 import React, { Component } from 'react';
 import { clamp, merge, filter, concat, sortBy } from 'lodash';
 import { DetailView } from './DetailView';
@@ -19,7 +19,6 @@ interface ExplorerState {
   directoryState: FileInfo[];
   editableIndex?: number;
   editType?: 'create' | 'rename';
-  autoPreview: boolean;
   focused: boolean;
 }
 
@@ -36,6 +35,7 @@ interface ExplorerProps extends HOHandlers {
   openInTerminal?: (path: string) => void;
   onDirectoryChange?: (path: string) => void;
   focused?: boolean;
+  settingsManager: ISettingsManager;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
@@ -49,7 +49,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       selectedIndex: 0,
       viewType: 'detail',
       directoryState: [],
-      autoPreview: true,
       currentPath: props.explorerManager.getPath(),
       focused: props.focused ?? false,
     };
@@ -155,7 +154,10 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   toggleAutoPreview() {
-    this.setState((state) => ({ ...state, autoPreview: !state.autoPreview }));
+    this.props.settingsManager.setSettings(
+      'autoPreview',
+      !this.props.settingsManager.getSettings().autoPreview
+    );
   }
 
   @autobind
@@ -178,7 +180,11 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     const newIndex = clamp(index, 0, this.state.directoryState.length - 1);
     const newSelectedItem = this.state.directoryState[newIndex];
 
-    if (this.state.autoPreview && newSelectedItem.attributes.directory === false) {
+    if (
+      !this.props.settingsManager.getSettings().layout.preview.hidden &&
+      this.props.settingsManager.getSettings().autoPreview &&
+      newSelectedItem.attributes.directory === false
+    ) {
       this.props.onPreview && this.props.onPreview(newSelectedItem);
     }
 

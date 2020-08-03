@@ -23,7 +23,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { dispatch: focusAction, data: focus } = useFocus();
   const { dispatch: commandsAction } = useCommands();
   const { dispatch: keysAction } = useHotKeys();
-  const { getIdentityManager, directoryManager } = useManagers();
+  const { getIdentityManager, directoryManager, settingsManager } = useManagers();
   const cacheManager = useCache();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
@@ -202,6 +202,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
                 onMove={onMove(i)}
                 onPreview={props.onPreview}
                 openInTerminal={props.openInTerminal}
+                settingsManager={settingsManager}
               />
             </ErrorBoundary>
           );

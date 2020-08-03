@@ -1,59 +1,51 @@
-import React, { Dispatch, createContext, useReducer, useContext, PropsWithChildren } from 'react';
+import React, { createContext, useContext, PropsWithChildren, useState } from 'react';
 import { noop } from 'lodash';
-import { PreviewPanelInfo, FileInfo } from '@fm/common';
+import { FileInfo, ISettingsManager } from '@fm/common';
 
-type Action = { type: 'setPath'; item: FileInfo } | { type: 'toggle' };
-
-interface ReducerState {
+const PreviewContext = createContext<{
   item: FileInfo | null;
-  display: boolean;
-}
-
-const previewReducer = (state: ReducerState, action: Action): ReducerState => {
-  switch (action.type) {
-    case 'toggle': {
-      return {
-        ...state,
-        display: !state.display,
-      };
-    }
-    case 'setPath': {
-      return {
-        display: true,
-        item: action.item,
-      };
-    }
-  }
-};
-
-const PreviewContext = createContext<{ data: ReducerState; dispatch: Dispatch<Action> }>({
-  data: {
-    display: false,
-    item: null,
-  },
-  dispatch: noop,
+  setItem: (path: FileInfo) => void;
+  hidden: boolean;
+  toggleHidden: () => void;
+}>({
+  item: null,
+  setItem: noop,
+  hidden: true,
+  toggleHidden: noop,
 });
 
 interface PreviewProviderProps {
-  initialState?: PreviewPanelInfo;
+  settingsManager: ISettingsManager;
 }
 
-const PreviewProvider = ({ children, initialState }: PropsWithChildren<PreviewProviderProps>) => {
-  const [data, dispatch] = useReducer(
-    previewReducer,
-    {
-      item: null,
-      display: false,
-    },
-    (): ReducerState => {
-      return {
-        display: initialState !== undefined,
-        item: null,
-      };
-    }
+const PreviewProvider = ({
+  children,
+  settingsManager,
+}: PropsWithChildren<PreviewProviderProps>) => {
+  const [item, setItem] = useState<FileInfo | null>(null);
+  const [hidden, setHidden] = useState<boolean>(
+    settingsManager.getSettings().layout.preview.hidden ?? false
   );
 
-  return <PreviewContext.Provider value={{ data, dispatch }}>{children}</PreviewContext.Provider>;
+  const toggleHidden = () => {
+    const currentState = settingsManager.getSettings().layout.preview.hidden;
+
+    settingsManager.setSettings('layout.preview.hidden', !currentState);
+    setHidden(!currentState);
+  };
+
+  return (
+    <PreviewContext.Provider
+      value={{
+        item,
+        setItem,
+        hidden: hidden,
+        toggleHidden: toggleHidden,
+      }}
+    >
+      {children}
+    </PreviewContext.Provider>
+  );
 };
 
 const usePreview = () => useContext(PreviewContext);

@@ -7,7 +7,7 @@ import {
   useHotKeys,
   useTerminals,
 } from '@fm/hooks';
-import { noop } from 'lodash';
+import { noop, iteratee } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
 import {
@@ -21,7 +21,7 @@ import {
 import { remote } from 'electron';
 
 const Window = () => {
-  const { keysManager, getIdentityManager } = useManagers();
+  const { keysManager, getIdentityManager, settingsManager } = useManagers();
   const commandPaletteManager = useMemo(() => {
     return getIdentityManager();
   }, []);
@@ -54,21 +54,16 @@ const Window = () => {
     });
   };
 
-  const { data: preview, dispatch: previewAction } = usePreview();
+  const { hidden, item, toggleHidden, setItem } = usePreview();
 
   const { data: commands } = useCommands();
 
   const previewHandler = (item: FileInfo) => {
-    previewAction({
-      type: 'setPath',
-      item,
-    });
+    setItem(item);
   };
 
   const togglePreview = () => {
-    previewAction({
-      type: 'toggle',
-    });
+    toggleHidden();
   };
 
   const closeSelect = () => {
@@ -118,12 +113,12 @@ const Window = () => {
               onPreview={previewHandler}
               openInTerminal={openInTerminal}
             />
-            {preview.display &&
+            {hidden &&
               (({ width }) => {
                 return (
                   <PreviewPanel
                     hotkeys={handlers}
-                    item={preview.item}
+                    item={item}
                     onHide={togglePreview}
                     width={width}
                   />

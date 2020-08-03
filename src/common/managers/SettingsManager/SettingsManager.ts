@@ -23,6 +23,10 @@ class SettingsManager implements ISettingsManager {
 
     return merge(DEFAULT_SETTINGS, this.store.store);
   }
+
+  setSettings(key: keyof Settings | string, value: unknown): void {
+    this.store.set(key, value);
+  }
 }
 
 export { SettingsManager };
