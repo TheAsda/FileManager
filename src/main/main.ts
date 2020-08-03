@@ -8,9 +8,11 @@ const mode = process.env.NODE_ENV || 'production';
 const isDev = () => mode !== 'production';
 
 if (isDev()) {
-  init({
-    dsn: process.env.SENTRY_DSN,
-  });
+  if (process.env.SENTRY_DSN) {
+    init({
+      dsn: process.env.SENTRY_DSN,
+    });
+  }
   hotReaload();
   app.setPath('userData', resolve('./resources'));
 }

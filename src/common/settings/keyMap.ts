@@ -26,6 +26,8 @@ const DEFAULT_KEYMAP: KeyMap = {
   close: ['esc'],
   complete: ['ctrl+space'],
   move: ['f5'],
+  zoomIn: ['ctrl+plus'],
+  zoomOut: ['ctrl+-'],
 };
 
 export { DEFAULT_KEYMAP };

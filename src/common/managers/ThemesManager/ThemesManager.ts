@@ -61,7 +61,6 @@ class ThemesManager implements IThemesManager {
       'preview-background-color':
         theme['preview-background-color'] ?? theme['primary-background-color'],
       'preview-font-family': theme['preview-font-family'] ?? theme['primary-font-family'],
-      'preview-font-size': theme['preview-font-size'] ?? theme['primary-font-size'],
       'preview-text-color': theme['preview-text-color'] ?? theme['primary-text-color'],
 
       'palette-background-color':

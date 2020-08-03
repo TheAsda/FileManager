@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { usePreview, useCommands, useHotKeys, useManagers } from '@fm/hooks';
 import './style.css';
-import { includes, merge } from 'lodash';
+import { includes, merge, clamp } from 'lodash';
 import { ignoredExtentions, imageExtentions } from './fileExtentions';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import MonacoEditor from 'react-monaco-editor';
 import { extname } from 'path';
 import { HOHandlers } from '@fm/components';
 
@@ -19,6 +18,20 @@ const Preview = (props: PreviewProps) => {
   const { dispatch: commandsAction } = useCommands();
   const { dispatch: keysAction } = useHotKeys();
   const { directoryManager } = useManagers();
+  const [fontSize, setFontSize] = useState<number>(15);
+
+  const increaseFontSize = () => {
+    setFontSize((state) => clamp(state + 2, 10, 64));
+  };
+
+  const decreaseFontSize = () => {
+    setFontSize((state) => clamp(state - 2, 10, 64));
+  };
+
+  const hotkeys = {
+    zoomIn: increaseFontSize,
+    zoomOut: decreaseFontSize,
+  };
 
   useEffect(() => {
     if (!focused && props.focused) {
@@ -32,7 +45,7 @@ const Preview = (props: PreviewProps) => {
   const onFocus = () => {
     keysAction({
       type: 'setHotKeys',
-      hotkeys: merge({}, props.hotkeys),
+      hotkeys: merge(hotkeys, props.hotkeys),
     });
 
     commandsAction({
@@ -51,45 +64,44 @@ const Preview = (props: PreviewProps) => {
     if (!includes(ignoredExtentions, extention)) {
       if (includes(imageExtentions, extention)) {
         return (
-          <TransformWrapper
-            options={{
-              minScale: 0.5,
-              limitToBounds: false,
-            }}
-          >
-            <TransformComponent>
-              <div style={{ width: props.width, height: '100vh' }}>
-                <img
-                  alt={data.item.name}
-                  src={data.item.path + data.item.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                />
-              </div>
-            </TransformComponent>
-          </TransformWrapper>
+          <div className="preview">
+            <TransformWrapper
+              options={{
+                minScale: 0.5,
+                limitToBounds: false,
+              }}
+            >
+              <TransformComponent>
+                <div style={{ width: props.width, height: '100vh' }}>
+                  <img
+                    alt={data.item.name}
+                    src={data.item.path + data.item.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  />
+                </div>
+              </TransformComponent>
+            </TransformWrapper>
+          </div>
         );
       } else {
+        const text = directoryManager.readFileSync(data.item.path + data.item.name);
+
         return (
-          <MonacoEditor
-            height="100%"
-            options={{
-              readOnly: true,
-            }}
-            value={directoryManager.readFileSync(data.item.path + data.item.name)}
-            width="100%"
-          ></MonacoEditor>
+          <div className="preview" style={{ fontSize }}>
+            <pre>{text}</pre>
+          </div>
         );
       }
     } else {
       return (
-        <div>
+        <div className="preview">
           <h1>Cannot display</h1>
         </div>
       );
     }
   } else {
     return (
-      <div>
+      <div className="preview">
         <h1>Empty</h1>
       </div>
     );

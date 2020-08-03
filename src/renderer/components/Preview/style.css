@@ -3,8 +3,8 @@
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
-}
-
-.preview__content {
   overflow: auto;
+  font-family: var(--preview-font-family);
+  background-color: var(--preview-background-color);
+  color: var(--preview-text-color);
 }
