@@ -15,7 +15,7 @@ interface TerminalPanelsProps extends HOHandlers {
 
 const TerminalPanels = (props: TerminalPanelsProps) => {
   const { data, dispatch } = useTerminals();
-  const { getIdentityManager } = useManagers();
+  const { getIdentityManager, themesManager } = useManagers();
   const { data: focus, dispatch: focusAction } = useFocus();
   const { dispatch: commandsAction } = useCommands();
   const { dispatch: keysAction } = useHotKeys();
@@ -138,6 +138,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
                 onExit={onClose(i)}
                 onFocus={focusItem(i)}
                 terminalManager={item}
+                theme={themesManager.getTheme()}
               />
               {props.selectModeActivated && (
                 <SelectPanel

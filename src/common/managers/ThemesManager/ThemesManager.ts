@@ -72,6 +72,30 @@ class ThemesManager implements IThemesManager {
       'palette-selected-color': theme['palette-selected-color'] ?? theme['primary-selected-color'],
       'palette-additional-color':
         theme['palette-additional-color'] ?? theme['primary-additional-color'],
+      'terminal-background-color':
+        theme['terminal-background-color'] ?? theme['primary-background-color'],
+      'terminal-black-color': theme['terminal-black-color'] ?? '',
+      'terminal-blue-color': theme['terminal-blue-color'] ?? '',
+      'terminal-brightBlack-color': theme['terminal-brightBlack-color'] ?? '',
+      'terminal-brightBlue-color': theme['terminal-brightBlue-color'] ?? '',
+      'terminal-brightCyan-color': theme['terminal-brightCyan-color'] ?? '',
+      'terminal-brightGreen-color': theme['terminal-brightGreen-color'] ?? '',
+      'terminal-brightMagenta-color': theme['terminal-brightMagenta-color'] ?? '',
+      'terminal-brightRed-color': theme['terminal-brightRed-color'] ?? '',
+      'terminal-brightWhite-color': theme['terminal-brightWhite-color'] ?? '',
+      'terminal-brightYellow-color': theme['terminal-brightYellow-color'] ?? '',
+      'terminal-cursor-color': theme['terminal-cursor-color'] ?? '',
+      'terminal-cursorAccent-color': theme['terminal-cursorAccent-color'] ?? '',
+      'terminal-cyan-color': theme['terminal-cyan-color'] ?? '',
+      'terminal-foreground-color': theme['terminal-foreground-color'] ?? '',
+      'terminal-green-color': theme['terminal-green-color'] ?? '',
+      'terminal-magenta-color': theme['terminal-magenta-color'] ?? '',
+      'terminal-red-color': theme['terminal-red-color'] ?? '',
+      'terminal-selection-color': theme['terminal-selection-color'] ?? '',
+      'terminal-white-color': theme['terminal-white-color'] ?? '',
+      'terminal-yellow-color': theme['terminal-yellow-color'] ?? '',
+      'terminal-font-family': theme['terminal-font-family'] ?? '',
+      'terminal-font-size': theme['terminal-font-size'] ?? 15,
     };
   }
 }

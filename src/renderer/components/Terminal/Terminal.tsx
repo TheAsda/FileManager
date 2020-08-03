@@ -1,6 +1,6 @@
 import React, { Component, RefObject, createRef } from 'react';
 import { FitAddon } from 'xterm-addon-fit';
-import { ITerminalManager, Commands } from '@fm/common';
+import { ITerminalManager, Commands, Theme } from '@fm/common';
 import { Terminal as XTerm } from 'xterm';
 import 'xterm/css/xterm.css';
 import './style.css';
@@ -21,6 +21,7 @@ interface TerminalProps extends HOHandlers {
   onBlur?: () => void;
   focused?: boolean;
   onReload?: () => void;
+  theme: Theme;
 }
 
 interface TerminalState {
@@ -42,31 +43,31 @@ class Terminal extends Component<TerminalProps, TerminalState> {
     this.containerRef = createRef<HTMLDivElement>();
     this.terminal = new XTerm({
       convertEol: true,
-      fontFamily: `'Cascadia Code PL', 'Consolas'`,
-      fontSize: 15,
+      fontFamily: `${props.theme['terminal-font-family']}, 'Consolas'`,
+      fontSize: props.theme['terminal-font-size'],
       rendererType: 'dom', // default is canvas
       theme: {
-        background: 'var(--terminal-background-color)',
-        black: 'var(--terminal-black-color)',
-        blue: 'var(--terminal-blue-color)',
-        brightBlack: 'var(--terminal-brightBlack-color)',
-        brightBlue: 'var(--terminal-brightBlue-color)',
-        brightCyan: 'var(--terminal-brightCyan-color)',
-        brightGreen: 'var(--terminal-brightGreen-color)',
-        brightMagenta: 'var(--terminal-brightMagenta-color)',
-        brightRed: 'var(--terminal-brightRed-color)',
-        brightWhite: 'var(--terminal-brightWhite-color)',
-        brightYellow: 'var(--terminal-brightYellow-color)',
-        cursor: 'var(--terminal-cursor-color)',
-        cursorAccent: 'var(--terminal-cursorAccent-color)',
-        cyan: 'var(--terminal-cyan-color)',
-        foreground: 'var(--terminal-foreground-color)',
-        green: 'var(--terminal-green-color)',
-        magenta: 'var(--terminal-magenta-color)',
-        red: 'var(--terminal-red-color)',
-        selection: 'var(--terminal-selection-color)',
-        white: 'var(--terminal-white-color)',
-        yellow: 'var(--terminal-yellow-color)',
+        background: props.theme['terminal-background-color'],
+        black: props.theme['terminal-black-color'],
+        blue: props.theme['terminal-blue-color'],
+        brightBlack: props.theme['terminal-brightBlack-color'],
+        brightBlue: props.theme['terminal-brightBlue-color'],
+        brightCyan: props.theme['terminal-brightCyan-color'],
+        brightGreen: props.theme['terminal-brightGreen-color'],
+        brightMagenta: props.theme['terminal-brightMagenta-color'],
+        brightRed: props.theme['terminal-brightRed-color'],
+        brightWhite: props.theme['terminal-brightWhite-color'],
+        brightYellow: props.theme['terminal-brightYellow-color'],
+        cursor: props.theme['terminal-cursor-color'],
+        cursorAccent: props.theme['terminal-cursorAccent-color'],
+        cyan: props.theme['terminal-cyan-color'],
+        foreground: props.theme['terminal-foreground-color'],
+        green: props.theme['terminal-green-color'],
+        magenta: props.theme['terminal-magenta-color'],
+        red: props.theme['terminal-red-color'],
+        selection: props.theme['terminal-selection-color'],
+        white: props.theme['terminal-white-color'],
+        yellow: props.theme['terminal-yellow-color'],
       },
     });
     this.fitAddon = new FitAddon();

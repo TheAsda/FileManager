@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
 import { Theme } from '@fm/common';
-import { toPairs, forEach } from 'lodash';
+import { toPairs, forEach, isNumber } from 'lodash';
 
 interface CSSApplicatorProps {
   theme: Theme;
@@ -21,7 +21,10 @@ class CSSApplicator extends Component<CSSApplicatorProps> {
   @autobind
   updateCSSVariables() {
     forEach(toPairs(this.props.theme), (pair) => {
-      document.documentElement.style.setProperty(`--${pair[0]}`, pair[1]);
+      document.documentElement.style.setProperty(
+        `--${pair[0]}`,
+        isNumber(pair[1]) ? `${pair[1]}px` : pair[1]
+      );
     });
   }
 

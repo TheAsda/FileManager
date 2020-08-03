@@ -34,7 +34,7 @@ class CacheManager implements ICacheManager {
     }
   }
 
-  private debouncedSave = debounce(this.save, 1000, {
+  private debouncedSave = debounce(this.save, 300, {
     leading: false,
     trailing: true,
   });
