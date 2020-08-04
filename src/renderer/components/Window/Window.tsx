@@ -21,7 +21,7 @@ import {
 import { remote } from 'electron';
 
 const Window = () => {
-  const { keysManager, getIdentityManager } = useManagers();
+  const { keysManager, getIdentityManager, settingsManager } = useManagers();
   const commandPaletteManager = useMemo(() => {
     return getIdentityManager();
   }, []);
@@ -105,7 +105,7 @@ const Window = () => {
   return (
     <>
       <div className="window">
-        <FocusProvider>
+        <FocusProvider settingsManager={settingsManager}>
           <SplitPanels minSize={200} splitType="vertical">
             <ExplorerPanels
               commands={coms}
@@ -113,7 +113,7 @@ const Window = () => {
               onPreview={previewHandler}
               openInTerminal={openInTerminal}
             />
-            {hidden &&
+            {!hidden &&
               (({ width }) => {
                 return (
                   <PreviewPanel

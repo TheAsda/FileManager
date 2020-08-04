@@ -2,4 +2,4 @@ webpack.config.js
 dist/
 build/
 resources/
-_templates
+_templates/

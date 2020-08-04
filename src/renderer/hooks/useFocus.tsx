@@ -6,7 +6,7 @@ import React, {
   PropsWithChildren,
   useEffect,
 } from 'react';
-import { PanelType } from '@fm/common';
+import { PanelType, ISettingsManager, SettingsManager } from '@fm/common';
 import { noop } from 'lodash';
 
 type FocusAction =
@@ -23,11 +23,16 @@ type FocusAction =
     }
   | {
       type: 'togglePanel';
+    }
+  | {
+      type: 'setSettingsManager';
+      settingsManager: ISettingsManager;
     };
 
 interface FocusState {
   focusedPanel: PanelType;
   index?: number;
+  settingsManager: ISettingsManager;
 }
 
 const focusReducer = (state: FocusState, action: FocusAction): FocusState => {
@@ -55,29 +60,55 @@ const focusReducer = (state: FocusState, action: FocusAction): FocusState => {
       };
     }
     case 'togglePanel': {
-      switch (state.focusedPanel) {
-        case 'explorer': {
+      if (state.focusedPanel === 'explorer') {
+        if (!state.settingsManager.getSettings().layout.preview.hidden) {
           return {
             ...state,
             focusedPanel: 'preview',
-            index: undefined,
           };
         }
-        case 'preview': {
+        if (!state.settingsManager.getSettings().layout.terminals.hidden) {
           return {
             ...state,
             focusedPanel: 'terminal',
-            index: 0,
-          };
-        }
-        case 'terminal': {
-          return {
-            ...state,
-            focusedPanel: 'explorer',
-            index: 0,
           };
         }
       }
+      if (state.focusedPanel === 'preview') {
+        if (!state.settingsManager.getSettings().layout.terminals.hidden) {
+          return {
+            ...state,
+            focusedPanel: 'terminal',
+          };
+        }
+        if (!state.settingsManager.getSettings().layout.explorers.hidden) {
+          return {
+            ...state,
+            focusedPanel: 'explorer',
+          };
+        }
+      }
+      if (state.focusedPanel === 'terminal') {
+        if (!state.settingsManager.getSettings().layout.explorers.hidden) {
+          return {
+            ...state,
+            focusedPanel: 'explorer',
+          };
+        }
+        if (!state.settingsManager.getSettings().layout.preview.hidden) {
+          return {
+            ...state,
+            focusedPanel: 'preview',
+          };
+        }
+      }
+      return state;
+    }
+    case 'setSettingsManager': {
+      return {
+        ...state,
+        settingsManager: action.settingsManager,
+      };
     }
   }
 };
@@ -86,15 +117,29 @@ const FocusContext = createContext<{ data: FocusState; dispatch: Dispatch<FocusA
   data: {
     focusedPanel: 'explorer',
     index: 0,
+    settingsManager: new SettingsManager(),
   },
   dispatch: noop,
 });
 
-const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
+const FocusProvider = ({
+  children,
+  settingsManager,
+}: PropsWithChildren<{
+  settingsManager: ISettingsManager;
+}>) => {
   const [data, dispatch] = useReducer(focusReducer, {
     focusedPanel: 'explorer',
     index: 0,
+    settingsManager,
   });
+
+  useEffect(() => {
+    dispatch({
+      type: 'setSettingsManager',
+      settingsManager,
+    });
+  }, [settingsManager]);
 
   const handleKey = (event: KeyboardEvent) => {
     if (event.keyCode === 9) {
@@ -123,6 +168,7 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
     };
   }, []);
 
+  console.log('data', data);
   return <FocusContext.Provider value={{ data, dispatch }}>{children}</FocusContext.Provider>;
 };
 
