@@ -88,12 +88,10 @@ typings/
 # Electron-Forge
 out/
 
-dist/*
-
-resources/*
+dist
 
 build/*
 
-_templates/*
+_templates
 
-devAppData/*
+devAppData

@@ -7,7 +7,7 @@ import {
   useHotKeys,
   useTerminals,
 } from '@fm/hooks';
-import { noop, iteratee } from 'lodash';
+import { noop } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
 import {
@@ -21,7 +21,7 @@ import {
 import { remote } from 'electron';
 
 const Window = () => {
-  const { keysManager, getIdentityManager, settingsManager } = useManagers();
+  const { keysManager, getIdentityManager } = useManagers();
   const commandPaletteManager = useMemo(() => {
     return getIdentityManager();
   }, []);
