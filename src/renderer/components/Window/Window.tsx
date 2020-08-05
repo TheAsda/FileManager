@@ -8,7 +8,7 @@ import {
   useTerminals,
   useTheme,
 } from '@fm/hooks';
-import { noop } from 'lodash';
+import { noop, map, reject } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
 import {
@@ -20,11 +20,12 @@ import {
   PreviewPanel,
   CSSApplicator,
 } from '@fm/components';
-import { remote } from 'electron';
+import { remote, app } from 'electron';
+import { GoToPalette } from '../modals';
 
 const Window = () => {
-  const { keysManager, getIdentityManager, settingsManager } = useManagers();
-  const { resetTheme, theme } = useTheme();
+  const { keysManager, getIdentityManager, settingsManager, directoryManager } = useManagers();
+  const { resetTheme, theme, setTheme } = useTheme();
   const commandPaletteManager = useMemo(() => {
     return getIdentityManager();
   }, []);
@@ -37,6 +38,7 @@ const Window = () => {
     isShown: false,
     onSelect: noop,
   });
+
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
   const openCommandPalette = () => {
     setCommandPalette(true);
@@ -86,6 +88,40 @@ const Window = () => {
     });
   };
 
+  const [themeSelectorState, setThemeSelectorState] = useState<{
+    isShown: boolean;
+    options: string[];
+  }>({
+    isShown: false,
+    options: [],
+  });
+
+  const openThemeSelector = async () => {
+    const options = map(
+      reject(
+        await directoryManager.listDirectory((app || remote.app).getPath('userData') + '/themes'),
+        ['name', '..']
+      ),
+      (item) => item.name.substr(0, item.name.lastIndexOf('.'))
+    );
+
+    setThemeSelectorState({
+      isShown: true,
+      options,
+    });
+  };
+
+  const closeThemeSelector = () => {
+    setThemeSelectorState({
+      isShown: false,
+      options: [],
+    });
+  };
+
+  const onThemeSelect = (themeName: string) => {
+    setTheme(themeName), closeThemeSelector();
+  };
+
   const handlers = {
     togglePreview,
     openCommandPalette,
@@ -97,6 +133,7 @@ const Window = () => {
       remote.getCurrentWindow().reload();
     },
     'Reset theme': resetTheme,
+    'Select theme': openThemeSelector,
   };
 
   useEffect(() => {
@@ -143,6 +180,12 @@ const Window = () => {
         isOpened={isCommandPaletteOpen}
         manager={commandPaletteManager}
         onClose={closeCommandPalette}
+      />
+      <GoToPalette
+        isOpened={themeSelectorState?.isShown}
+        onClose={closeThemeSelector}
+        onSelect={onThemeSelect}
+        options={themeSelectorState.options}
       />
       <Popup />
     </CSSApplicator>

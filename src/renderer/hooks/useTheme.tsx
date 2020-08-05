@@ -17,19 +17,24 @@ const ThemeContext = createContext<ThemeContextContent>({
 
 const ThemeProvider = ({ children }: PropsWithChildren<unknown>) => {
   const { themesManager, settingsManager } = useManagers();
-  const [theme, setTheme] = useState<string>(settingsManager.getSettings().theme);
+  const [themeName, setThemeName] = useState<string>(settingsManager.getSettings().theme);
 
   const resetTheme = () => {
     settingsManager.setSettings('theme', 'default');
-    setTheme('default');
+    setThemeName('default');
+  };
+
+  const setTheme = (themeName: string) => {
+    settingsManager.setSettings('theme', themeName);
+    setThemeName(themeName);
   };
 
   return (
     <ThemeContext.Provider
       value={{
-        theme: themesManager.getTheme(theme),
-        resetTheme: resetTheme,
-        setTheme: noop,
+        theme: themesManager.getTheme(themeName),
+        resetTheme,
+        setTheme,
       }}
     >
       {children}

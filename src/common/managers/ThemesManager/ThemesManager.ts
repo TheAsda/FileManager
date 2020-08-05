@@ -1,7 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { Theme, DEFAULT_THEME } from '@fm/common';
 import { IThemesManager } from './IThemesManager';
-import { ISettingsManager } from '../SettingsManager/ISettingsManager';
 import { ILogManager } from '../LogManager/ILogManager';
 import { merge, isEmpty } from 'lodash';
 import { TYPES } from '../../ioc';
