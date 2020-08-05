@@ -6,6 +6,7 @@ import {
   useCommands,
   useHotKeys,
   useTerminals,
+  useTheme,
 } from '@fm/hooks';
 import { noop } from 'lodash';
 import './style.css';
@@ -17,11 +18,13 @@ import {
   CommandPalette,
   Popup,
   PreviewPanel,
+  CSSApplicator,
 } from '@fm/components';
 import { remote } from 'electron';
 
 const Window = () => {
   const { keysManager, getIdentityManager, settingsManager } = useManagers();
+  const { resetTheme, theme } = useTheme();
   const commandPaletteManager = useMemo(() => {
     return getIdentityManager();
   }, []);
@@ -93,6 +96,7 @@ const Window = () => {
     'Reload window': () => {
       remote.getCurrentWindow().reload();
     },
+    'Reset theme': resetTheme,
   };
 
   useEffect(() => {
@@ -103,7 +107,7 @@ const Window = () => {
   }, []);
 
   return (
-    <>
+    <CSSApplicator theme={theme}>
       <div className="window">
         <FocusProvider settingsManager={settingsManager}>
           <SplitPanels minSize={200} splitType="vertical">
@@ -141,7 +145,7 @@ const Window = () => {
         onClose={closeCommandPalette}
       />
       <Popup />
-    </>
+    </CSSApplicator>
   );
 };
 

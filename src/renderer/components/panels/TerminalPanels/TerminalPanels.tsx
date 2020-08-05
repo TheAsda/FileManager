@@ -2,7 +2,15 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { map, merge } from 'lodash';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useTerminals, useFocus, useHotKeys, useCommands, useManagers, useCache } from '@fm/hooks';
+import {
+  useTerminals,
+  useFocus,
+  useHotKeys,
+  useCommands,
+  useManagers,
+  useCache,
+  useTheme,
+} from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
 import { bind, unbind } from 'mousetrap';
 import { HOHandlers, ErrorBoundary, SplitPanels, GoToPalette, Terminal } from '@fm/components';
@@ -15,7 +23,8 @@ interface TerminalPanelsProps extends HOHandlers {
 
 const TerminalPanels = (props: TerminalPanelsProps) => {
   const { data, dispatch } = useTerminals();
-  const { getIdentityManager, themesManager } = useManagers();
+  const { getIdentityManager } = useManagers();
+  const { theme } = useTheme();
   const { data: focus, dispatch: focusAction } = useFocus();
   const { dispatch: commandsAction } = useCommands();
   const { dispatch: keysAction } = useHotKeys();
@@ -138,7 +147,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
                 onExit={onClose(i)}
                 onFocus={focusItem(i)}
                 terminalManager={item}
-                theme={themesManager.getTheme()}
+                theme={theme}
               />
               {props.selectModeActivated && (
                 <SelectPanel

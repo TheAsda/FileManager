@@ -9,41 +9,30 @@ import Store from 'electron-store';
 
 @injectable()
 class ThemesManager implements IThemesManager {
-  private store: Store<Theme>;
-  private settingsManager: ISettingsManager;
   private logger: ILogManager;
 
-  constructor(
-    @inject(TYPES.ILogManager) logger: ILogManager,
-    @inject(TYPES.ISettingsManager) settingsManager: ISettingsManager
-  ) {
-    this.settingsManager = settingsManager;
+  constructor(@inject(TYPES.ILogManager) logger: ILogManager) {
     this.logger = logger;
-    this.store = new Store<Theme>({
-      name: 'themes/' + settingsManager.getSettings().theme,
-    });
   }
 
   /** @inheritdoc */
-  getTheme(): Theme {
+  getTheme(themeName: string): Theme {
     this.logger.log('Getting theme');
 
-    let theme = this.store.store;
+    const store = new Store<Theme>({
+      name: 'themes/' + themeName,
+    });
+
+    let theme = store.store;
 
     if (isEmpty(theme)) {
-      this.store.set(this.fillTheme(DEFAULT_THEME));
+      store.set(this.fillTheme(DEFAULT_THEME));
       theme = DEFAULT_THEME;
     } else {
       theme = merge(DEFAULT_THEME, theme);
     }
 
     return this.fillTheme(theme);
-  }
-
-  changeTheme(theme: string): void {
-    this.store = new Store<Theme>({
-      name: 'themes/' + theme,
-    });
   }
 
   private fillTheme(theme: Theme): Theme {

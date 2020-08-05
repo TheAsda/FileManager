@@ -7,7 +7,7 @@ import './style.css';
 import autobind from 'autobind-decorator';
 import { PathWrapper } from '../PathWrapper';
 import { HOHandlers } from '../common/HOHandlers';
-import { merge, noop } from 'lodash';
+import { merge, noop, map } from 'lodash';
 import { TerminalCommands } from './terminalCommands';
 import ResizeObserver from 'rc-resize-observer';
 
@@ -24,11 +24,7 @@ interface TerminalProps extends HOHandlers {
   theme: Theme;
 }
 
-interface TerminalState {
-  focused: boolean;
-}
-
-class Terminal extends Component<TerminalProps, TerminalState> {
+class Terminal extends Component<TerminalProps> {
   private containerRef: RefObject<HTMLDivElement>;
   private terminal: XTerm;
   private TerminalManager: ITerminalManager;
@@ -46,34 +42,9 @@ class Terminal extends Component<TerminalProps, TerminalState> {
       fontFamily: `${props.theme['terminal-font-family']}, 'Consolas'`,
       fontSize: props.theme['terminal-font-size'],
       rendererType: 'dom', // default is canvas
-      theme: {
-        background: props.theme['terminal-background-color'],
-        black: props.theme['terminal-black-color'],
-        blue: props.theme['terminal-blue-color'],
-        brightBlack: props.theme['terminal-brightBlack-color'],
-        brightBlue: props.theme['terminal-brightBlue-color'],
-        brightCyan: props.theme['terminal-brightCyan-color'],
-        brightGreen: props.theme['terminal-brightGreen-color'],
-        brightMagenta: props.theme['terminal-brightMagenta-color'],
-        brightRed: props.theme['terminal-brightRed-color'],
-        brightWhite: props.theme['terminal-brightWhite-color'],
-        brightYellow: props.theme['terminal-brightYellow-color'],
-        cursor: props.theme['terminal-cursor-color'],
-        cursorAccent: props.theme['terminal-cursorAccent-color'],
-        cyan: props.theme['terminal-cyan-color'],
-        foreground: props.theme['terminal-foreground-color'],
-        green: props.theme['terminal-green-color'],
-        magenta: props.theme['terminal-magenta-color'],
-        red: props.theme['terminal-red-color'],
-        selection: props.theme['terminal-selection-color'],
-        white: props.theme['terminal-white-color'],
-        yellow: props.theme['terminal-yellow-color'],
-      },
+      theme: this.mapTheme(props.theme),
     });
     this.fitAddon = new FitAddon();
-    this.state = {
-      focused: false,
-    };
 
     this.handlers = {};
 
@@ -105,14 +76,44 @@ class Terminal extends Component<TerminalProps, TerminalState> {
     }
   }
 
-  componentDidUpdate() {
-    if (!this.state.focused && this.props.focused) {
+  componentDidUpdate(prevProps: TerminalProps) {
+    if (!prevProps.focused && this.props.focused) {
       this.onFocus();
       this.containerRef.current?.focus();
       this.terminal.focus();
-    } else if (this.state.focused && !this.props.focused) {
+    } else if (prevProps.focused && !this.props.focused) {
       this.onBlur();
     }
+
+    if (prevProps.theme !== this.props.theme) {
+      this.terminal.setOption('theme', this.mapTheme(this.props.theme));
+    }
+  }
+
+  private mapTheme(theme: Theme) {
+    return {
+      background: theme['terminal-background-color'],
+      black: theme['terminal-black-color'],
+      blue: theme['terminal-blue-color'],
+      brightBlack: theme['terminal-brightBlack-color'],
+      brightBlue: theme['terminal-brightBlue-color'],
+      brightCyan: theme['terminal-brightCyan-color'],
+      brightGreen: theme['terminal-brightGreen-color'],
+      brightMagenta: theme['terminal-brightMagenta-color'],
+      brightRed: theme['terminal-brightRed-color'],
+      brightWhite: theme['terminal-brightWhite-color'],
+      brightYellow: theme['terminal-brightYellow-color'],
+      cursor: theme['terminal-cursor-color'],
+      cursorAccent: theme['terminal-cursorAccent-color'],
+      cyan: theme['terminal-cyan-color'],
+      foreground: theme['terminal-foreground-color'],
+      green: theme['terminal-green-color'],
+      magenta: theme['terminal-magenta-color'],
+      red: theme['terminal-red-color'],
+      selection: theme['terminal-selection-color'],
+      white: theme['terminal-white-color'],
+      yellow: theme['terminal-yellow-color'],
+    };
   }
 
   @autobind
