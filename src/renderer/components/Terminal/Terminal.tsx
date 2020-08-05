@@ -87,6 +87,8 @@ class Terminal extends Component<TerminalProps> {
 
     if (prevProps.theme !== this.props.theme) {
       this.terminal.setOption('theme', this.mapTheme(this.props.theme));
+      this.terminal.setOption('fontFamily', this.props.theme['terminal-font-family']);
+      this.terminal.setOption('fontSize', this.props.theme['terminal-font-size']);
     }
   }
 

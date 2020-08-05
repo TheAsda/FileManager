@@ -71,7 +71,8 @@ const Window = () => {
     });
   };
   const onThemeSelect = (themeName: string) => {
-    setTheme(themeName), closeThemeSelector();
+    setTheme(themeName);
+    closeThemeSelector();
   };
 
   const commandPaletteManager = useMemo(() => {

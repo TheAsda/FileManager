@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 import { Theme, DEFAULT_THEME } from '@fm/common';
 import { IThemesManager } from './IThemesManager';
 import { ILogManager } from '../LogManager/ILogManager';
-import { merge, isEmpty } from 'lodash';
+import { merge, isEmpty, isEqual, clone } from 'lodash';
 import { TYPES } from '../../ioc';
 import Store from 'electron-store';
 
@@ -24,11 +24,17 @@ class ThemesManager implements IThemesManager {
 
     let theme = store.store;
 
-    if (isEmpty(theme)) {
+    // TODO: fill all the fields and get rid of fillTheme method(only merge default and custom)
+    if (themeName === 'default') {
+      if (!isEqual(this.fillTheme(DEFAULT_THEME), theme)) {
+        store.set(this.fillTheme(DEFAULT_THEME));
+      }
+      theme = DEFAULT_THEME;
+    } else if (isEmpty(theme)) {
       store.set(this.fillTheme(DEFAULT_THEME));
       theme = DEFAULT_THEME;
     } else {
-      theme = merge(DEFAULT_THEME, theme);
+      theme = merge(clone(DEFAULT_THEME), theme);
     }
 
     return this.fillTheme(theme);
