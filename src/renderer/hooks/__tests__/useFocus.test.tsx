@@ -1,10 +1,11 @@
 import React, { ReactNode } from 'react';
 import { FocusProvider, useFocus, FocusState, FocusAction } from '../useFocus';
 import { renderHook, act, HookResult } from '@testing-library/react-hooks';
+import { SettingsManager } from '@fm/common';
 
 describe('useFocus hook tests', () => {
   const wrapper = ({ children }: { children?: ReactNode }) => (
-    <FocusProvider>{children}</FocusProvider>
+    <FocusProvider settingsManager={new SettingsManager()}>{children}</FocusProvider>
   );
 
   let result: HookResult<{

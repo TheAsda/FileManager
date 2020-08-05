@@ -31,7 +31,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
   };
 
   private inputRef: HTMLInputElement | null;
-  private fuse: Fuse<string, Fuse.IFuseOptions<string>>;
+  private fuse: Fuse<string>;
 
   constructor(props: SelectPaletteProps) {
     super(props);
