@@ -12,7 +12,6 @@ import {
   useTheme,
 } from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
-import { bind, unbind } from 'mousetrap';
 import { HOHandlers, ErrorBoundary, SplitPanels, GoToPalette, Terminal } from '@fm/components';
 
 interface TerminalPanelsProps extends HOHandlers {
@@ -25,9 +24,9 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   const { data, dispatch } = useTerminals();
   const { getIdentityManager } = useManagers();
   const { theme } = useTheme();
-  const { data: focus, dispatch: focusAction } = useFocus();
-  const { dispatch: commandsAction } = useCommands();
-  const { dispatch: keysAction } = useHotKeys();
+  const { focus, focusIndex, focusPanel } = useFocus();
+  const { addCommands, emptyCommands } = useCommands();
+  const { removeHotKeys, addHotKeys, setGlobalHotKeys, removeGlobalHotKeys } = useHotKeys();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
     panelIndex?: number;
@@ -45,10 +44,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
       panelIndex: undefined,
     });
 
-    keysAction({
-      type: 'setHotKeys',
-      pop: true,
-    });
+    removeHotKeys();
   };
 
   const openGotoPalette = () => {
@@ -56,11 +52,8 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
       isShown: true,
       panelIndex: focus.index,
     });
-    keysAction({
-      type: 'setHotKeys',
-      hotkeys: gotoManager.getHotkeys(),
-      push: true,
-    });
+
+    addHotKeys(gotoManager.getHotkeys(), true);
   };
 
   const onClose = (index: number) => () => {
@@ -77,44 +70,26 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   };
 
   const focusItem = (index: number) => () => {
-    focusAction({
-      type: 'focusItem',
-      index,
-    });
+    focusIndex(index);
 
-    keysAction({
-      type: 'setHotKeys',
-      hotkeys: merge(data[index].getHotkeys(), props.hotkeys),
-    });
+    addHotKeys(merge(data[index].getHotkeys(), props.hotkeys));
 
-    commandsAction({
-      type: 'empty',
-    });
+    emptyCommands();
 
-    commandsAction({
-      type: 'add',
-      items: merge(data[index].getCommands(), props.commands),
-    });
+    addCommands(merge(data[index].getCommands(), props.commands));
   };
 
   useEffect(() => {
     if (props.selectModeActivated === true) {
-      bind('esc', () => {
-        props.onSelectClose();
-      });
+      setGlobalHotKeys({ close: props.onSelectClose });
 
       return () => {
-        unbind('esc');
+        removeGlobalHotKeys(['close']);
       };
+    } else {
+      removeGlobalHotKeys(['close']);
     }
   }, [props.selectModeActivated]);
-
-  // useEffect(() => {
-  //   if (focus.focusedPanel === 'terminal' && focus.index !== undefined) {
-  //     console.log('TerminalPanels -> focus.focusedPanel', focus.focusedPanel);
-  //     focusItem(focus.index)();
-  //   }
-  // }, [focus]);
 
   const hotkeys = {
     openGoto: openGotoPalette,
@@ -129,13 +104,13 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
 
   return (
     <DefaultPanel
-      onFocus={() => focusAction({ type: 'focusPanel', item: 'terminal' })}
+      onFocus={() => focusPanel('terminal')}
       onSplit={splitTerminal}
       splitable={data.length < 2}
     >
       <SplitPanels className="terminal-panels" splitType="horizontal">
         {map(data, (item, i) => {
-          const focused = focus.focusedPanel === 'terminal' && focus.index === i;
+          const focused = focus.panel === 'terminal' && focus.index === i;
 
           return (
             <ErrorBoundary key={item.getId()}>

@@ -12,15 +12,15 @@ interface PreviewPanelProps extends HOHandlers {
 }
 
 const PreviewPanel = (props: PreviewPanelProps) => {
-  const { dispatch: focusAction, data: focus } = useFocus();
+  const { focus, focusPanel } = useFocus();
 
   const onFocus = () => {
-    focusAction({ type: 'focusPanel', item: 'preview' });
+    focusPanel('preview');
   };
 
   return (
     <DefaultPanel onFocus={onFocus} onHide={props.onHide} splitable={false}>
-      <Preview focused={focus.focusedPanel === 'preview'} width={props.width} />
+      <Preview focused={focus.panel === 'preview'} width={props.width} />
     </DefaultPanel>
   );
 };

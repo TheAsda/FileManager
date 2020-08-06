@@ -25,8 +25,8 @@ import { GoToPalette } from '../modals';
 
 const Window = () => {
   const { keysManager, getIdentityManager, settingsManager, directoryManager } = useManagers();
-  const { dispatch: keysAction } = useHotKeys();
-  const { data: commands } = useCommands();
+  const { addHotKeys, removeHotKeys, setKeyMap } = useHotKeys();
+  const { commands } = useCommands();
 
   const themeSelectorManager = useMemo(() => {
     return getIdentityManager();
@@ -53,11 +53,7 @@ const Window = () => {
       options,
     });
 
-    keysAction({
-      type: 'setHotKeys',
-      hotkeys: themeSelectorManager.getHotkeys(),
-      push: true,
-    });
+    addHotKeys(themeSelectorManager.getHotkeys(), true);
   };
   const closeThemeSelector = () => {
     setThemeSelectorState({
@@ -65,10 +61,7 @@ const Window = () => {
       options: [],
     });
 
-    keysAction({
-      type: 'setHotKeys',
-      pop: true,
-    });
+    removeHotKeys();
   };
   const onThemeSelect = (themeName: string) => {
     setTheme(themeName);
@@ -82,19 +75,12 @@ const Window = () => {
   const openCommandPalette = () => {
     setCommandPalette(true);
 
-    keysAction({
-      type: 'setHotKeys',
-      hotkeys: commandPaletteManager.getHotkeys(),
-      push: true,
-    });
+    addHotKeys(commandPaletteManager.getHotkeys(), true);
   };
   const closeCommandPalette = () => {
     setCommandPalette(false);
 
-    keysAction({
-      type: 'setHotKeys',
-      pop: true,
-    });
+    closeThemeSelector();
   };
 
   const { data: terminals } = useTerminals();
@@ -145,10 +131,7 @@ const Window = () => {
   };
 
   useEffect(() => {
-    keysAction({
-      type: 'setKeyMap',
-      keymap: keysManager.getKeyMap(),
-    });
+    setKeyMap(keysManager.getKeyMap());
   }, []);
 
   return (

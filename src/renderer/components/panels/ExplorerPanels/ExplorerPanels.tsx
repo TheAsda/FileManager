@@ -20,9 +20,9 @@ interface ExplorerPalensProps extends HOHandlers {
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { data, dispatch } = useExplorers();
-  const { dispatch: focusAction, data: focus } = useFocus();
-  const { dispatch: commandsAction } = useCommands();
-  const { dispatch: keysAction } = useHotKeys();
+  const { focus, focusIndex, focusPanel } = useFocus();
+  const { addCommands, emptyCommands } = useCommands();
+  const { addHotKeys, removeHotKeys } = useHotKeys();
   const { getIdentityManager, directoryManager, settingsManager } = useManagers();
   const cacheManager = useCache();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
@@ -61,11 +61,8 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       isShown: true,
       panelIndex: focus.index,
     });
-    keysAction({
-      type: 'setHotKeys',
-      hotkeys: gotoManager.getHotkeys(),
-      push: true,
-    });
+
+    addHotKeys(gotoManager.getHotkeys(), true);
   };
 
   const closeGotoPalette = () => {
@@ -74,10 +71,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       panelIndex: undefined,
     });
 
-    keysAction({
-      type: 'setHotKeys',
-      pop: true,
-    });
+    removeHotKeys();
   };
 
   const hotkeys = {
@@ -98,26 +92,15 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   };
 
   const focusItem = (index: number) => () => {
-    if (focus.focusedPanel === 'explorer' && focus.index !== index) {
-      focusAction({
-        type: 'focusItem',
-        index,
-      });
+    if (focus.panel === 'explorer' && focus.index !== index) {
+      focusIndex(index);
     }
 
-    keysAction({
-      type: 'setHotKeys',
-      hotkeys: merge(data[index].getHotkeys(), props.hotkeys),
-    });
+    addHotKeys(merge(data[index].getHotkeys(), props.hotkeys));
 
-    commandsAction({
-      type: 'empty',
-    });
+    emptyCommands();
 
-    commandsAction({
-      type: 'add',
-      items: merge(data[index].getCommands(), props.commands),
-    });
+    addCommands(merge(data[index].getCommands(), props.commands));
   };
 
   const onCopy = (panelIndex: number) => (filesToCopy: FileInfo[]) => {
@@ -178,13 +161,13 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
 
   return (
     <DefaultPanel
-      onFocus={() => focusAction({ type: 'focusPanel', item: 'explorer' })}
+      onFocus={() => focusPanel('explorer')}
       onSplit={splitExplorer}
       splitable={data.length < 2}
     >
       <SplitPanels minSize={200} splitType="horizontal">
         {map(data, (item, i) => {
-          const isFocused = focus.focusedPanel === 'explorer' && focus.index === i;
+          const isFocused = focus.panel === 'explorer' && focus.index === i;
 
           return (
             <ErrorBoundary key={item.getId()}>

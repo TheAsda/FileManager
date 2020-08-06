@@ -1,107 +1,107 @@
-import React, {
-  createContext,
-  useReducer,
-  useContext,
-  Dispatch,
-  PropsWithChildren,
-  useEffect,
-} from 'react';
+import React, { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import { KeyMap, Commands } from '@fm/common';
-import { noop, values, flatten, forEach, keys } from 'lodash';
+import { noop, values, flatten, forEach, keys, slice, merge } from 'lodash';
 import { unbind, bindGlobal } from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
+import { useValidatedContext } from './useValidatedContext';
 
-type HotKeysAction =
-  | {
-      type: 'setKeyMap';
-      keymap: KeyMap;
-    }
-  | {
-      type: 'setHotKeys';
-      hotkeys: Commands;
-      push?: boolean;
-    }
-  | {
-      type: 'setHotKeys';
-      pop: true;
-    };
-
-interface HotKeysState {
-  keymap: KeyMap;
-  hotKeys: Commands[];
-}
-
-const focusReducer = (state: HotKeysState, action: HotKeysAction): HotKeysState => {
-  switch (action.type) {
-    case 'setKeyMap': {
-      return {
-        ...state,
-        keymap: {
-          ...state.keymap,
-          ...action.keymap,
-        },
-      };
-    }
-    case 'setHotKeys': {
-      if ('pop' in action) {
-        return {
-          ...state,
-          hotKeys: state.hotKeys.slice(0, state.hotKeys.length - 1),
-        };
-      } else {
-        return {
-          ...state,
-          hotKeys: action.push ? [...state.hotKeys, action.hotkeys] : [action.hotkeys],
-        };
-      }
-    }
-    default:
-      return state;
-  }
-};
-
-const HotKeysContext = createContext<{ data: HotKeysState; dispatch: Dispatch<HotKeysAction> }>({
-  data: {
-    keymap: {},
-    hotKeys: [],
-  },
-  dispatch: noop,
+const HotKeysContext = createContext<{
+  setKeyMap: (keyMap: KeyMap) => void;
+  addHotKeys: (hotKeys: Commands, push?: boolean) => void;
+  removeHotKeys: () => void;
+  setGlobalHotKeys: (hotKeys: Commands) => void;
+  removeGlobalHotKeys: (hotKeys: string[]) => void;
+}>({
+  setKeyMap: noop,
+  addHotKeys: noop,
+  removeHotKeys: noop,
+  setGlobalHotKeys: noop,
+  removeGlobalHotKeys: noop,
 });
 
 const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
-  const [data, dispatch] = useReducer(focusReducer, {
-    keymap: {},
-    hotKeys: [],
-  });
+  const [keyMap, setKeyMapState] = useState<KeyMap>({});
+  const [hotKeys, setHotKeys] = useState<Commands[]>([]);
+  const [globalHotKeys, setGlobalHotKeysState] = useState<Commands>({});
 
-  const bindHotKeys = () => {
-    const lastHotKeys = data.hotKeys[data.hotKeys.length - 1];
-    console.log('bindHotKeys -> data.hotKeys', data.hotKeys);
-    forEach(keys(lastHotKeys), (commandName) => {
-      const bindings = data.keymap[commandName];
+  const setKeyMap = (keyMap: KeyMap) => {
+    setKeyMapState(keyMap);
+  };
+
+  const addHotKeys = (hotKeys: Commands, push = false) => {
+    if (push) {
+      setHotKeys((state) => [...state, hotKeys]);
+      return;
+    }
+
+    setHotKeys([hotKeys]);
+  };
+
+  const removeHotKeys = () => {
+    setHotKeys((state) => slice(state, 0, state.length - 1));
+  };
+
+  const setGlobalHotKeys = (hotKeys: Commands) => {
+    setGlobalHotKeysState((state) => merge(state, hotKeys));
+  };
+
+  const removeGlobalHotKeys = (hotKeys: string[]) => {
+    setGlobalHotKeysState((state) => {
+      forEach(hotKeys, (item) => {
+        delete state[item];
+      });
+
+      return state;
+    });
+  };
+
+  const bindGlobalHotKeys = () => {
+    forEach(keys(globalHotKeys), (name) => {
+      const bindings = keyMap[name];
 
       if (!bindings) {
-        console.log(`Haven't found bindings for ${commandName}`);
+        console.log(`Haven't found bindings for global ${name}`);
         return;
       }
 
-      bindGlobal(bindings, lastHotKeys[commandName]);
+      bindGlobal(bindings, globalHotKeys[name]);
+    });
+  };
+
+  const bindHotKeys = () => {
+    const lastHotKeys = hotKeys[hotKeys.length - 1];
+    forEach(keys(lastHotKeys), (name) => {
+      const bindings = keyMap[name];
+
+      if (!bindings) {
+        console.log(`Haven't found bindings for ${name}`);
+        return;
+      }
+
+      bindGlobal(bindings, lastHotKeys[name]);
     });
   };
 
   const unbindAll = () => {
-    const allBindings = flatten(values(data.keymap));
+    const allBindings = flatten(values(keyMap));
     unbind(allBindings);
   };
 
   useEffect(() => {
+    bindGlobalHotKeys();
     unbindAll();
     bindHotKeys();
-  }, [data.hotKeys]);
+  }, [hotKeys]);
 
-  return <HotKeysContext.Provider value={{ data, dispatch }}>{children}</HotKeysContext.Provider>;
+  return (
+    <HotKeysContext.Provider
+      value={{ setKeyMap, addHotKeys, removeHotKeys, setGlobalHotKeys, removeGlobalHotKeys }}
+    >
+      {children}
+    </HotKeysContext.Provider>
+  );
 };
 
-const useHotKeys = () => useContext(HotKeysContext);
+const useHotKeys = () => useValidatedContext(HotKeysContext);
 
-export { HotKeysProvider, useHotKeys, HotKeysAction, HotKeysState };
+export { HotKeysProvider, useHotKeys };

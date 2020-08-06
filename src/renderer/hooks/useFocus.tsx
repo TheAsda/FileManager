@@ -1,125 +1,26 @@
-import React, {
-  createContext,
-  useReducer,
-  useContext,
-  Dispatch,
-  PropsWithChildren,
-  useEffect,
-} from 'react';
-import { PanelType, ISettingsManager, SettingsManager } from '@fm/common';
+import React, { createContext, useContext, PropsWithChildren, useEffect, useState } from 'react';
+import { PanelType, ISettingsManager } from '@fm/common';
 import { noop } from 'lodash';
+import { useHotKeys } from './useHotKeys';
 
-type FocusAction =
-  | {
-      type: 'focusPanel';
-      item: PanelType;
-    }
-  | {
-      type: 'focusItem';
-      index: number;
-    }
-  | {
-      type: 'toggleItem';
-    }
-  | {
-      type: 'togglePanel';
-    }
-  | {
-      type: 'setSettingsManager';
-      settingsManager: ISettingsManager;
-    };
-
-interface FocusState {
-  focusedPanel: PanelType;
-  index?: number;
-  settingsManager: ISettingsManager;
-}
-
-const focusReducer = (state: FocusState, action: FocusAction): FocusState => {
-  switch (action.type) {
-    case 'focusPanel': {
-      return {
-        ...state,
-        focusedPanel: action.item,
-      };
-    }
-    case 'focusItem': {
-      return {
-        ...state,
-        index: action.index,
-      };
-    }
-    case 'toggleItem': {
-      if (state.index === undefined || state.focusedPanel === 'preview') {
-        return state;
-      }
-
-      return {
-        ...state,
-        index: state.index ^ 1,
-      };
-    }
-    case 'togglePanel': {
-      if (state.focusedPanel === 'explorer') {
-        if (!state.settingsManager.getSettings().layout.preview.hidden) {
-          return {
-            ...state,
-            focusedPanel: 'preview',
-          };
-        }
-        if (!state.settingsManager.getSettings().layout.terminals.hidden) {
-          return {
-            ...state,
-            focusedPanel: 'terminal',
-          };
-        }
-      }
-      if (state.focusedPanel === 'preview') {
-        if (!state.settingsManager.getSettings().layout.terminals.hidden) {
-          return {
-            ...state,
-            focusedPanel: 'terminal',
-          };
-        }
-        if (!state.settingsManager.getSettings().layout.explorers.hidden) {
-          return {
-            ...state,
-            focusedPanel: 'explorer',
-          };
-        }
-      }
-      if (state.focusedPanel === 'terminal') {
-        if (!state.settingsManager.getSettings().layout.explorers.hidden) {
-          return {
-            ...state,
-            focusedPanel: 'explorer',
-          };
-        }
-        if (!state.settingsManager.getSettings().layout.preview.hidden) {
-          return {
-            ...state,
-            focusedPanel: 'preview',
-          };
-        }
-      }
-      return state;
-    }
-    case 'setSettingsManager': {
-      return {
-        ...state,
-        settingsManager: action.settingsManager,
-      };
-    }
-  }
-};
-
-const FocusContext = createContext<{ data: FocusState; dispatch: Dispatch<FocusAction> }>({
-  data: {
-    focusedPanel: 'explorer',
+const FocusContext = createContext<{
+  togglePanel: () => void;
+  toggleIndex: () => void;
+  focusIndex: (index: number) => void;
+  focusPanel: (panel: PanelType) => void;
+  focus: {
+    panel: PanelType;
+    index: number;
+  };
+}>({
+  focus: {
     index: 0,
-    settingsManager: new SettingsManager(),
+    panel: 'explorer',
   },
-  dispatch: noop,
+  toggleIndex: noop,
+  togglePanel: noop,
+  focusIndex: noop,
+  focusPanel: noop,
 });
 
 const FocusProvider = ({
@@ -128,50 +29,81 @@ const FocusProvider = ({
 }: PropsWithChildren<{
   settingsManager: ISettingsManager;
 }>) => {
-  const [data, dispatch] = useReducer(focusReducer, {
-    focusedPanel: 'explorer',
-    index: 0,
-    settingsManager,
-  });
+  const { setGlobalHotKeys } = useHotKeys();
 
-  useEffect(() => {
-    dispatch({
-      type: 'setSettingsManager',
-      settingsManager,
-    });
-  }, [settingsManager]);
+  const [focusedPanel, setFocusedPanel] = useState<PanelType>('explorer');
+  const [focusedIndex, setFocusedIndex] = useState<number>(0);
 
-  const handleKey = (event: KeyboardEvent) => {
-    if (event.keyCode === 9) {
-      event.preventDefault();
-      if (event.ctrlKey) {
-        if (event.shiftKey) {
-          dispatch({
-            type: 'togglePanel',
-          });
-          return;
-        }
-
-        if (data.focusedPanel !== 'preview') {
-          dispatch({
-            type: 'toggleItem',
-          });
-        }
+  const togglePanel = () => {
+    if (focusedPanel === 'explorer') {
+      if (!settingsManager.getSettings().layout.preview.hidden) {
+        setFocusedPanel('preview');
+        return;
+      }
+      if (!settingsManager.getSettings().layout.terminals.hidden) {
+        setFocusedPanel('terminal');
+        return;
+      }
+    }
+    if (focusedPanel === 'preview') {
+      if (!settingsManager.getSettings().layout.terminals.hidden) {
+        setFocusedPanel('terminal');
+        return;
+      }
+      if (!settingsManager.getSettings().layout.explorers.hidden) {
+        setFocusedPanel('explorer');
+        return;
+      }
+    }
+    if (focusedPanel === 'terminal') {
+      if (!settingsManager.getSettings().layout.explorers.hidden) {
+        setFocusedPanel('explorer');
+        return;
+      }
+      if (!settingsManager.getSettings().layout.preview.hidden) {
+        setFocusedPanel('preview');
+        return;
       }
     }
   };
 
+  const toggleIndex = () => {
+    setFocusedIndex((state) => state ^ 1);
+  };
+
+  const focusPanel = (panel: PanelType) => {
+    setFocusedPanel(panel);
+  };
+
+  const focusIndex = (index: number) => {
+    setFocusedIndex(index);
+  };
+
   useEffect(() => {
-    window.addEventListener('keydown', handleKey, true);
-    return () => {
-      window.removeEventListener('keydown', handleKey, true);
-    };
+    setGlobalHotKeys({
+      toggleFocusPanel: togglePanel,
+      toggleFocusItem: toggleIndex,
+    });
   }, []);
 
-  console.log('data', data);
-  return <FocusContext.Provider value={{ data, dispatch }}>{children}</FocusContext.Provider>;
+  return (
+    <FocusContext.Provider
+      value={{
+        focus: {
+          index: focusedIndex,
+          panel: focusedPanel,
+        },
+        toggleIndex,
+        togglePanel,
+        focusIndex,
+        focusPanel,
+      }}
+    >
+      {children}
+    </FocusContext.Provider>
+  );
 };
 
 const useFocus = () => useContext(FocusContext);
 
-export { FocusProvider, useFocus, FocusState, FocusAction };
+export { FocusProvider, useFocus };

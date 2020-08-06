@@ -15,8 +15,8 @@ interface PreviewProps extends HOHandlers {
 const Preview = (props: PreviewProps) => {
   const { item } = usePreview();
   const [focused, setFocused] = useState<boolean>(false);
-  const { dispatch: commandsAction } = useCommands();
-  const { dispatch: keysAction } = useHotKeys();
+  const { addCommands, emptyCommands } = useCommands();
+  const { addHotKeys } = useHotKeys();
   const { directoryManager } = useManagers();
   const [fontSize, setFontSize] = useState<number>(15);
 
@@ -43,19 +43,11 @@ const Preview = (props: PreviewProps) => {
   }, [props.focused]);
 
   const onFocus = () => {
-    keysAction({
-      type: 'setHotKeys',
-      hotkeys: merge(hotkeys, props.hotkeys),
-    });
+    addHotKeys(merge(hotkeys, props.hotkeys));
 
-    commandsAction({
-      type: 'empty',
-    });
+    emptyCommands();
 
-    commandsAction({
-      type: 'add',
-      items: merge({}, props.commands),
-    });
+    addCommands(merge({}, props.commands));
   };
 
   if (item) {
