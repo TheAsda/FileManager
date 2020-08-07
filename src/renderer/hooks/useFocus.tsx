@@ -35,6 +35,7 @@ const FocusProvider = ({
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
 
   const togglePanel = () => {
+    console.log('togglePanel');
     if (focusedPanel === 'explorer') {
       if (!settingsManager.getSettings().layout.preview.hidden) {
         setFocusedPanel('preview');
@@ -68,6 +69,7 @@ const FocusProvider = ({
   };
 
   const toggleIndex = () => {
+    console.log('toggleIndex');
     setFocusedIndex((state) => state ^ 1);
   };
 
@@ -82,7 +84,7 @@ const FocusProvider = ({
   useEffect(() => {
     setGlobalHotKeys({
       toggleFocusPanel: togglePanel,
-      toggleFocusItem: toggleIndex,
+      toggleFocusIndex: toggleIndex,
     });
   }, []);
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { bind, unbind } from 'mousetrap';
 import './style.css';
+import { useHotKeys } from '@fm/hooks';
 
 interface SelectPanelProps {
   onSelect: () => void;
@@ -9,14 +9,16 @@ interface SelectPanelProps {
 }
 
 const SelectPanel = (props: SelectPanelProps) => {
+  const { setGlobalHotKeys, removeGlobalHotKeys } = useHotKeys();
+
   useEffect(() => {
     console.log('Bind ' + props.hotkey);
 
-    bind(props.hotkey, props.onSelect);
+    setGlobalHotKeys({ [props.hotkey]: props.onSelect }, true);
 
     return () => {
       console.log('Unbind ' + props.hotkey);
-      unbind(props.hotkey);
+      removeGlobalHotKeys([props.hotkey]);
     };
   }, [props.hotkey]);
 

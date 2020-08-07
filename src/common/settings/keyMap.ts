@@ -28,8 +28,10 @@ const DEFAULT_KEYMAP: KeyMap = {
   move: ['f5'],
   zoomIn: ['ctrl+plus'],
   zoomOut: ['ctrl+-'],
-  toggleFocusPanel: ['ctrl+tab'],
-  toggleFocusItem: ['ctrl+shift+tab'],
+  toggleFocusIndex: ['ctrl+tab'],
+  toggleFocusPanel: ['ctrl+shift+tab'],
 };
 
-export { DEFAULT_KEYMAP };
+const DISABLED_KEYS = ['tab'];
+
+export { DEFAULT_KEYMAP, DISABLED_KEYS };
