@@ -68,9 +68,16 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
     });
   };
 
+  const preventDefaultWrapper = (action: (event: KeyboardEvent) => void) => (
+    event: KeyboardEvent
+  ) => {
+    event.preventDefault();
+    action(event);
+  };
+
   const bindGlobalHotKeys = () => {
     forEach(keys(rawGlobalHotKeys), (key) => {
-      hotkeys(key, rawGlobalHotKeys[key]);
+      hotkeys(key, preventDefaultWrapper(rawGlobalHotKeys[key]));
     });
 
     forEach(keys(globalHotKeys), (name) => {
@@ -81,13 +88,13 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
         return;
       }
 
-      hotkeys(bindings.join(', '), globalHotKeys[name]);
+      hotkeys(bindings.join(', '), preventDefaultWrapper(globalHotKeys[name]));
     });
   };
 
   const bindHotKeys = () => {
     forEach(keys(rawHotKeys), (key) => {
-      hotkeys(key, rawHotKeys[key]);
+      hotkeys(key, preventDefaultWrapper(rawHotKeys[key]));
     });
 
     const lastHotKeys = hotKeys[hotKeys.length - 1];
@@ -99,7 +106,7 @@ const HotKeysProvider = ({ children }: PropsWithChildren<unknown>) => {
         return;
       }
 
-      hotkeys(bindings.join(', '), lastHotKeys[name]);
+      hotkeys(bindings.join(', '), preventDefaultWrapper(lastHotKeys[name]));
     });
   };
 

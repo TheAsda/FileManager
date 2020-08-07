@@ -94,10 +94,10 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     }
   }
 
-  componentDidUpdate() {
-    if (!this.state.focused && this.props.focused) {
+  componentDidUpdate(prevProps: ExplorerProps) {
+    if (!prevProps.focused && this.props.focused) {
       this.onFocus();
-    } else if (this.state.focused && !this.props.focused) {
+    } else if (prevProps.focused && !this.props.focused) {
       this.onBlur();
     }
 

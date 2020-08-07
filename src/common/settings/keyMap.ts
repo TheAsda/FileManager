@@ -32,6 +32,6 @@ const DEFAULT_KEYMAP: KeyMap = {
   toggleFocusPanel: ['ctrl+shift+tab'],
 };
 
-const DISABLED_KEYS = ['tab'];
+const DISABLED_KEYS = ['tab', 'up+down'];
 
 export { DEFAULT_KEYMAP, DISABLED_KEYS };
