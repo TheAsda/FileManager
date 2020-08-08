@@ -1,4 +1,4 @@
-import { app, protocol } from 'electron';
+import { app, protocol, ipcMain } from 'electron';
 import { resolve, join } from 'path';
 import { Window } from './Window';
 import { hotReaload } from './hotReload';
@@ -27,17 +27,42 @@ const registerIconsProtocol = () => {
   });
 };
 
+let mainWindow: Window | null;
+
 const createWindow = () => {
-  const mainWindow = new Window({
+  mainWindow = new Window({
     file: `file://${__dirname}/index.html`,
     openDevTools: isDev(),
+    frame: false,
   });
+
+  mainWindow.setMenu(null);
+
+  mainWindow.on('closed', () => (mainWindow = null));
 
   registerIconsProtocol();
 };
+
+ipcMain.handle('close-event', () => {
+  app.quit();
+});
+
+app.on('browser-window-focus', () => {
+  mainWindow?.webContents.send('focused');
+});
+
+app.on('browser-window-blur', () => {
+  mainWindow?.webContents.send('blurred');
+});
 
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
   app.quit();
+});
+
+app.on('activate', () => {
+  if (mainWindow === null) {
+    createWindow();
+  }
 });

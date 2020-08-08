@@ -1,4 +1,4 @@
-import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
+import { BrowserWindow, BrowserWindowConstructorOptions, ipcMain } from 'electron';
 
 const defaultWindowSettings = {
   minHeight: 600,
@@ -27,6 +27,26 @@ class Window extends BrowserWindow {
 
     this.once('ready-to-show', () => {
       this.show();
+    });
+
+    this.on('maximize', () => {
+      this.webContents.send('maximized');
+    });
+
+    this.on('unmaximize', () => {
+      this.webContents.send('unmaximized');
+    });
+
+    ipcMain.handle('minimize-event', () => {
+      this.minimize();
+    });
+
+    ipcMain.handle('maximize-event', () => {
+      this.maximize();
+    });
+
+    ipcMain.handle('unmaximize-event', () => {
+      this.unmaximize();
     });
   }
 }
