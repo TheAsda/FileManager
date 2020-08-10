@@ -1,21 +1,27 @@
-import { ExplorerPanelInfo, PreviewPanelInfo, TerminalPanelInfo } from './Panel';
+interface ExplorerPanelInfo {
+  directory: string;
+  size?: number;
+}
+
+interface TerminalPanelInfo {
+  directory: string;
+  size?: number;
+}
 
 interface Layout {
   explorers: {
-    hidden?: boolean;
+    hidden: boolean;
     panels: ExplorerPanelInfo[];
-    sizes?: number[];
+    size?: number;
   };
   preview: {
-    hidden?: boolean;
-    panel?: PreviewPanelInfo;
+    hidden: boolean;
     size?: number;
   };
   terminals: {
-    hidden?: boolean;
+    hidden: boolean;
     panels: TerminalPanelInfo[];
-    sizes?: number[];
   };
 }
 
-export { Layout };
+export { Layout, ExplorerPanelInfo, TerminalPanelInfo };

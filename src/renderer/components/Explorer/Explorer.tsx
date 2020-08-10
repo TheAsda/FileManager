@@ -1,4 +1,10 @@
-import { FileInfo, IDirectoryManager, IExplorerManager, ISettingsManager } from '@fm/common';
+import {
+  FileInfo,
+  IDirectoryManager,
+  IExplorerManager,
+  ISettingsManager,
+  Settings,
+} from '@fm/common';
 import React, { Component } from 'react';
 import { clamp, merge, filter, concat, sortBy } from 'lodash';
 import { DetailView } from './DetailView';
@@ -35,7 +41,7 @@ interface ExplorerProps extends HOHandlers {
   openInTerminal?: (path: string) => void;
   onDirectoryChange?: (path: string) => void;
   focused?: boolean;
-  settingsManager: ISettingsManager;
+  settings: Settings;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
@@ -154,10 +160,10 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   toggleAutoPreview() {
-    this.props.settingsManager.setSettings(
-      'autoPreview',
-      !this.props.settingsManager.getSettings().autoPreview
-    );
+    // this.props.settingsManager.setSettings(
+    //   'autoPreview',
+    //   !this.props.settingsManager.getSettings().autoPreview
+    // );
   }
 
   @autobind
@@ -181,8 +187,8 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     const newSelectedItem = this.state.directoryState[newIndex];
 
     if (
-      !this.props.settingsManager.getSettings().layout.preview.hidden &&
-      this.props.settingsManager.getSettings().autoPreview &&
+      !this.props.settings?.layout?.preview.hidden &&
+      this.props.settings.autoPreview &&
       newSelectedItem.attributes.directory === false
     ) {
       this.props.onPreview && this.props.onPreview(newSelectedItem);

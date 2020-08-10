@@ -12,6 +12,7 @@ import {
   Explorer,
   InputModal,
 } from '@fm/components';
+import { useSettings } from 'renderer/hooks/useSettings';
 
 interface ExplorerPalensProps extends HOHandlers {
   onPreview?: (item: FileInfo) => void;
@@ -23,7 +24,8 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { focus, focusIndex, focusPanel } = useFocus();
   const { addCommands, emptyCommands } = useCommands();
   const { addHotKeys, removeHotKeys } = useHotKeys();
-  const { getIdentityManager, directoryManager, settingsManager } = useManagers();
+  const { getIdentityManager, directoryManager } = useManagers();
+  const { settings } = useSettings();
   const cacheManager = useCache();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
@@ -165,32 +167,34 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       onSplit={splitExplorer}
       splitable={data.length < 2}
     >
-      <SplitPanels minSize={200} splitType="horizontal">
-        {map(data, (item, i) => {
-          const isFocused = focus.panel === 'explorer' && focus.index === i;
+      {settings && (
+        <SplitPanels minSize={200} splitType="horizontal">
+          {map(data, (item, i) => {
+            const isFocused = focus.panel === 'explorer' && focus.index === i;
 
-          return (
-            <ErrorBoundary key={item.getId()}>
-              <Explorer
-                closable={data.length > 1}
-                commands={props.commands}
-                directoryManager={directoryManager}
-                explorerManager={item}
-                focused={isFocused}
-                hotkeys={merge(hotkeys, props.hotkeys)}
-                onClose={onClose(i)}
-                onCopy={onCopy(i)}
-                onDirectoryChange={(path) => cacheManager.addToCache(path)}
-                onFocus={focusItem(i)}
-                onMove={onMove(i)}
-                onPreview={props.onPreview}
-                openInTerminal={props.openInTerminal}
-                settingsManager={settingsManager}
-              />
-            </ErrorBoundary>
-          );
-        })}
-      </SplitPanels>
+            return (
+              <ErrorBoundary key={item.getId()}>
+                <Explorer
+                  closable={data.length > 1}
+                  commands={props.commands}
+                  directoryManager={directoryManager}
+                  explorerManager={item}
+                  focused={isFocused}
+                  hotkeys={merge(hotkeys, props.hotkeys)}
+                  onClose={onClose(i)}
+                  onCopy={onCopy(i)}
+                  onDirectoryChange={(path) => cacheManager.addToCache(path)}
+                  onFocus={focusItem(i)}
+                  onMove={onMove(i)}
+                  onPreview={props.onPreview}
+                  openInTerminal={props.openInTerminal}
+                  settings={settings}
+                />
+              </ErrorBoundary>
+            );
+          })}
+        </SplitPanels>
+      )}
       <InputModal
         initialValue={inputModalState.inputValue}
         isOpened={inputModalState.isShown}

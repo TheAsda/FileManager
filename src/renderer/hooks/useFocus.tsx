@@ -2,6 +2,7 @@ import React, { createContext, useContext, PropsWithChildren, useEffect, useStat
 import { PanelType, ISettingsManager } from '@fm/common';
 import { noop } from 'lodash';
 import { useHotKeys } from './useHotKeys';
+import { useSettings } from './useSettings';
 
 const FocusContext = createContext<{
   togglePanel: () => void;
@@ -30,6 +31,7 @@ const FocusProvider = ({
   settingsManager: ISettingsManager;
 }>) => {
   const { setGlobalHotKeys } = useHotKeys();
+  const { settings } = useSettings();
 
   const [focusedPanel, setFocusedPanel] = useState<PanelType>('explorer');
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
@@ -37,31 +39,31 @@ const FocusProvider = ({
   const togglePanel = () => {
     console.log('togglePanel');
     if (focusedPanel === 'explorer') {
-      if (!settingsManager.getSettings().layout.preview.hidden) {
+      if (!settings?.layout?.preview.hidden) {
         setFocusedPanel('preview');
         return;
       }
-      if (!settingsManager.getSettings().layout.terminals.hidden) {
+      if (!settings?.layout?.terminals.hidden) {
         setFocusedPanel('terminal');
         return;
       }
     }
     if (focusedPanel === 'preview') {
-      if (!settingsManager.getSettings().layout.terminals.hidden) {
+      if (!settings?.layout?.terminals.hidden) {
         setFocusedPanel('terminal');
         return;
       }
-      if (!settingsManager.getSettings().layout.explorers.hidden) {
+      if (!settings?.layout?.explorers.hidden) {
         setFocusedPanel('explorer');
         return;
       }
     }
     if (focusedPanel === 'terminal') {
-      if (!settingsManager.getSettings().layout.explorers.hidden) {
+      if (!settings?.layout?.explorers.hidden) {
         setFocusedPanel('explorer');
         return;
       }
-      if (!settingsManager.getSettings().layout.preview.hidden) {
+      if (!settings?.layout?.preview.hidden) {
         setFocusedPanel('preview');
         return;
       }

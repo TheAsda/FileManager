@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Window } from './components';
 import {
   useManagers,
@@ -10,28 +10,34 @@ import {
   useTheme,
   ThemeProvider,
 } from '@fm/hooks';
-import { DEFAULT_LAYOUT } from '@fm/common';
+import { Settings } from '@fm/common';
 import './style.css';
 import { CSSApplicator } from './components/CSSApplicator';
 import { Titlebar } from './components/Titlebar';
+import { ipcRenderer } from 'electron';
+import { useSettings } from './hooks/useSettings';
 
 const App = () => {
   const { settingsManager } = useManagers();
 
+  const { settings } = useSettings();
+  
   return (
     <>
       <Titlebar />
       <ThemeProvider>
         <HotKeysProvider>
-          <ExplorersProvider initialState={DEFAULT_LAYOUT.explorers.panels}>
-            <TerminalsProvider initialState={DEFAULT_LAYOUT.terminals.panels}>
-              <PreviewProvider settingsManager={settingsManager}>
-                <CommandsProvider>
-                  <Window />
-                </CommandsProvider>
-              </PreviewProvider>
-            </TerminalsProvider>
-          </ExplorersProvider>
+          {settings?.layout && (
+            <ExplorersProvider initialState={settings.layout.explorers.panels}>
+              <TerminalsProvider initialState={settings.layout.terminals.panels}>
+                <PreviewProvider settingsManager={settingsManager}>
+                  <CommandsProvider>
+                    <Window />
+                  </CommandsProvider>
+                </PreviewProvider>
+              </TerminalsProvider>
+            </ExplorersProvider>
+          )}
         </HotKeysProvider>
       </ThemeProvider>
     </>

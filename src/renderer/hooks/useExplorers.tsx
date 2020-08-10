@@ -1,7 +1,8 @@
 import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
-import { IExplorerManager, ExplorerPanelInfo, container, TYPES } from '@fm/common';
+import { IExplorerManager, container, TYPES } from '@fm/common';
 import { map, noop } from 'lodash';
 import { normalizePath } from 'filemancore';
+import { ExplorerPanelInfo } from 'common/interfaces/models/Layout';
 
 type Action = { type: 'spawn'; path?: string } | { type: 'destroy'; index: number };
 
@@ -56,11 +57,8 @@ const ExplorersProvider = ({
 
     return map(initialState, (item) => {
       const manager = getExplorerManager();
-      if (item.directory) {
-        manager.setPath(item.directory);
-      } else {
-        manager.setPath(process.cwd());
-      }
+      manager.setPath(item.directory);
+
       return manager;
     });
   });

@@ -1,6 +1,7 @@
 import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
-import { container, TYPES, ITerminalManager, TerminalPanelInfo } from '@fm/common';
+import { container, TYPES, ITerminalManager } from '@fm/common';
 import { map, isString, noop, filter } from 'lodash';
+import { TerminalPanelInfo } from 'common/interfaces/models/Layout';
 
 type Action = { type: 'spawn'; path?: string } | { type: 'destroy'; id: number };
 

@@ -12,7 +12,7 @@ interface Settings {
 
   autoPreview: boolean;
 
-  layout: Layout;
+  layout?: Layout;
 }
 
 export { Settings };

@@ -12,6 +12,7 @@
     "webpack:prod": "yarn webpack --mode=production",
     "watch": "yarn webpack --watch",
     "start": "yarn webpack:prod && yarn electron",
+    "start:dev": "yarn webpack && yarn electron",
     "electron": "electron dist/main.js",
     "dev": "concurrently \"yarn watch\" \"yarn electron\"",
     "build:win": "yarn webpack:prod && electron-builder --win",
@@ -25,6 +26,9 @@
     "directories": {
       "output": "build/"
     }
+  },
+  "resolutions": {
+    "styled-components": "^5"
   },
   "author": "Andrey Kiselev",
   "license": "ISC",
@@ -73,7 +77,7 @@
     "autobind-decorator": "^2.4.0",
     "bunyan": "^1.8.12",
     "electron-store": "^6.0.0",
-    "filemancore": "^1.0.1",
+    "filemancore": "^1.0.8",
     "fuse.js": "^6.4.1",
     "hotkeys-js": "^3.8.1",
     "inversify": "^5.0.1",
@@ -87,6 +91,7 @@
     "react-toastify": "^6.0.8",
     "react-zoom-pan-pinch": "^1.6.1",
     "reflect-metadata": "^0.1.13",
+    "styled-components": "^5.1.1",
     "trash": "^6.1.1",
     "xterm": "^4.6.0",
     "xterm-addon-fit": "^0.4.0"
