@@ -1,10 +1,4 @@
-import {
-  FileInfo,
-  IDirectoryManager,
-  IExplorerManager,
-  ISettingsManager,
-  Settings,
-} from '@fm/common';
+import { FileInfo, IDirectoryManager, IExplorerManager, Settings } from '@fm/common';
 import React, { Component } from 'react';
 import { clamp, merge, filter, concat, sortBy } from 'lodash';
 import { DetailView } from './DetailView';

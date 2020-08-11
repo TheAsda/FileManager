@@ -13,7 +13,8 @@
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
-    "plugin:lodash/recommended"
+    "plugin:lodash/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -25,9 +26,11 @@
       "jsx": true
     },
     "ecmaVersion": 11,
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./"
   },
-  "plugins": ["react", "@typescript-eslint", "lodash"],
+  "plugins": ["react", "@typescript-eslint", "lodash", "import"],
   "rules": {
     "lodash/import-scope": ["error", "member"],
     "@typescript-eslint/explicit-module-boundary-types": ["off"],
@@ -38,21 +41,17 @@
       }
     ],
     "react/prop-types": "off",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/no-floating-promises": "off"
   },
   "settings": {
     "react": {
       "version": "detect"
     },
     "import/resolver": {
-      "alias": {
-        "map": [
-          ["@fm/common", "./src/common"],
-          ["@fm/hooks", "./src/renderer/hooks"],
-          ["@fm/components", "./src/renderer/components"]
-        ],
-        "extensions": [".ts", ".tsx", ".js", ".jsx", ".json"]
-      }
+      "typescript": {}
     },
     "import/ignore": ["node_modules"]
   }

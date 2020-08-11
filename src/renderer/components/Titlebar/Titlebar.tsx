@@ -48,17 +48,17 @@ const Titlebar = () => {
         <div className="Title-Bar__section-windows-control">
           <div className="section-windows-control_box">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
               height="14"
-              viewBox="0 0 24 24"
               strokeLinejoin="round"
+              viewBox="0 0 24 24"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <circle
-                onClick={minimizeHandler}
                 className={isActive ? 'minimize-active_logo' : 'minimize-inactive_logo'}
                 cx="11.6"
                 cy="11.6"
+                onClick={minimizeHandler}
                 r="11.4"
               />
             </svg>
@@ -66,17 +66,17 @@ const Titlebar = () => {
           {isMaximized ? (
             <div className="section-windows-control_box">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
                 height="14"
-                viewBox="0 0 24 24"
                 strokeLinejoin="round"
+                viewBox="0 0 24 24"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
-                  onClick={unmaximizeHandler}
                   className={isActive ? 'unmaximize-active_logo' : 'unmaximize-inactive_logo'}
                   cx="11.6"
                   cy="11.6"
+                  onClick={unmaximizeHandler}
                   r="11.4"
                 />
               </svg>
@@ -84,17 +84,17 @@ const Titlebar = () => {
           ) : (
             <div className="section-windows-control_box">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
                 height="14"
-                viewBox="0 0 24 24"
                 strokeLinejoin="round"
+                viewBox="0 0 24 24"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
-                  onClick={maximizeHandler}
                   className={isActive ? 'maximize-active_logo' : 'maximize-inactive_logo'}
                   cx="11.6"
                   cy="11.6"
+                  onClick={maximizeHandler}
                   r="11.4"
                 />
               </svg>
@@ -102,23 +102,23 @@ const Titlebar = () => {
           )}
           <div className="section-windows-control_box">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
               height="14"
-              viewBox="0 0 24 24"
               strokeLinejoin="round"
+              viewBox="0 0 24 24"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <circle
-                onClick={closeHandler}
                 className={isActive ? 'close-active_logo' : 'close-inactive_logo'}
                 cx="11.6"
                 cy="11.6"
+                onClick={closeHandler}
                 r="11.4"
               />
             </svg>
           </div>
         </div>
-        <div style={isMaximized ? { display: 'none' } : {}} className="resizer"></div>
+        <div className="resizer" style={isMaximized ? { display: 'none' } : {}}></div>
       </div>
     </div>
   );

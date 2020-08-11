@@ -39,6 +39,7 @@ class Terminal extends Component<TerminalProps> {
     this.containerRef = createRef<HTMLDivElement>();
     this.terminal = new XTerm({
       convertEol: true,
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       fontFamily: `${props.theme['terminal-font-family']}, 'Consolas'`,
       fontSize: props.theme['terminal-font-size'],
       rendererType: 'dom', // default is canvas

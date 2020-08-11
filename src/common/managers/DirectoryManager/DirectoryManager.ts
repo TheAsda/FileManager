@@ -67,7 +67,7 @@ class DirectoryManager implements IDirectoryManager {
     const newNameFull = join(itemPath, newName);
 
     try {
-      await renameSync(oldNameFull, newNameFull);
+      renameSync(oldNameFull, newNameFull);
       this._logger.log('Renamed successfully');
     } catch {
       this._logger.error(`Cannot rename ${oldNameFull} to ${newNameFull}`);

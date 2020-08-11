@@ -2,7 +2,6 @@ import { ITerminalManager } from './ITerminalManager';
 import { IPty, spawn } from 'node-pty';
 import { injectable } from 'inversify';
 import { platform, homedir } from 'os';
-import { exec } from 'child_process';
 import { Terminal } from 'xterm';
 import { IdentityManager } from '../IdentityManager';
 

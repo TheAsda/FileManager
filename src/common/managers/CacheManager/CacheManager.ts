@@ -59,7 +59,7 @@ class CacheManager implements ICacheManager {
 
   private getCache(): string[] {
     try {
-      return JSON.parse(this.directoryManager.readFileSync(this.cachePath));
+      return JSON.parse(this.directoryManager.readFileSync(this.cachePath)) as string[];
     } catch {
       this.logger.error('Cannot read cache file');
       return [];
