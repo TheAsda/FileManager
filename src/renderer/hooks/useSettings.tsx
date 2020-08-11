@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, PropsWithChildren, useEffect } from 'react';
-import { Settings } from '@fm/common';
+import { Settings, Channels } from '@fm/common';
 import { noop } from 'lodash';
 import { ipcRenderer } from 'electron';
-import { IpcRendererEvent } from '../../main/rendererEvent';
-import { IpcMainEvent } from 'main/mainEvent';
 
 const SettingsContext = createContext<{
   settings?: Settings;
@@ -18,14 +16,22 @@ const SettingsProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [state, setState] = useState<Settings>();
 
   useEffect(() => {
-    setState(ipcRenderer.sendSync(IpcMainEvent.GET_SETTINGS));
-    ipcRenderer.on(IpcRendererEvent.SETTINGS, (event, args: Settings[]) => {
-      setState(args[0]);
+    ipcRenderer.send(Channels.GET_SETTINGS);
+    ipcRenderer.on(Channels.SETTINGS, (event, args: Settings) => {
+      setState(args);
     });
   }, []);
 
+  const setValue = (key: string, value: unknown) => {
+    ipcRenderer.send(Channels.SET_SETTINGS, { key, value });
+  };
+
+  const resetSettings = () => {
+    ipcRenderer.send(Channels.RESET_SETTINGS);
+  };
+
   return (
-    <SettingsContext.Provider value={{ settings: state, setValue: noop, resetSettings: noop }}>
+    <SettingsContext.Provider value={{ settings: state, setValue, resetSettings }}>
       {children}
     </SettingsContext.Provider>
   );

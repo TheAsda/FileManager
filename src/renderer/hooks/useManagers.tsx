@@ -1,23 +1,22 @@
-import {
-  ISettingsManager,
-  IThemesManager,
-  IKeysManager,
-  IDirectoryManager,
-  IIdentityManager,
-} from '@fm/common';
-import { container, TYPES } from '../../common/ioc';
+import { IThemesManager, IKeysManager, IDirectoryManager, IIdentityManager } from '@fm/common';
+import { container } from '../../common/ioc/container';
+import { TYPES } from '../../common/ioc/types';
+import { useMemo } from 'react';
 
-const settingsManager = container.get<ISettingsManager>(TYPES.ISettingsManager);
-const keysManager = container.get<IKeysManager>(TYPES.IKeysManager);
-const themesManager = container.get<IThemesManager>(TYPES.IThemesManager);
-const directoryManager = container.get<IDirectoryManager>(TYPES.IDirectoryManager);
+const useManagers = () => {
+  const directoryManager = useMemo(
+    () => container.get<IDirectoryManager>(TYPES.IDirectoryManager),
+    []
+  );
+  const keysManager = useMemo(() => container.get<IKeysManager>(TYPES.IKeysManager), []);
+  const themesManager = useMemo(() => container.get<IThemesManager>(TYPES.IThemesManager), []);
 
-const useManagers = () => ({
-  keysManager,
-  settingsManager,
-  themesManager,
-  directoryManager,
-  getIdentityManager: () => container.get<IIdentityManager>(TYPES.IIdentityManager),
-});
+  return {
+    keysManager,
+    themesManager,
+    directoryManager,
+    getIdentityManager: () => container.get<IIdentityManager>(TYPES.IIdentityManager),
+  };
+};
 
 export { useManagers };

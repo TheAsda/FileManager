@@ -24,7 +24,7 @@ import { remote, app } from 'electron';
 import { GoToPalette } from '../modals';
 
 const Window = () => {
-  const { keysManager, getIdentityManager, settingsManager, directoryManager } = useManagers();
+  const { keysManager, getIdentityManager, directoryManager } = useManagers();
   const { addHotKeys, removeHotKeys, setKeyMap } = useHotKeys();
   const { commands } = useCommands();
 
@@ -137,7 +137,7 @@ const Window = () => {
   return (
     <CSSApplicator theme={theme}>
       <div className="window">
-        <FocusProvider settingsManager={settingsManager}>
+        <FocusProvider>
           <SplitPanels minSize={200} splitType="vertical">
             <ExplorerPanels
               commands={localCommands}

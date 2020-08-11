@@ -1,5 +1,6 @@
 import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
-import { container, TYPES, ITerminalManager } from '@fm/common';
+import { ITerminalManager } from '@fm/common';
+import { container, TYPES } from '../../common/ioc';
 import { map, isString, noop, filter } from 'lodash';
 import { TerminalPanelInfo } from 'common/interfaces/models/Layout';
 

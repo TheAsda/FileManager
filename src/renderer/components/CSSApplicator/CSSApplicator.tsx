@@ -4,7 +4,7 @@ import { Theme } from '@fm/common';
 import { toPairs, forEach, isNumber } from 'lodash';
 
 interface CSSApplicatorProps {
-  theme: Theme;
+  theme?: Theme;
 }
 
 class CSSApplicator extends Component<CSSApplicatorProps> {

@@ -1,5 +1,6 @@
 import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
-import { IExplorerManager, container, TYPES } from '@fm/common';
+import { IExplorerManager } from '@fm/common';
+import { TYPES, container } from '../../common/ioc';
 import { map, noop } from 'lodash';
 import { normalizePath } from 'filemancore';
 import { ExplorerPanelInfo } from 'common/interfaces/models/Layout';

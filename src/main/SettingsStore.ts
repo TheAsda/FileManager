@@ -1,6 +1,6 @@
 import { ISettingsStore } from './interfaces/ISettingsStore';
 import Store, { Schema } from 'electron-store';
-import { Settings } from './interfaces/Settings';
+import { Settings } from '@fm/common';
 
 const settingsSchema: Schema<Settings> = {
   autoPreview: {
@@ -111,7 +111,7 @@ const settingsSchema: Schema<Settings> = {
   },
 };
 
-class SettingsStore implements ISettingsStore {
+class ThemesManager implements ISettingsStore {
   store: Store<Settings>;
 
   constructor() {
@@ -120,6 +120,11 @@ class SettingsStore implements ISettingsStore {
       schema: settingsSchema,
     });
   }
+
+  openInEditor(): void {
+    this.store.openInEditor();
+  }
+
   getAll(): Settings {
     return this.store.store;
   }
@@ -137,4 +142,4 @@ class SettingsStore implements ISettingsStore {
   }
 }
 
-export { SettingsStore };
+export { ThemesManager };

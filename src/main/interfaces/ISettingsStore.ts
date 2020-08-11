@@ -1,4 +1,4 @@
-import { Settings } from './Settings';
+import { Settings } from '@fm/common';
 
 interface ISettingsStore {
   getAll(): Settings;
@@ -8,6 +8,8 @@ interface ISettingsStore {
   setValue(key: string, value: unknown): void;
 
   resetSettings(): void;
+
+  openInEditor(): void;
 }
 
 export { ISettingsStore };

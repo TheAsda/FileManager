@@ -1,23 +1,21 @@
 import { ipcMain } from 'electron';
 import { ISettingsStore } from './interfaces/ISettingsStore';
-import { SettingsStore } from './SettingsStore';
-import { IpcMainEvent } from './mainEvent';
-import { Window } from './Window';
+import { ThemesManager } from './SettingsStore';
+import { Channels } from '../common/Channels';
 import { forEach } from 'lodash';
-import { IpcRendererEvent } from './rendererEvent';
 
 class SettingsManager {
   settingsStore: ISettingsStore;
 
   constructor() {
-    this.settingsStore = new SettingsStore();
+    this.settingsStore = new ThemesManager();
 
-    ipcMain.on(IpcMainEvent.GET_SETTINGS, (event) => {
-      event.returnValue = this.settingsStore.getAll();
+    ipcMain.on(Channels.GET_SETTINGS, (event) => {
+      event.reply(Channels.SETTINGS, this.settingsStore.getAll());
     });
 
     ipcMain.on(
-      IpcMainEvent.SET_SETTINGS,
+      Channels.SET_SETTINGS,
       (
         event,
         args: {
@@ -29,22 +27,20 @@ class SettingsManager {
           this.settingsStore.setValue(item.key, item.value);
         });
 
-        event.reply(this.settingsStore.getAll());
+        event.reply(Channels.SETTINGS, this.settingsStore.getAll());
       }
     );
 
-    ipcMain.on(IpcMainEvent.RESET_SETTINGS, (event) => {
+    ipcMain.on(Channels.RESET_SETTINGS, (event) => {
       this.settingsStore.resetSettings();
 
-      event.reply(this.settingsStore.getAll());
+      event.reply(Channels.SETTINGS, this.settingsStore.getAll());
+    });
+
+    ipcMain.on(Channels.OPEN_SETTINGS, () => {
+      this.settingsStore.openInEditor();
     });
   }
-
-  sendSettingsOnWindowLoad = (window: Window) => {
-    window.once('show', () => {
-      window.webContents.send(IpcRendererEvent.SETTINGS, this.settingsStore.getAll());
-    });
-  };
 }
 
 export { SettingsManager };

@@ -3,7 +3,15 @@ import { map, merge, noop } from 'lodash';
 import { FileInfo } from '@fm/common';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useExplorers, useFocus, useCommands, useHotKeys, useManagers, useCache } from '@fm/hooks';
+import {
+  useExplorers,
+  useFocus,
+  useCommands,
+  useHotKeys,
+  useManagers,
+  usePaths,
+  useSettings,
+} from '@fm/hooks';
 import {
   SplitPanels,
   ErrorBoundary,
@@ -12,7 +20,6 @@ import {
   Explorer,
   InputModal,
 } from '@fm/components';
-import { useSettings } from 'renderer/hooks/useSettings';
 
 interface ExplorerPalensProps extends HOHandlers {
   onPreview?: (item: FileInfo) => void;
@@ -25,8 +32,8 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { addCommands, emptyCommands } = useCommands();
   const { addHotKeys, removeHotKeys } = useHotKeys();
   const { getIdentityManager, directoryManager } = useManagers();
-  const { settings } = useSettings();
-  const cacheManager = useCache();
+  const { settings, setValue } = useSettings();
+  const { paths, addPath } = usePaths();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
     panelIndex?: number;
@@ -183,11 +190,12 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
                   hotkeys={merge(hotkeys, props.hotkeys)}
                   onClose={onClose(i)}
                   onCopy={onCopy(i)}
-                  onDirectoryChange={(path) => cacheManager.addToCache(path)}
+                  onDirectoryChange={addPath}
                   onFocus={focusItem(i)}
                   onMove={onMove(i)}
                   onPreview={props.onPreview}
                   openInTerminal={props.openInTerminal}
+                  setSettings={setValue}
                   settings={settings}
                 />
               </ErrorBoundary>
@@ -208,7 +216,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
         manager={gotoManager}
         onClose={closeGotoPalette}
         onSelect={onGotoSelect}
-        options={[...cacheManager.cache]}
+        options={paths}
       />
     </DefaultPanel>
   );

@@ -1,10 +1,11 @@
+import 'reflect-metadata';
 import { app, protocol, ipcMain } from 'electron';
 import { resolve, join } from 'path';
 import { Window } from './Window';
 import { hotReaload } from './hotReload';
 import { init } from '@sentry/electron';
 import { SettingsManager } from './SettingsManager';
-import { set } from 'lodash';
+import { ThemesManager } from './ThemesManager';
 
 const mode = process.env.NODE_ENV || 'production';
 const isDev = () => mode !== 'production';
@@ -31,6 +32,7 @@ const registerIconsProtocol = () => {
 
 let mainWindow: Window | null;
 const settingsManager = new SettingsManager();
+const themesManager = new ThemesManager();
 
 const createWindow = () => {
   mainWindow = new Window({
@@ -42,8 +44,6 @@ const createWindow = () => {
   mainWindow.setMenu(null);
 
   mainWindow.on('closed', () => (mainWindow = null));
-
-  settingsManager.sendSettingsOnWindowLoad(mainWindow);
 
   registerIconsProtocol();
 };

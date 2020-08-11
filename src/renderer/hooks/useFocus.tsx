@@ -1,5 +1,5 @@
 import React, { createContext, useContext, PropsWithChildren, useEffect, useState } from 'react';
-import { PanelType, ISettingsManager } from '@fm/common';
+import { PanelType } from '@fm/common';
 import { noop } from 'lodash';
 import { useHotKeys } from './useHotKeys';
 import { useSettings } from './useSettings';
@@ -24,12 +24,7 @@ const FocusContext = createContext<{
   focusPanel: noop,
 });
 
-const FocusProvider = ({
-  children,
-  settingsManager,
-}: PropsWithChildren<{
-  settingsManager: ISettingsManager;
-}>) => {
+const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
   const { setGlobalHotKeys } = useHotKeys();
   const { settings } = useSettings();
 

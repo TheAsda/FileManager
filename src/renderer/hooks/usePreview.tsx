@@ -1,6 +1,6 @@
-import React, { createContext, useContext, PropsWithChildren, useState, useEffect } from 'react';
+import React, { createContext, useContext, PropsWithChildren, useState } from 'react';
 import { noop } from 'lodash';
-import { FileInfo, ISettingsManager } from '@fm/common';
+import { FileInfo } from '@fm/common';
 import { useSettings } from './useSettings';
 
 const PreviewContext = createContext<{
@@ -15,23 +15,16 @@ const PreviewContext = createContext<{
   toggleHidden: noop,
 });
 
-interface PreviewProviderProps {
-  settingsManager: ISettingsManager;
-}
-
-const PreviewProvider = ({
-  children,
-  settingsManager,
-}: PropsWithChildren<PreviewProviderProps>) => {
+const PreviewProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [item, setItem] = useState<FileInfo | null>(null);
-  const { settings } = useSettings();
+  const { settings, setValue } = useSettings();
   const [hidden, setHidden] = useState<boolean>(settings?.layout?.preview.hidden ?? true);
 
   const toggleHidden = () => {
     const currentState = settings?.layout?.preview.hidden;
     console.log('toggleHidden -> currentState', currentState);
 
-    settingsManager.setSettings('layout.preview.hidden', !currentState);
+    setValue('layout.preview.hidden', !currentState);
     setHidden(!currentState);
   };
 

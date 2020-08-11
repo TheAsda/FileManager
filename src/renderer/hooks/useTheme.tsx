@@ -1,38 +1,41 @@
-import React, { useState, createContext, PropsWithChildren, useContext } from 'react';
-import { useManagers } from './useManagers';
+import React, { useState, createContext, PropsWithChildren, useContext, useEffect } from 'react';
 import { noop } from 'lodash';
-import { Theme, DEFAULT_THEME } from '@fm/common';
+import { Theme, Channels } from '@fm/common';
+import { ipcRenderer } from 'electron';
 
 interface ThemeContextContent {
-  theme: Theme;
+  theme?: Theme;
   resetTheme: () => void;
   setTheme: (themeName: string) => void;
 }
 
 const ThemeContext = createContext<ThemeContextContent>({
-  theme: DEFAULT_THEME,
   resetTheme: noop,
   setTheme: noop,
 });
 
 const ThemeProvider = ({ children }: PropsWithChildren<unknown>) => {
-  const { themesManager, settingsManager } = useManagers();
-  const [themeName, setThemeName] = useState<string>(settingsManager.getSettings().theme);
+  const [state, setState] = useState<Theme>();
 
-  const resetTheme = () => {
-    settingsManager.setSettings('theme', 'default');
-    setThemeName('default');
-  };
+  useEffect(() => {
+    ipcRenderer.send(Channels.GET_THEME);
+    ipcRenderer.on(Channels.THEME, (event, args: Theme) => {
+      setState(args);
+    });
+  }, []);
 
   const setTheme = (themeName: string) => {
-    settingsManager.setSettings('theme', themeName);
-    setThemeName(themeName);
+    ipcRenderer.send(Channels.SET_THEME, themeName);
+  };
+
+  const resetTheme = () => {
+    ipcRenderer.send(Channels.RESET_THEME);
   };
 
   return (
     <ThemeContext.Provider
       value={{
-        theme: themesManager.getTheme(themeName),
+        theme: state,
         resetTheme,
         setTheme,
       }}

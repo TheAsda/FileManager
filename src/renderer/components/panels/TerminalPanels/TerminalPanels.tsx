@@ -8,8 +8,8 @@ import {
   useHotKeys,
   useCommands,
   useManagers,
-  useCache,
   useTheme,
+  usePaths,
 } from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
 import { HOHandlers, ErrorBoundary, SplitPanels, GoToPalette, Terminal } from '@fm/components';
@@ -36,7 +36,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   const gotoManager = useMemo(() => {
     return getIdentityManager();
   }, []);
-  const cacheManager = useCache();
+  const { paths } = usePaths();
 
   const closeGotoPalette = () => {
     setGotoPalette({
@@ -109,38 +109,39 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
       splitable={data.length < 2}
     >
       <SplitPanels className="terminal-panels" splitType="horizontal">
-        {map(data, (item, i) => {
-          const focused = focus.panel === 'terminal' && focus.index === i;
+        {theme &&
+          map(data, (item, i) => {
+            const focused = focus.panel === 'terminal' && focus.index === i;
 
-          return (
-            <ErrorBoundary key={item.getId()}>
-              <Terminal
-                closable={data.length > 1}
-                focused={focused}
-                hotkeys={hotkeys}
-                onClose={onClose(i)}
-                onExit={onClose(i)}
-                onFocus={focusItem(i)}
-                terminalManager={item}
-                theme={theme}
-              />
-              {props.selectModeActivated && (
-                <SelectPanel
-                  hotkey={(i + 1).toString()}
-                  onSelect={() => props.onSelect(i)}
-                  text={i + 1}
+            return (
+              <ErrorBoundary key={item.getId()}>
+                <Terminal
+                  closable={data.length > 1}
+                  focused={focused}
+                  hotkeys={hotkeys}
+                  onClose={onClose(i)}
+                  onExit={onClose(i)}
+                  onFocus={focusItem(i)}
+                  terminalManager={item}
+                  theme={theme}
                 />
-              )}
-            </ErrorBoundary>
-          );
-        })}
+                {props.selectModeActivated && (
+                  <SelectPanel
+                    hotkey={(i + 1).toString()}
+                    onSelect={() => props.onSelect(i)}
+                    text={i + 1}
+                  />
+                )}
+              </ErrorBoundary>
+            );
+          })}
       </SplitPanels>
       <GoToPalette
         isOpened={isGotoPaletteOpen.isShown}
         manager={gotoManager}
         onClose={closeGotoPalette}
         onSelect={onGotoSelect}
-        options={[...cacheManager.cache]}
+        options={paths}
       />
     </DefaultPanel>
   );
