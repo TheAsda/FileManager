@@ -1,8 +1,8 @@
 import React, { createContext, useContext, PropsWithChildren, useEffect, useState } from 'react';
 import { PanelType } from '@fm/common';
 import { noop } from 'lodash';
-import { useHotKeys } from './useHotKeys';
 import { useSettings } from './useSettings';
+import { HotKeys } from 'react-hotkeys';
 
 const FocusContext = createContext<{
   togglePanel: () => void;
@@ -25,7 +25,6 @@ const FocusContext = createContext<{
 });
 
 const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
-  const { setGlobalHotKeys } = useHotKeys();
   const { settings } = useSettings();
 
   const [focusedPanel, setFocusedPanel] = useState<PanelType>('explorer');
@@ -78,13 +77,6 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
     setFocusedIndex(index);
   };
 
-  useEffect(() => {
-    setGlobalHotKeys({
-      toggleFocusPanel: togglePanel,
-      toggleFocusIndex: toggleIndex,
-    });
-  }, []);
-
   return (
     <FocusContext.Provider
       value={{
@@ -98,7 +90,14 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
         focusPanel,
       }}
     >
-      {children}
+      <HotKeys
+        handlers={{
+          toggleFocusPanel: togglePanel,
+          toggleFocusIndex: toggleIndex,
+        }}
+      >
+        {children}
+      </HotKeys>
     </FocusContext.Provider>
   );
 };

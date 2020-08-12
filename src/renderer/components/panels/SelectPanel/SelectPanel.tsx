@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './style.css';
-import { useHotKeys } from '@fm/hooks';
+import { HotKeys } from 'react-hotkeys';
 
 interface SelectPanelProps {
   onSelect: () => void;
@@ -9,23 +9,26 @@ interface SelectPanelProps {
 }
 
 const SelectPanel = (props: SelectPanelProps) => {
-  const { setGlobalHotKeys, removeGlobalHotKeys } = useHotKeys();
+  // useEffect(() => {
+  //   console.log('Bind ' + props.hotkey);
 
-  useEffect(() => {
-    console.log('Bind ' + props.hotkey);
+  //   setGlobalHotKeys({ [props.hotkey]: props.onSelect }, true);
 
-    setGlobalHotKeys({ [props.hotkey]: props.onSelect }, true);
-
-    return () => {
-      console.log('Unbind ' + props.hotkey);
-      removeGlobalHotKeys([props.hotkey]);
-    };
-  }, [props.hotkey]);
+  //   return () => {
+  //     console.log('Unbind ' + props.hotkey);
+  //     removeGlobalHotKeys([props.hotkey]);
+  //   };
+  // }, [props.hotkey]);
 
   return (
-    <div className="select-panel" onClick={props.onSelect}>
-      {props.text}
-    </div>
+    <HotKeys
+      keyMap={{ [props.hotkey]: props.hotkey }}
+      handlers={{ [props.hotkey]: props.onSelect }}
+    >
+      <div className="select-panel" onClick={props.onSelect}>
+        {props.text}
+      </div>
+    </HotKeys>
   );
 };
 

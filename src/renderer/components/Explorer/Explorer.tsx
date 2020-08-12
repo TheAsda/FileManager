@@ -11,6 +11,7 @@ import { ExplorerCommands } from './explorerCommands';
 import { normalizePath, openWithDefaultApp } from 'filemancore';
 import { join } from 'path';
 import { HOHandlers } from '../common/HOHandlers';
+import { HotKeys } from 'react-hotkeys';
 
 interface ExplorerState {
   currentPath: string;
@@ -84,7 +85,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     };
 
     props.explorerManager.setCommands(merge(this.options, props.commands));
-    props.explorerManager.setHotkeys(merge(this.handlers, props.hotkeys));
+    // props.explorerManager.setHotkeys(merge(this.handlers, props.hotkeys));
   }
 
   componentDidMount() {
@@ -391,19 +392,21 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         onClose={this.onClose}
         path={this.props.explorerManager.getPath()}
       >
-        <div className="explorer" onClick={this.onFocus}>
-          {this.state.viewType === 'detail' ? (
-            <DetailView
-              data={this.state.directoryState}
-              editableIndex={this.state.editableIndex}
-              onEditEnd={this.onEditEnd}
-              onExit={this.exitDirectory}
-              onItemClick={this.onClick}
-              selectedIndex={this.state.selectedIndex}
-            />
-          ) : null}
-          <StateLine count={this.state.directoryState.length} />
-        </div>
+        <HotKeys handlers={this.handlers}>
+          <div className="explorer" onClick={this.onFocus}>
+            {this.state.viewType === 'detail' ? (
+              <DetailView
+                data={this.state.directoryState}
+                editableIndex={this.state.editableIndex}
+                onEditEnd={this.onEditEnd}
+                onExit={this.exitDirectory}
+                onItemClick={this.onClick}
+                selectedIndex={this.state.selectedIndex}
+              />
+            ) : null}
+            <StateLine count={this.state.directoryState.length} />
+          </div>
+        </HotKeys>
       </PathWrapper>
     );
   }

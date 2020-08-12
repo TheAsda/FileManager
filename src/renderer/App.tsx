@@ -5,7 +5,6 @@ import {
   TerminalsProvider,
   PreviewProvider,
   CommandsProvider,
-  HotKeysProvider,
   ThemeProvider,
   useSettings,
 } from '@fm/hooks';
@@ -19,19 +18,17 @@ const App = () => {
     <>
       <Titlebar />
       <ThemeProvider>
-        <HotKeysProvider>
-          {settings?.layout && (
-            <ExplorersProvider initialState={settings.layout.explorers.panels}>
-              <TerminalsProvider initialState={settings.layout.terminals.panels}>
-                <PreviewProvider>
-                  <CommandsProvider>
-                    <Window />
-                  </CommandsProvider>
-                </PreviewProvider>
-              </TerminalsProvider>
-            </ExplorersProvider>
-          )}
-        </HotKeysProvider>
+        {settings?.layout && (
+          <ExplorersProvider initialState={settings.layout.explorers.panels}>
+            <TerminalsProvider initialState={settings.layout.terminals.panels}>
+              <PreviewProvider>
+                <CommandsProvider>
+                  <Window />
+                </CommandsProvider>
+              </PreviewProvider>
+            </TerminalsProvider>
+          </ExplorersProvider>
+        )}
       </ThemeProvider>
     </>
   );

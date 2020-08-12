@@ -6,6 +6,7 @@ import { SelectPaletteItem } from './SelectPaletteItem';
 import Modal from 'react-modal';
 import { HOHandlers } from '@fm/components';
 import Fuse from 'fuse.js';
+import { HotKeys } from 'react-hotkeys';
 
 interface SelectPaletteProps extends HOHandlers {
   options: string[];
@@ -42,9 +43,9 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
       findAllMatches: true,
     });
 
-    if (this.props.manager) {
-      this.props.manager.setHotkeys(this.handlers);
-    }
+    // if (this.props.manager) {
+    //   this.props.manager.setHotkeys(this.handlers);
+    // }
   }
 
   componentDidUpdate() {
@@ -122,39 +123,41 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
         onRequestClose={this.props.onClose}
         shouldCloseOnOverlayClick={true}
       >
-        <div className="select-palette__header">
-          <input
-            className="select-palette__search"
-            onChange={this.handleInput}
-            ref={(ref) => {
-              this.inputRef = ref;
-              ref?.focus();
-              ref &&
-                ref.addEventListener('keydown', (event) => {
-                  if (includes([38, 40], event.keyCode)) {
-                    event.preventDefault();
-                  }
-                });
-            }}
-            type="text"
-          />
-        </div>
-        {map(this.state.options, (option, i) => (
-          <SelectPaletteItem
-            command={option}
-            key={option}
-            onSelect={() => {
-              this.setState(
-                (state) => ({
-                  ...state,
-                  selectedIndex: i,
-                }),
-                this.selectItem
-              );
-            }}
-            selected={i === this.state.selectedIndex}
-          />
-        ))}
+        <HotKeys handlers={this.handlers}>
+          <div className="select-palette__header">
+            <input
+              className="select-palette__search"
+              onChange={this.handleInput}
+              ref={(ref) => {
+                this.inputRef = ref;
+                ref?.focus();
+                ref &&
+                  ref.addEventListener('keydown', (event) => {
+                    if (includes([38, 40], event.keyCode)) {
+                      event.preventDefault();
+                    }
+                  });
+              }}
+              type="text"
+            />
+          </div>
+          {map(this.state.options, (option, i) => (
+            <SelectPaletteItem
+              command={option}
+              key={option}
+              onSelect={() => {
+                this.setState(
+                  (state) => ({
+                    ...state,
+                    selectedIndex: i,
+                  }),
+                  this.selectItem
+                );
+              }}
+              selected={i === this.state.selectedIndex}
+            />
+          ))}
+        </HotKeys>
       </Modal>
     );
   }

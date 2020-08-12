@@ -4,7 +4,6 @@ import {
   usePreview,
   FocusProvider,
   useCommands,
-  useHotKeys,
   useTerminals,
   useTheme,
 } from '@fm/hooks';
@@ -22,10 +21,10 @@ import {
 } from '@fm/components';
 import { remote, app } from 'electron';
 import { GoToPalette } from '../modals';
+import { HotKeys } from 'react-hotkeys';
 
 const Window = () => {
   const { keysManager, getIdentityManager, directoryManager } = useManagers();
-  const { addHotKeys, removeHotKeys, setKeyMap } = useHotKeys();
   const { commands } = useCommands();
 
   const themeSelectorManager = useMemo(() => {
@@ -53,7 +52,7 @@ const Window = () => {
       options,
     });
 
-    addHotKeys(themeSelectorManager.getHotkeys(), true);
+    // addHotKeys(themeSelectorManager.getHotkeys(), true);
   };
   const closeThemeSelector = () => {
     setThemeSelectorState({
@@ -61,7 +60,7 @@ const Window = () => {
       options: [],
     });
 
-    removeHotKeys();
+    // removeHotKeys();
   };
   const onThemeSelect = (themeName: string) => {
     setTheme(themeName);
@@ -75,7 +74,7 @@ const Window = () => {
   const openCommandPalette = () => {
     setCommandPalette(true);
 
-    addHotKeys(commandPaletteManager.getHotkeys(), true);
+    // addHotKeys(commandPaletteManager.getHotkeys(), true);
   };
   const closeCommandPalette = () => {
     setCommandPalette(false);
@@ -130,57 +129,48 @@ const Window = () => {
     'Select theme': openThemeSelector,
   };
 
-  useEffect(() => {
-    setKeyMap(keysManager.getKeyMap());
-  }, []);
-
   return (
-    <CSSApplicator theme={theme}>
-      <div className="window">
-        <FocusProvider>
-          <SplitPanels minSize={200} splitType="vertical">
-            <ExplorerPanels
-              commands={localCommands}
-              hotkeys={hotkeys}
-              onPreview={previewHandler}
-              openInTerminal={openInTerminal}
-            />
-            {!hidden &&
-              (({ width }) => {
-                return (
-                  <PreviewPanel
-                    hotkeys={hotkeys}
-                    item={item}
-                    onHide={togglePreview}
-                    width={width}
-                  />
-                );
-              })}
-            <TerminalPanels
-              commands={localCommands}
-              hotkeys={hotkeys}
-              onSelect={terminalSelect.onSelect}
-              onSelectClose={closeSelect}
-              selectModeActivated={terminalSelect.isShown}
-            />
-          </SplitPanels>
-        </FocusProvider>
-      </div>
-      <CommandPalette
-        commands={commands}
-        isOpened={isCommandPaletteOpen}
-        manager={commandPaletteManager}
-        onClose={closeCommandPalette}
-      />
-      <GoToPalette
-        isOpened={themeSelectorState?.isShown}
-        manager={themeSelectorManager}
-        onClose={closeThemeSelector}
-        onSelect={onThemeSelect}
-        options={themeSelectorState.options}
-      />
-      <Popup />
-    </CSSApplicator>
+    <HotKeys keyMap={keysManager.getKeyMap()}>
+      <CSSApplicator theme={theme}>
+        <HotKeys handlers={hotkeys}>
+          <div className="window">
+            <FocusProvider>
+              <SplitPanels minSize={200} splitType="vertical">
+                <ExplorerPanels
+                  commands={localCommands}
+                  onPreview={previewHandler}
+                  openInTerminal={openInTerminal}
+                />
+                {!hidden &&
+                  (({ width }) => {
+                    return <PreviewPanel item={item} onHide={togglePreview} width={width} />;
+                  })}
+                <TerminalPanels
+                  commands={localCommands}
+                  onSelect={terminalSelect.onSelect}
+                  onSelectClose={closeSelect}
+                  selectModeActivated={terminalSelect.isShown}
+                />
+              </SplitPanels>
+            </FocusProvider>
+          </div>
+          <CommandPalette
+            commands={commands}
+            isOpened={isCommandPaletteOpen}
+            manager={commandPaletteManager}
+            onClose={closeCommandPalette}
+          />
+          <GoToPalette
+            isOpened={themeSelectorState?.isShown}
+            manager={themeSelectorManager}
+            onClose={closeThemeSelector}
+            onSelect={onThemeSelect}
+            options={themeSelectorState.options}
+          />
+          <Popup />
+        </HotKeys>
+      </CSSApplicator>
+    </HotKeys>
   );
 };
 

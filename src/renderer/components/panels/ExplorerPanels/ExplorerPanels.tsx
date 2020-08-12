@@ -3,15 +3,7 @@ import { map, merge, noop } from 'lodash';
 import { FileInfo } from '@fm/common';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import {
-  useExplorers,
-  useFocus,
-  useCommands,
-  useHotKeys,
-  useManagers,
-  usePaths,
-  useSettings,
-} from '@fm/hooks';
+import { useExplorers, useFocus, useCommands, useManagers, usePaths, useSettings } from '@fm/hooks';
 import {
   SplitPanels,
   ErrorBoundary,
@@ -20,6 +12,7 @@ import {
   Explorer,
   InputModal,
 } from '@fm/components';
+import { HotKeys } from 'react-hotkeys';
 
 interface ExplorerPalensProps extends HOHandlers {
   onPreview?: (item: FileInfo) => void;
@@ -30,7 +23,6 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { data, dispatch } = useExplorers();
   const { focus, focusIndex, focusPanel } = useFocus();
   const { addCommands, emptyCommands } = useCommands();
-  const { addHotKeys, removeHotKeys } = useHotKeys();
   const { getIdentityManager, directoryManager } = useManagers();
   const { settings, setValue } = useSettings();
   const { paths, addPath } = usePaths();
@@ -71,7 +63,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       panelIndex: focus.index,
     });
 
-    addHotKeys(gotoManager.getHotkeys(), true);
+    // addHotKeys(gotoManager.getHotkeys(), true);
   };
 
   const closeGotoPalette = () => {
@@ -80,7 +72,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       panelIndex: undefined,
     });
 
-    removeHotKeys();
+    // removeHotKeys();
   };
 
   const hotkeys = {
@@ -105,7 +97,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       focusIndex(index);
     }
 
-    addHotKeys(merge(data[index].getHotkeys(), props.hotkeys));
+    // addHotKeys(merge(data[index].getHotkeys(), props.hotkeys));
 
     emptyCommands();
 
@@ -175,33 +167,34 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       splitable={data.length < 2}
     >
       {settings && (
-        <SplitPanels minSize={200} splitType="horizontal">
-          {map(data, (item, i) => {
-            const isFocused = focus.panel === 'explorer' && focus.index === i;
+        <HotKeys handlers={hotkeys}>
+          <SplitPanels minSize={200} splitType="horizontal">
+            {map(data, (item, i) => {
+              const isFocused = focus.panel === 'explorer' && focus.index === i;
 
-            return (
-              <ErrorBoundary key={item.getId()}>
-                <Explorer
-                  closable={data.length > 1}
-                  commands={props.commands}
-                  directoryManager={directoryManager}
-                  explorerManager={item}
-                  focused={isFocused}
-                  hotkeys={merge(hotkeys, props.hotkeys)}
-                  onClose={onClose(i)}
-                  onCopy={onCopy(i)}
-                  onDirectoryChange={addPath}
-                  onFocus={focusItem(i)}
-                  onMove={onMove(i)}
-                  onPreview={props.onPreview}
-                  openInTerminal={props.openInTerminal}
-                  setSettings={setValue}
-                  settings={settings}
-                />
-              </ErrorBoundary>
-            );
-          })}
-        </SplitPanels>
+              return (
+                <ErrorBoundary key={item.getId()}>
+                  <Explorer
+                    closable={data.length > 1}
+                    commands={props.commands}
+                    directoryManager={directoryManager}
+                    explorerManager={item}
+                    focused={isFocused}
+                    onClose={onClose(i)}
+                    onCopy={onCopy(i)}
+                    onDirectoryChange={addPath}
+                    onFocus={focusItem(i)}
+                    onMove={onMove(i)}
+                    onPreview={props.onPreview}
+                    openInTerminal={props.openInTerminal}
+                    setSettings={setValue}
+                    settings={settings}
+                  />
+                </ErrorBoundary>
+              );
+            })}
+          </SplitPanels>
+        </HotKeys>
       )}
       <InputModal
         initialValue={inputModalState.inputValue}

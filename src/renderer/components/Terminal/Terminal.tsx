@@ -10,6 +10,7 @@ import { HOHandlers } from '../common/HOHandlers';
 import { merge, noop } from 'lodash';
 import { TerminalCommands } from './terminalCommands';
 import ResizeObserver from 'rc-resize-observer';
+import { HotKeys } from 'react-hotkeys';
 
 interface TerminalProps extends HOHandlers {
   terminalManager: ITerminalManager;
@@ -55,7 +56,7 @@ class Terminal extends Component<TerminalProps> {
     };
 
     props.terminalManager.setCommands(merge(this.options, props.commands));
-    props.terminalManager.setHotkeys(merge(this.handlers, props.hotkeys));
+    // props.terminalManager.setHotkeys(merge(this.handlers, props.hotkeys));
   }
 
   componentDidMount() {
@@ -143,15 +144,17 @@ class Terminal extends Component<TerminalProps> {
 
   render() {
     return (
-      <PathWrapper
-        closable={this.props.closable}
-        onClose={this.props.onClose}
-        path={this.props.terminalManager.getDirectory()}
-      >
-        <ResizeObserver onResize={this.resize}>
-          <div className="terminal" ref={this.containerRef} />
-        </ResizeObserver>
-      </PathWrapper>
+      <HotKeys handlers={this.handlers}>
+        <PathWrapper
+          closable={this.props.closable}
+          onClose={this.props.onClose}
+          path={this.props.terminalManager.getDirectory()}
+        >
+          <ResizeObserver onResize={this.resize}>
+            <div className="terminal" ref={this.containerRef} />
+          </ResizeObserver>
+        </PathWrapper>
+      </HotKeys>
     );
   }
 }
