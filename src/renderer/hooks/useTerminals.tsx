@@ -1,13 +1,14 @@
 import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
-import { ITerminalManager } from '@fm/common';
-import { container, TYPES } from '../../common/ioc';
+import { ITerminalManager, TerminalManager } from '@fm/common';
+// import { container, TYPES } from '../../common/ioc';
 import { map, isString, noop, filter } from 'lodash';
 import { TerminalPanelInfo } from 'common/interfaces/models/Layout';
 
 type Action = { type: 'spawn'; path?: string } | { type: 'destroy'; id: number };
 
 const getTerminalManager = () => {
-  return container.get<ITerminalManager>(TYPES.ITerminalManager);
+  // return container.get<ITerminalManager>(TYPES.ITerminalManager);
+  return new TerminalManager();
 };
 
 const terminalReducer = (state: ITerminalManager[], action: Action) => {

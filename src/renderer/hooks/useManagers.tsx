@@ -1,21 +1,23 @@
-import { IThemesManager, IKeysManager, IDirectoryManager, IIdentityManager } from '@fm/common';
-import { container } from '../../common/ioc/container';
-import { TYPES } from '../../common/ioc/types';
+import { DirectoryManager, KeysManager, IdentityManager } from '@fm/common';
 import { useMemo } from 'react';
 
 const useManagers = () => {
   const directoryManager = useMemo(
-    () => container.get<IDirectoryManager>(TYPES.IDirectoryManager),
+    // () => container.get<IDirectoryManager>(TYPES.IDirectoryManager),
+    () => new DirectoryManager(),
     []
   );
-  const keysManager = useMemo(() => container.get<IKeysManager>(TYPES.IKeysManager), []);
-  const themesManager = useMemo(() => container.get<IThemesManager>(TYPES.IThemesManager), []);
+  const keysManager = useMemo(
+    // () => container.get<IKeysManager>(TYPES.IKeysManager)
+    () => new KeysManager(),
+    []
+  );
 
   return {
     keysManager,
-    themesManager,
     directoryManager,
-    getIdentityManager: () => container.get<IIdentityManager>(TYPES.IIdentityManager),
+    // getIdentityManager: () => container.get<IIdentityManager>(TYPES.IIdentityManager),
+    getIdentityManager: () => new IdentityManager(),
   };
 };
 

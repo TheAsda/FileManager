@@ -1,8 +1,6 @@
-import { injectable } from 'inversify';
 import { IIdentityManager } from './IIdentityManager';
 import { Commands } from '@fm/common';
 
-@injectable()
 class IdentityManager implements IIdentityManager {
   private id: number;
   private commands: Commands;

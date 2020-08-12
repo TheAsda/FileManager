@@ -81,7 +81,6 @@
     "filemancore": "^1.0.8",
     "fuse.js": "^6.4.1",
     "hotkeys-js": "^3.8.1",
-    "inversify": "^5.0.1",
     "lodash": "^4.17.15",
     "node-pty": "^0.9.0",
     "rc-resize-observer": "^0.2.3",

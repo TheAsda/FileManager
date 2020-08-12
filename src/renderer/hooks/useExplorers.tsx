@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
-import { IExplorerManager } from '@fm/common';
-import { TYPES, container } from '../../common/ioc';
+import { IExplorerManager, ExplorerManager } from '@fm/common';
+// import { TYPES, container } from '../../common/ioc';
 import { map, noop } from 'lodash';
 import { normalizePath } from 'filemancore';
 import { ExplorerPanelInfo } from 'common/interfaces/models/Layout';
@@ -8,7 +8,8 @@ import { ExplorerPanelInfo } from 'common/interfaces/models/Layout';
 type Action = { type: 'spawn'; path?: string } | { type: 'destroy'; index: number };
 
 const getExplorerManager = () => {
-  return container.get<IExplorerManager>(TYPES.IExplorerManager);
+  // return container.get<IExplorerManager>(TYPES.IExplorerManager);
+  return new ExplorerManager();
 };
 
 const explorerReducer = (state: IExplorerManager[], action: Action) => {

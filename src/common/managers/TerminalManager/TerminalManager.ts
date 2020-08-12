@@ -1,11 +1,10 @@
 import { ITerminalManager } from './ITerminalManager';
 import { IPty, spawn } from 'node-pty';
-import { injectable } from 'inversify';
 import { platform, homedir } from 'os';
 import { Terminal } from 'xterm';
 import { IdentityManager } from '../IdentityManager';
+import { constant } from 'lodash';
 
-@injectable()
 class TerminalManager extends IdentityManager implements ITerminalManager {
   private process: IPty;
 
@@ -50,11 +49,8 @@ class TerminalManager extends IdentityManager implements ITerminalManager {
     this.process.write(`exit \r`);
   }
 
-  getDirectory(): string {
-    // TODO: add getting cwd by pid
-
-    return '/to/do/path';
-  }
+  // TODO: add getting cwd by pid
+  getDirectory = constant('to\\do\\path');
 }
 
 export { TerminalManager };

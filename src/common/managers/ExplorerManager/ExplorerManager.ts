@@ -1,9 +1,7 @@
 import { IExplorerManager } from './IExplorerManager';
-import { injectable } from 'inversify';
 import { forEach } from 'lodash';
 import { IdentityManager } from '../IdentityManager';
 
-@injectable()
 class ExplorerManager extends IdentityManager implements IExplorerManager {
   private directory: string;
   private pathHandlers: ((path: string) => void)[];
