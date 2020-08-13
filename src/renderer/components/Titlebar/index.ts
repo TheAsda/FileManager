@@ -1,1 +1,1 @@
-export * from './Titlebar'
+export * from './Titlebar';

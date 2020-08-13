@@ -1,4 +1,4 @@
-import { IThemesStore } from './interfaces/IThemesStore';
+import { IThemesStore } from '../interfaces/IThemesStore';
 import { Theme } from '@fm/common';
 import Store from 'electron-store';
 

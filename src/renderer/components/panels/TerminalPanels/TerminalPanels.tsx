@@ -1,11 +1,17 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { map, merge } from 'lodash';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useTerminals, useFocus, useCommands, useManagers, useTheme, usePaths } from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
-import { HOHandlers, ErrorBoundary, SplitPanels, GoToPalette, Terminal } from '@fm/components';
-import { HotKeys } from 'react-hotkeys';
+import {
+  HOHandlers,
+  ErrorBoundary,
+  SplitPanels,
+  GoToPalette,
+  Terminal,
+  HotKeysWrapper,
+} from '@fm/components';
 
 interface TerminalPanelsProps extends HOHandlers {
   selectModeActivated?: boolean;
@@ -83,7 +89,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
       splitable={data.length < 2}
     >
       {theme && (
-        <HotKeys handlers={hotkeys}>
+        <HotKeysWrapper handlers={hotkeys}>
           <SplitPanels className="terminal-panels" splitType="horizontal">
             {map(data, (item, i) => {
               const focused = focus.panel === 'terminal' && focus.index === i;
@@ -110,7 +116,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
               );
             })}
           </SplitPanels>
-        </HotKeys>
+        </HotKeysWrapper>
       )}
       <GoToPalette
         isOpened={isGotoPaletteOpen.isShown}

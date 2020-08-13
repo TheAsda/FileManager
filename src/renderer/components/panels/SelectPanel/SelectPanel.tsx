@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './style.css';
-import { HotKeys } from 'react-hotkeys';
+import { HotKeysWrapper } from '@fm/components';
 
 interface SelectPanelProps {
   onSelect: () => void;
@@ -21,14 +21,14 @@ const SelectPanel = (props: SelectPanelProps) => {
   // }, [props.hotkey]);
 
   return (
-    <HotKeys
-      keyMap={{ [props.hotkey]: props.hotkey }}
+    <HotKeysWrapper
       handlers={{ [props.hotkey]: props.onSelect }}
+      keyMap={{ [props.hotkey]: props.hotkey }}
     >
       <div className="select-panel" onClick={props.onSelect}>
         {props.text}
       </div>
-    </HotKeys>
+    </HotKeysWrapper>
   );
 };
 

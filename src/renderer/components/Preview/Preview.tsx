@@ -5,8 +5,7 @@ import { includes, merge, clamp } from 'lodash';
 import { ignoredExtentions, imageExtentions } from './fileExtentions';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { extname } from 'path';
-import { HOHandlers } from '@fm/components';
-import { HotKeys } from 'react-hotkeys';
+import { HOHandlers, HotKeysWrapper } from '@fm/components';
 
 interface PreviewProps extends HOHandlers {
   width?: number;
@@ -56,7 +55,7 @@ const Preview = (props: PreviewProps) => {
     if (!includes(ignoredExtentions, extention)) {
       if (includes(imageExtentions, extention)) {
         return (
-          <HotKeys handlers={hotkeys}>
+          <HotKeysWrapper handlers={hotkeys}>
             <div className="preview">
               <TransformWrapper
                 options={{
@@ -75,35 +74,35 @@ const Preview = (props: PreviewProps) => {
                 </TransformComponent>
               </TransformWrapper>
             </div>
-          </HotKeys>
+          </HotKeysWrapper>
         );
       } else {
         const text = directoryManager.readFileSync(item.path + item.name);
 
         return (
-          <HotKeys handlers={hotkeys}>
+          <HotKeysWrapper handlers={hotkeys}>
             <div className="preview" style={{ fontSize }}>
               <pre>{text}</pre>
             </div>
-          </HotKeys>
+          </HotKeysWrapper>
         );
       }
     } else {
       return (
-        <HotKeys handlers={hotkeys}>
+        <HotKeysWrapper handlers={hotkeys}>
           <div className="preview">
             <h1>Cannot display</h1>
           </div>
-        </HotKeys>
+        </HotKeysWrapper>
       );
     }
   } else {
     return (
-      <HotKeys handlers={hotkeys}>
+      <HotKeysWrapper handlers={hotkeys}>
         <div className="preview">
           <h1>Empty</h1>
         </div>
-      </HotKeys>
+      </HotKeysWrapper>
     );
   }
 };

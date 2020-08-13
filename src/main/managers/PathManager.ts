@@ -1,10 +1,10 @@
 import { ipcMain } from 'electron';
-import { Channels } from '../common/Channels';
+import { Channels } from '../../common/Channels';
 import { forEach } from 'lodash';
-import { IPathStore } from './interfaces/IPathStore';
-import { PathStore } from './PathStore';
+import { IPathStore } from '../interfaces/IPathStore';
+import { PathStore } from '../stores/PathStore';
 
-class ThemesManager {
+class PathManager {
   pathStore: IPathStore;
 
   constructor() {
@@ -24,4 +24,4 @@ class ThemesManager {
   }
 }
 
-export { ThemesManager };
+export { PathManager };

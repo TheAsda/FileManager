@@ -11,7 +11,7 @@ import { ExplorerCommands } from './explorerCommands';
 import { normalizePath, openWithDefaultApp } from 'filemancore';
 import { join } from 'path';
 import { HOHandlers } from '../common/HOHandlers';
-import { HotKeys } from 'react-hotkeys';
+import { HotKeysWrapper } from '..';
 
 interface ExplorerState {
   currentPath: string;
@@ -392,7 +392,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         onClose={this.onClose}
         path={this.props.explorerManager.getPath()}
       >
-        <HotKeys handlers={this.handlers}>
+        <HotKeysWrapper handlers={this.handlers}>
           <div className="explorer" onClick={this.onFocus}>
             {this.state.viewType === 'detail' ? (
               <DetailView
@@ -406,7 +406,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
             ) : null}
             <StateLine count={this.state.directoryState.length} />
           </div>
-        </HotKeys>
+        </HotKeysWrapper>
       </PathWrapper>
     );
   }

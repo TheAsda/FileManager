@@ -4,9 +4,8 @@ import { clamp, map, includes, isEqual, indexOf } from 'lodash';
 import './style.css';
 import { SelectPaletteItem } from './SelectPaletteItem';
 import Modal from 'react-modal';
-import { HOHandlers } from '@fm/components';
+import { HOHandlers, HotKeysWrapper } from '@fm/components';
 import Fuse from 'fuse.js';
-import { HotKeys } from 'react-hotkeys';
 
 interface SelectPaletteProps extends HOHandlers {
   options: string[];
@@ -123,7 +122,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
         onRequestClose={this.props.onClose}
         shouldCloseOnOverlayClick={true}
       >
-        <HotKeys handlers={this.handlers}>
+        <HotKeysWrapper handlers={this.handlers}>
           <div className="select-palette__header">
             <input
               className="select-palette__search"
@@ -157,7 +156,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
               selected={i === this.state.selectedIndex}
             />
           ))}
-        </HotKeys>
+        </HotKeysWrapper>
       </Modal>
     );
   }

@@ -7,6 +7,7 @@ import {
   CommandsProvider,
   ThemeProvider,
   useSettings,
+  KeyMapProvider,
 } from '@fm/hooks';
 import './style.css';
 import { Titlebar } from './components/Titlebar';
@@ -18,17 +19,19 @@ const App = () => {
     <>
       <Titlebar />
       <ThemeProvider>
-        {settings?.layout && (
-          <ExplorersProvider initialState={settings.layout.explorers.panels}>
-            <TerminalsProvider initialState={settings.layout.terminals.panels}>
-              <PreviewProvider>
-                <CommandsProvider>
-                  <Window />
-                </CommandsProvider>
-              </PreviewProvider>
-            </TerminalsProvider>
-          </ExplorersProvider>
-        )}
+        <KeyMapProvider>
+          {settings?.layout && (
+            <ExplorersProvider initialState={settings.layout.explorers.panels}>
+              <TerminalsProvider initialState={settings.layout.terminals.panels}>
+                <PreviewProvider>
+                  <CommandsProvider>
+                    <Window />
+                  </CommandsProvider>
+                </PreviewProvider>
+              </TerminalsProvider>
+            </ExplorersProvider>
+          )}
+        </KeyMapProvider>
       </ThemeProvider>
     </>
   );

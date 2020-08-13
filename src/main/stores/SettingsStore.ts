@@ -1,4 +1,4 @@
-import { ISettingsStore } from './interfaces/ISettingsStore';
+import { ISettingsStore } from '../interfaces/ISettingsStore';
 import Store, { Schema } from 'electron-store';
 import { Settings } from '@fm/common';
 

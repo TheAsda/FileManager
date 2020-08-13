@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron';
-import { Channels } from '../common/Channels';
+import { Channels } from '../../common/Channels';
 import { forEach } from 'lodash';
-import { IThemesStore } from './interfaces/IThemesStore';
-import { ThemesStore } from './ThemesStore';
+import { IThemesStore } from '../interfaces/IThemesStore';
+import { ThemesStore } from '../stores/ThemesStore';
 
 class ThemesManager {
   themesStore: IThemesStore;

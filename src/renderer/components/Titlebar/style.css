@@ -25,7 +25,7 @@
   top: 0px;
   width: 100%;
   height: 30px;
-  background-color: #2A2A2A;
+  background-color: #2a2a2a;
   display: flex;
   font-family: 'Open Sans', sans-serif;
   position: relative;
@@ -53,7 +53,7 @@
 
 .section-icon__logo {
   width: 22px;
-  padding-left: 5px
+  padding-left: 5px;
 }
 
 .section-icon__title {
@@ -109,7 +109,7 @@
 }
 
 .minimize-active_logo:hover {
-  fill: #F8B92B;
+  fill: #f8b92b;
   transition: all 0.05s ease-in;
 }
 
@@ -119,7 +119,7 @@
 }
 
 .minimize-inactive_logo:hover {
-  fill: #F8B92B;
+  fill: #f8b92b;
   transition: all 0.05s ease-in;
 }
 
@@ -129,7 +129,7 @@
 }
 
 .maximize-active_logo:hover {
-  fill: #2BC73B;
+  fill: #2bc73b;
   transition: all 0.05s ease-in;
 }
 
@@ -139,7 +139,7 @@
 }
 
 .maximize-inactive_logo:hover {
-  fill: #2BC73B;
+  fill: #2bc73b;
   transition: all 0.05s ease-in;
 }
 
@@ -149,7 +149,7 @@
 }
 
 .unmaximize-active_logo:hover {
-  fill: #2BC73B;
+  fill: #2bc73b;
   transition: all 0.05s ease-in;
 }
 
@@ -159,7 +159,7 @@
 }
 
 .unmaximize-inactive_logo:hover {
-  fill: #2BC73B;
+  fill: #2bc73b;
   transition: all 0.05s ease-in;
 }
 
@@ -169,7 +169,7 @@
 }
 
 .close-active_logo:hover {
-  fill: #F35D58;
+  fill: #f35d58;
   transition: all 0.05s ease-in;
 }
 
@@ -179,6 +179,6 @@
 }
 
 .close-inactive_logo:hover {
-  fill: #F35D58;
+  fill: #f35d58;
   transition: all 0.05s ease-in;
 }

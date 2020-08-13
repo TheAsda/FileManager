@@ -10,7 +10,7 @@ import { HOHandlers } from '../common/HOHandlers';
 import { merge, noop } from 'lodash';
 import { TerminalCommands } from './terminalCommands';
 import ResizeObserver from 'rc-resize-observer';
-import { HotKeys } from 'react-hotkeys';
+import { HotKeysWrapper } from '..';
 
 interface TerminalProps extends HOHandlers {
   terminalManager: ITerminalManager;
@@ -144,7 +144,7 @@ class Terminal extends Component<TerminalProps> {
 
   render() {
     return (
-      <HotKeys handlers={this.handlers}>
+      <HotKeysWrapper handlers={this.handlers}>
         <PathWrapper
           closable={this.props.closable}
           onClose={this.props.onClose}
@@ -154,7 +154,7 @@ class Terminal extends Component<TerminalProps> {
             <div className="terminal" ref={this.containerRef} />
           </ResizeObserver>
         </PathWrapper>
-      </HotKeys>
+      </HotKeysWrapper>
     );
   }
 }

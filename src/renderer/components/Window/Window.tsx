@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   useManagers,
   usePreview,
@@ -6,6 +6,7 @@ import {
   useCommands,
   useTerminals,
   useTheme,
+  useKeyMap,
 } from '@fm/hooks';
 import { noop, map, reject } from 'lodash';
 import './style.css';
@@ -18,14 +19,16 @@ import {
   Popup,
   PreviewPanel,
   CSSApplicator,
+  HotKeysWrapper,
 } from '@fm/components';
 import { remote, app } from 'electron';
 import { GoToPalette } from '../modals';
-import { HotKeys } from 'react-hotkeys';
 
 const Window = () => {
-  const { keysManager, getIdentityManager, directoryManager } = useManagers();
+  const { getIdentityManager, directoryManager } = useManagers();
   const { commands } = useCommands();
+  const { keymap } = useKeyMap();
+  console.log('Window -> keymap', keymap);
 
   const themeSelectorManager = useMemo(() => {
     return getIdentityManager();
@@ -130,9 +133,9 @@ const Window = () => {
   };
 
   return (
-    <HotKeys keyMap={keysManager.getKeyMap()}>
+    <HotKeysWrapper keyMap={keymap}>
       <CSSApplicator theme={theme}>
-        <HotKeys handlers={hotkeys}>
+        <HotKeysWrapper handlers={hotkeys}>
           <div className="window">
             <FocusProvider>
               <SplitPanels minSize={200} splitType="vertical">
@@ -168,9 +171,9 @@ const Window = () => {
             options={themeSelectorState.options}
           />
           <Popup />
-        </HotKeys>
+        </HotKeysWrapper>
       </CSSApplicator>
-    </HotKeys>
+    </HotKeysWrapper>
   );
 };
 

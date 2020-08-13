@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron';
-import { ISettingsStore } from './interfaces/ISettingsStore';
-import { ThemesManager } from './SettingsStore';
-import { Channels } from '../common/Channels';
+import { ISettingsStore } from '../interfaces/ISettingsStore';
+import { ThemesManager } from '../stores/SettingsStore';
+import { Channels } from '../../common/Channels';
 import { forEach } from 'lodash';
 
 class SettingsManager {

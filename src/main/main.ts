@@ -4,8 +4,10 @@ import { resolve, join } from 'path';
 import { Window } from './Window';
 import { hotReaload } from './hotReload';
 import { init } from '@sentry/electron';
-import { SettingsManager } from './SettingsManager';
-import { ThemesManager } from './ThemesManager';
+import { SettingsManager } from './managers/SettingsManager';
+import { ThemesManager } from './managers/ThemesManager';
+import { PathManager } from './managers/PathManager';
+import { KeyMapManager } from './managers/KeyMapManager';
 
 const mode = process.env.NODE_ENV || 'production';
 const isDev = () => mode !== 'production';
@@ -33,6 +35,8 @@ const registerIconsProtocol = () => {
 let mainWindow: Window | null;
 const settingsManager = new SettingsManager();
 const themesManager = new ThemesManager();
+const pathManager = new PathManager();
+const keymapManager = new KeyMapManager();
 
 const createWindow = () => {
   mainWindow = new Window({

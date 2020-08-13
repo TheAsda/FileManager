@@ -11,8 +11,8 @@ import {
   HOHandlers,
   Explorer,
   InputModal,
+  HotKeysWrapper,
 } from '@fm/components';
-import { HotKeys } from 'react-hotkeys';
 
 interface ExplorerPalensProps extends HOHandlers {
   onPreview?: (item: FileInfo) => void;
@@ -167,7 +167,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       splitable={data.length < 2}
     >
       {settings && (
-        <HotKeys handlers={hotkeys}>
+        <HotKeysWrapper handlers={hotkeys}>
           <SplitPanels minSize={200} splitType="horizontal">
             {map(data, (item, i) => {
               const isFocused = focus.panel === 'explorer' && focus.index === i;
@@ -194,7 +194,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
               );
             })}
           </SplitPanels>
-        </HotKeys>
+        </HotKeysWrapper>
       )}
       <InputModal
         initialValue={inputModalState.inputValue}

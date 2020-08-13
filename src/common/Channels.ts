@@ -12,6 +12,9 @@ const Channels = {
   ADD_PATH: 'add-path',
   GET_PATH: 'get-path',
   PATH: 'path',
+  GET_KEYMAP: 'get-keymap',
+  RESET_KEYMAP: 'reset-keymap',
+  KEYMAP: 'keymap',
 };
 
 export { Channels };

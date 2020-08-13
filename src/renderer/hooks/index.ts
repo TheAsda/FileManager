@@ -8,3 +8,4 @@ export * from './useFocus';
 export * from './useCommands';
 export * from './useTheme';
 export * from './useSettings';
+export * from './useKeyMap';

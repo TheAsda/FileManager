@@ -1,8 +1,8 @@
-import React, { createContext, useContext, PropsWithChildren, useEffect, useState } from 'react';
+import React, { createContext, useContext, PropsWithChildren, useState } from 'react';
 import { PanelType } from '@fm/common';
 import { noop } from 'lodash';
 import { useSettings } from './useSettings';
-import { HotKeys } from 'react-hotkeys';
+import { HotKeysWrapper } from '@fm/components';
 
 const FocusContext = createContext<{
   togglePanel: () => void;
@@ -90,14 +90,14 @@ const FocusProvider = ({ children }: PropsWithChildren<unknown>) => {
         focusPanel,
       }}
     >
-      <HotKeys
+      <HotKeysWrapper
         handlers={{
           toggleFocusPanel: togglePanel,
           toggleFocusIndex: toggleIndex,
         }}
       >
         {children}
-      </HotKeys>
+      </HotKeysWrapper>
     </FocusContext.Provider>
   );
 };

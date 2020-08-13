@@ -1,4 +1,4 @@
-import { DirectoryManager, KeysManager, IdentityManager } from '@fm/common';
+import { DirectoryManager, IdentityManager } from '@fm/common';
 import { useMemo } from 'react';
 
 const useManagers = () => {
@@ -7,14 +7,8 @@ const useManagers = () => {
     () => new DirectoryManager(),
     []
   );
-  const keysManager = useMemo(
-    // () => container.get<IKeysManager>(TYPES.IKeysManager)
-    () => new KeysManager(),
-    []
-  );
 
   return {
-    keysManager,
     directoryManager,
     // getIdentityManager: () => container.get<IIdentityManager>(TYPES.IIdentityManager),
     getIdentityManager: () => new IdentityManager(),

@@ -1,4 +1,4 @@
-import { IPathStore } from './interfaces/IPathStore';
+import { IPathStore } from '../interfaces/IPathStore';
 import Store from 'electron-store';
 
 class PathStore implements IPathStore {
