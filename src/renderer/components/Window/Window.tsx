@@ -54,16 +54,12 @@ const Window = () => {
       isShown: true,
       options,
     });
-
-    // addHotKeys(themeSelectorManager.getHotkeys(), true);
   };
   const closeThemeSelector = () => {
     setThemeSelectorState({
       isShown: false,
       options: [],
     });
-
-    // removeHotKeys();
   };
   const onThemeSelect = (themeName: string) => {
     setTheme(themeName);
@@ -76,8 +72,6 @@ const Window = () => {
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
   const openCommandPalette = () => {
     setCommandPalette(true);
-
-    // addHotKeys(commandPaletteManager.getHotkeys(), true);
   };
   const closeCommandPalette = () => {
     setCommandPalette(false);

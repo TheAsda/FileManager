@@ -42,8 +42,6 @@ const Preview = (props: PreviewProps) => {
   }, [props.focused]);
 
   const onFocus = () => {
-    // addHotKeys(merge(hotkeys, props.hotkeys));
-
     emptyCommands();
 
     addCommands(merge({}, props.commands));

@@ -85,7 +85,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     };
 
     props.explorerManager.setCommands(merge(this.options, props.commands));
-    // props.explorerManager.setHotkeys(merge(this.handlers, props.hotkeys));
   }
 
   componentDidMount() {
@@ -224,7 +223,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       return;
     }
 
-    // Forced edit end
     if (name === null) {
       this.setState((state) => ({
         ...state,

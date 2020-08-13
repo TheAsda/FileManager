@@ -62,8 +62,6 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       isShown: true,
       panelIndex: focus.index,
     });
-
-    // addHotKeys(gotoManager.getHotkeys(), true);
   };
 
   const closeGotoPalette = () => {
@@ -71,8 +69,6 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
       isShown: false,
       panelIndex: undefined,
     });
-
-    // removeHotKeys();
   };
 
   const hotkeys = {
@@ -96,8 +92,6 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     if (focus.panel === 'explorer' && focus.index !== index) {
       focusIndex(index);
     }
-
-    // addHotKeys(merge(data[index].getHotkeys(), props.hotkeys));
 
     emptyCommands();
 

@@ -45,7 +45,7 @@ const createWindow = () => {
     frame: false,
   });
 
-  // mainWindow.setMenu(null);
+  mainWindow.setMenu(null);
 
   mainWindow.on('closed', () => (mainWindow = null));
 

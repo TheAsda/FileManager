@@ -9,17 +9,6 @@ interface SelectPanelProps {
 }
 
 const SelectPanel = (props: SelectPanelProps) => {
-  // useEffect(() => {
-  //   console.log('Bind ' + props.hotkey);
-
-  //   setGlobalHotKeys({ [props.hotkey]: props.onSelect }, true);
-
-  //   return () => {
-  //     console.log('Unbind ' + props.hotkey);
-  //     removeGlobalHotKeys([props.hotkey]);
-  //   };
-  // }, [props.hotkey]);
-
   return (
     <HotKeysWrapper
       handlers={{ [props.hotkey]: props.onSelect }}

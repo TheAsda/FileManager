@@ -56,7 +56,6 @@ class Terminal extends Component<TerminalProps> {
     };
 
     props.terminalManager.setCommands(merge(this.options, props.commands));
-    // props.terminalManager.setHotkeys(merge(this.handlers, props.hotkeys));
   }
 
   componentDidMount() {

@@ -41,10 +41,6 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
     this.fuse = new Fuse(props.options, {
       findAllMatches: true,
     });
-
-    // if (this.props.manager) {
-    //   this.props.manager.setHotkeys(this.handlers);
-    // }
   }
 
   componentDidUpdate() {
