@@ -79,7 +79,7 @@
     "autobind-decorator": "^2.4.0",
     "bunyan": "^1.8.12",
     "electron-store": "^6.0.0",
-    "filemancore": "^1.0.8",
+    "filemancore": "1.0.8",
     "fuse.js": "^6.4.1",
     "hotkeys-js": "^3.8.1",
     "lodash": "^4.17.15",

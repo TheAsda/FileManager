@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildr
 import { IExplorerManager, ExplorerManager } from '@fm/common';
 import { map, noop } from 'lodash';
 import { normalizePath } from 'filemancore';
-import { ExplorerPanelInfo } from 'common/interfaces/models/Layout';
+import { ExplorerPanelInfo } from 'common/interfaces/Layout';
 
 type Action = { type: 'spawn'; path?: string } | { type: 'destroy'; index: number };
 

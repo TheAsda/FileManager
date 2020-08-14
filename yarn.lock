@@ -3518,7 +3518,7 @@ filelist@^1.0.1:
   dependencies:
     minimatch "^3.0.4"
 
-filemancore@^1.0.8:
+filemancore@1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/filemancore/-/filemancore-1.0.8.tgz#9cf7eabe33b2d0e4bb1a5a39abf00b052ba2c55d"
   integrity sha512-o5j08DB+dkshUKzIm2W87rF4qxcZVCLnEqFeqbsnfi1/9DoedH1Nt/kWI+LWdsunVN992lhgZNXTSj6pJK0CpA==

@@ -1,6 +1,6 @@
 import { IKeyMapStore } from '../interfaces/IKeyMapStore';
 import Store from 'electron-store';
-import { KeyMap } from 'common/interfaces/models/KeyMap';
+import { KeyMap } from 'common/interfaces/KeyMap';
 import { DEFAULT_KEYMAP } from '../../common/settings/keyMap';
 
 class KeyMapStore implements IKeyMapStore {
