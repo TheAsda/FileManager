@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { usePreview, useCommands, useManagers, CommandsWrapper } from '@fm/hooks';
+import React, { useState } from 'react';
+import { usePreview, useManagers } from '@fm/hooks';
 import './style.css';
-import { includes, merge, clamp } from 'lodash';
-import { ignoredExtensions, imageExtensions } from './fileExtentions';
+import { includes, clamp } from 'lodash';
+import { ignoredExtensions, imageExtensions } from './fileExtensions';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { extname } from 'path';
 import { HOHandlers, HotKeysWrapper } from '@fm/components';

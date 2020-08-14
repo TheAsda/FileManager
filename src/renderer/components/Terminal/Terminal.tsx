@@ -7,7 +7,7 @@ import './style.css';
 import autobind from 'autobind-decorator';
 import { PathWrapper } from '../PathWrapper';
 import { HOHandlers } from '../common/HOHandlers';
-import { merge, noop } from 'lodash';
+import { noop } from 'lodash';
 import { TerminalCommands } from './terminalCommands';
 import ResizeObserver from 'rc-resize-observer';
 import { HotKeysWrapper } from '..';

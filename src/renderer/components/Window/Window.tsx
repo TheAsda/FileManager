@@ -8,7 +8,7 @@ import {
   CommandsWrapper,
   useKeyMap,
 } from '@fm/hooks';
-import { noop, map, reject, toPairs, reduce, flatten, merge } from 'lodash';
+import { noop, map, reject, toPairs, reduce, merge } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
 import {
@@ -131,7 +131,7 @@ const Window = () => {
       <CSSApplicator theme={theme}>
         <HotKeysWrapper handlers={hotkeys}>
           <div className="window">
-            <CommandsWrapper scope="window" commands={localCommands}>
+            <CommandsWrapper commands={localCommands} scope="window">
               <SplitPanels minSize={200} splitType="vertical">
                 <ExplorerPanels onPreview={previewHandler} openInTerminal={openInTerminal} />
                 {!hidden &&

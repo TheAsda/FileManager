@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { map, merge, noop } from 'lodash';
+import { map, noop } from 'lodash';
 import { FileInfo } from '@fm/common';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useExplorers, useFocus, useCommands, useManagers, usePaths, useSettings } from '@fm/hooks';
+import { useExplorers, useManagers, usePaths, useSettings } from '@fm/hooks';
 import {
   SplitPanels,
   ErrorBoundary,
@@ -14,12 +14,12 @@ import {
   HotKeysWrapper,
 } from '@fm/components';
 
-interface ExplorerPalensProps extends HOHandlers {
+interface ExplorerPanelsProps extends HOHandlers {
   onPreview?: (item: FileInfo) => void;
   openInTerminal?: (path: string) => void;
 }
 
-const ExplorerPanels = (props: ExplorerPalensProps) => {
+const ExplorerPanels = (props: ExplorerPanelsProps) => {
   const { data, dispatch } = useExplorers();
   const { getIdentityManager, directoryManager } = useManagers();
   const { settings, setValue } = useSettings();
@@ -135,7 +135,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     });
   };
 
-  const onGotoSelect = (path: string) => {
+  const onGotoSelect = () => {
     // if (focus.index !== undefined) {
     //   data[focus.index].setPath(path);
     // }
@@ -192,4 +192,4 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   );
 };
 
-export { ExplorerPanels, ExplorerPalensProps };
+export { ExplorerPanels, ExplorerPanelsProps };

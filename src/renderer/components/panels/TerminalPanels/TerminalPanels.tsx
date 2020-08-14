@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { map, merge } from 'lodash';
+import { map } from 'lodash';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useTerminals, useFocus, useCommands, useManagers, useTheme, usePaths } from '@fm/hooks';
+import { useTerminals, useManagers, useTheme, usePaths } from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
 import {
   HOHandlers,
@@ -64,7 +64,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
     openGoto: openGotoPalette,
   };
 
-  const onGotoSelect = (path: string) => {
+  const onGotoSelect = () => {
     // if (focus.index !== undefined) {
     //   data[focus.index].changeDirectory(path);
     // }
