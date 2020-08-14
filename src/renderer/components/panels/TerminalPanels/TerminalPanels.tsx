@@ -23,8 +23,6 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   const { data, dispatch } = useTerminals();
   const { getIdentityManager } = useManagers();
   const { theme } = useTheme();
-  const { focus, focusIndex, focusPanel } = useFocus();
-  const { addCommands, emptyCommands } = useCommands();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
     panelIndex?: number;
@@ -46,7 +44,6 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   const openGotoPalette = () => {
     setGotoPalette({
       isShown: true,
-      panelIndex: focus.index,
     });
   };
 
@@ -63,28 +60,20 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
     });
   };
 
-  const focusItem = (index: number) => () => {
-    focusIndex(index);
-
-    emptyCommands();
-
-    addCommands(merge(data[index].getCommands(), props.commands));
-  };
-
   const hotkeys = {
     openGoto: openGotoPalette,
   };
 
   const onGotoSelect = (path: string) => {
-    if (focus.index !== undefined) {
-      data[focus.index].changeDirectory(path);
-    }
+    // if (focus.index !== undefined) {
+    //   data[focus.index].changeDirectory(path);
+    // }
     closeGotoPalette();
   };
 
   return (
     <DefaultPanel
-      onFocus={() => focusPanel('terminal')}
+      // onFocus={() => focusPanel('terminal')}
       onSplit={splitTerminal}
       splitable={data.length < 2}
     >
@@ -92,16 +81,12 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
         <HotKeysWrapper handlers={hotkeys}>
           <SplitPanels className="terminal-panels" splitType="horizontal">
             {map(data, (item, i) => {
-              const focused = focus.panel === 'terminal' && focus.index === i;
-
               return (
                 <ErrorBoundary key={item.getId()}>
                   <Terminal
                     closable={data.length > 1}
-                    focused={focused}
                     onClose={onClose(i)}
                     onExit={onClose(i)}
-                    onFocus={focusItem(i)}
                     terminalManager={item}
                     theme={theme}
                   />

@@ -21,8 +21,6 @@ interface ExplorerPalensProps extends HOHandlers {
 
 const ExplorerPanels = (props: ExplorerPalensProps) => {
   const { data, dispatch } = useExplorers();
-  const { focus, focusIndex, focusPanel } = useFocus();
-  const { addCommands, emptyCommands } = useCommands();
   const { getIdentityManager, directoryManager } = useManagers();
   const { settings, setValue } = useSettings();
   const { paths, addPath } = usePaths();
@@ -60,7 +58,7 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   const openGotoPalette = () => {
     setGotoPalette({
       isShown: true,
-      panelIndex: focus.index,
+      // panelIndex: focus.index,
     });
   };
 
@@ -86,16 +84,6 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
     dispatch({
       type: 'spawn',
     });
-  };
-
-  const focusItem = (index: number) => () => {
-    if (focus.panel === 'explorer' && focus.index !== index) {
-      focusIndex(index);
-    }
-
-    emptyCommands();
-
-    addCommands(merge(data[index].getCommands(), props.commands));
   };
 
   const onCopy = (panelIndex: number) => (filesToCopy: FileInfo[]) => {
@@ -148,15 +136,15 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
   };
 
   const onGotoSelect = (path: string) => {
-    if (focus.index !== undefined) {
-      data[focus.index].setPath(path);
-    }
+    // if (focus.index !== undefined) {
+    //   data[focus.index].setPath(path);
+    // }
     closeGotoPalette();
   };
 
   return (
     <DefaultPanel
-      onFocus={() => focusPanel('explorer')}
+      // onFocus={() => focusPanel('explorer')}
       onSplit={splitExplorer}
       splitable={data.length < 2}
     >
@@ -164,20 +152,15 @@ const ExplorerPanels = (props: ExplorerPalensProps) => {
         <HotKeysWrapper handlers={hotkeys}>
           <SplitPanels minSize={200} splitType="horizontal">
             {map(data, (item, i) => {
-              const isFocused = focus.panel === 'explorer' && focus.index === i;
-
               return (
                 <ErrorBoundary key={item.getId()}>
                   <Explorer
                     closable={data.length > 1}
-                    commands={props.commands}
                     directoryManager={directoryManager}
                     explorerManager={item}
-                    focused={isFocused}
                     onClose={onClose(i)}
                     onCopy={onCopy(i)}
                     onDirectoryChange={addPath}
-                    onFocus={focusItem(i)}
                     onMove={onMove(i)}
                     onPreview={props.onPreview}
                     openInTerminal={props.openInTerminal}

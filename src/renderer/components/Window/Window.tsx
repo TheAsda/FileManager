@@ -2,13 +2,13 @@ import React, { useState, useMemo } from 'react';
 import {
   useManagers,
   usePreview,
-  FocusProvider,
   useCommands,
   useTerminals,
   useTheme,
+  CommandsWrapper,
   useKeyMap,
 } from '@fm/hooks';
-import { noop, map, reject } from 'lodash';
+import { noop, map, reject, toPairs, reduce, flatten, merge } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
 import {
@@ -131,28 +131,39 @@ const Window = () => {
       <CSSApplicator theme={theme}>
         <HotKeysWrapper handlers={hotkeys}>
           <div className="window">
-            <FocusProvider>
+            <CommandsWrapper scope="window" commands={localCommands}>
               <SplitPanels minSize={200} splitType="vertical">
-                <ExplorerPanels
-                  commands={localCommands}
-                  onPreview={previewHandler}
-                  openInTerminal={openInTerminal}
-                />
+                <ExplorerPanels onPreview={previewHandler} openInTerminal={openInTerminal} />
                 {!hidden &&
                   (({ width }) => {
                     return <PreviewPanel item={item} onHide={togglePreview} width={width} />;
                   })}
                 <TerminalPanels
-                  commands={localCommands}
                   onSelect={terminalSelect.onSelect}
                   onSelectClose={closeSelect}
                   selectModeActivated={terminalSelect.isShown}
                 />
               </SplitPanels>
-            </FocusProvider>
+            </CommandsWrapper>
           </div>
           <CommandPalette
-            commands={commands}
+            commands={reduce(
+              map(toPairs(commands), ([scope, commands]) => {
+                return reduce<[string, () => void], Commands>(
+                  toPairs(commands),
+                  (acc, [name, command]) => {
+                    acc[scope + ': ' + name] = command;
+
+                    return acc;
+                  },
+                  {}
+                );
+              }),
+              (acc, cur) => {
+                return merge(acc, cur);
+              },
+              {}
+            )}
             isOpened={isCommandPaletteOpen}
             manager={commandPaletteManager}
             onClose={closeCommandPalette}

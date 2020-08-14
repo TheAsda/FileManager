@@ -19,7 +19,6 @@ const CommandPalette = (props: CommandPaletteProps) => {
 
   return (
     <SelectPalette
-      commands={props.commands}
       isOpened={props.isOpened}
       manager={props.manager}
       onClose={props.onClose}

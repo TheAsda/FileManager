@@ -11,6 +11,7 @@ import { merge, noop } from 'lodash';
 import { TerminalCommands } from './terminalCommands';
 import ResizeObserver from 'rc-resize-observer';
 import { HotKeysWrapper } from '..';
+import { CommandsWrapper } from '@fm/hooks';
 
 interface TerminalProps extends HOHandlers {
   terminalManager: ITerminalManager;
@@ -54,8 +55,6 @@ class Terminal extends Component<TerminalProps> {
       'Close panel': this.props.onClose ?? noop,
       'Reload terminal': this.props.onReload ?? noop,
     };
-
-    props.terminalManager.setCommands(merge(this.options, props.commands));
   }
 
   componentDidMount() {
@@ -143,17 +142,22 @@ class Terminal extends Component<TerminalProps> {
 
   render() {
     return (
-      <HotKeysWrapper handlers={this.handlers}>
-        <PathWrapper
-          closable={this.props.closable}
-          onClose={this.props.onClose}
-          path={this.props.terminalManager.getDirectory()}
-        >
-          <ResizeObserver onResize={this.resize}>
-            <div className="terminal" ref={this.containerRef} />
-          </ResizeObserver>
-        </PathWrapper>
-      </HotKeysWrapper>
+      <CommandsWrapper
+        commands={this.options}
+        scope={`terminal ${this.TerminalManager.getId()}`}
+      >
+        <HotKeysWrapper handlers={this.handlers}>
+          <PathWrapper
+            closable={this.props.closable}
+            onClose={this.props.onClose}
+            path={this.props.terminalManager.getDirectory()}
+          >
+            <ResizeObserver onResize={this.resize}>
+              <div className="terminal" ref={this.containerRef} />
+            </ResizeObserver>
+          </PathWrapper>
+        </HotKeysWrapper>
+      </CommandsWrapper>
     );
   }
 }

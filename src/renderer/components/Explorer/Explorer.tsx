@@ -12,6 +12,7 @@ import { normalizePath, openWithDefaultApp } from 'filemancore';
 import { join } from 'path';
 import { HOHandlers } from '../common/HOHandlers';
 import { HotKeysWrapper } from '..';
+import { CommandsWrapper } from '@fm/hooks';
 
 interface ExplorerState {
   currentPath: string;
@@ -83,8 +84,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       'Toggle auto preview': this.toggleAutoPreview,
       'Open item': this.openItem,
     };
-
-    props.explorerManager.setCommands(merge(this.options, props.commands));
   }
 
   componentDidMount() {
@@ -107,6 +106,8 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     }
 
     if (!this.props.closable) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       delete this.options['Close panel'];
     } else {
       this.options['Close panel'] = this.onClose;
@@ -385,27 +386,32 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   render() {
     return (
-      <PathWrapper
-        closable={this.props.closable}
-        onClose={this.onClose}
-        path={this.props.explorerManager.getPath()}
+      <CommandsWrapper
+        commands={this.options}
+        scope={`explorer: ${this.props.explorerManager.getId()}`}
       >
-        <HotKeysWrapper handlers={this.handlers}>
-          <div className="explorer" onClick={this.onFocus}>
-            {this.state.viewType === 'detail' ? (
-              <DetailView
-                data={this.state.directoryState}
-                editableIndex={this.state.editableIndex}
-                onEditEnd={this.onEditEnd}
-                onExit={this.exitDirectory}
-                onItemClick={this.onClick}
-                selectedIndex={this.state.selectedIndex}
-              />
-            ) : null}
-            <StateLine count={this.state.directoryState.length} />
-          </div>
-        </HotKeysWrapper>
-      </PathWrapper>
+        <PathWrapper
+          closable={this.props.closable}
+          onClose={this.onClose}
+          path={this.props.explorerManager.getPath()}
+        >
+          <HotKeysWrapper handlers={this.handlers}>
+            <div className="explorer" onClick={this.onFocus}>
+              {this.state.viewType === 'detail' ? (
+                <DetailView
+                  data={this.state.directoryState}
+                  editableIndex={this.state.editableIndex}
+                  onEditEnd={this.onEditEnd}
+                  onExit={this.exitDirectory}
+                  onItemClick={this.onClick}
+                  selectedIndex={this.state.selectedIndex}
+                />
+              ) : null}
+              <StateLine count={this.state.directoryState.length} />
+            </div>
+          </HotKeysWrapper>
+        </PathWrapper>
+      </CommandsWrapper>
     );
   }
 }

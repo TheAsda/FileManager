@@ -13,7 +13,6 @@ interface GoToPaletteProps extends HOHandlers {
 const GoToPalette = (props: GoToPaletteProps) => {
   return (
     <SelectPalette
-      commands={props.commands}
       isOpened={props.isOpened}
       manager={props.manager}
       onClose={props.onClose}

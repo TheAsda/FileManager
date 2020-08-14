@@ -1,11 +1,15 @@
-import React, { createContext, useContext, useState, PropsWithChildren } from 'react';
-import { noop, merge, forEach } from 'lodash';
+import React, { createContext, useContext, useState, PropsWithChildren, useEffect } from 'react';
+import { noop, merge } from 'lodash';
 import { Commands } from '@fm/common';
 
+interface CommandsState {
+  [key: string]: Commands;
+}
+
 const CommandsContext = createContext<{
-  commands: Commands;
-  addCommands: (commands: Commands) => void;
-  removeCommands: (commands: string[]) => void;
+  commands: CommandsState;
+  addCommands: (commands: CommandsState) => void;
+  removeCommands: (key: string) => void;
   emptyCommands: () => void;
 }>({
   commands: {},
@@ -15,17 +19,15 @@ const CommandsContext = createContext<{
 });
 
 const CommandsProvider = ({ children }: PropsWithChildren<unknown>) => {
-  const [state, setState] = useState<Commands>({});
+  const [state, setState] = useState<CommandsState>({});
 
-  const addCommands = (commands: Commands) => {
+  const addCommands = (commands: CommandsState) => {
     setState((state) => merge(state, commands));
   };
 
-  const removeCommands = (commands: string[]) => {
+  const removeCommands = (key: string) => {
     setState((state) => {
-      forEach(commands, (command) => {
-        delete state[command];
-      });
+      delete state[key];
 
       return state;
     });
@@ -46,4 +48,25 @@ const CommandsProvider = ({ children }: PropsWithChildren<unknown>) => {
 
 const useCommands = () => useContext(CommandsContext);
 
-export { CommandsProvider, useCommands };
+interface CommandsProps {
+  commands: Commands;
+  scope: string;
+}
+
+const CommandsWrapper = (props: PropsWithChildren<CommandsProps>) => {
+  const { addCommands, removeCommands } = useCommands();
+
+  useEffect(() => {
+    if (props.commands && props.scope) {
+      addCommands({ [props.scope]: props.commands });
+
+      return () => {
+        removeCommands(props.scope);
+      };
+    }
+  }, [props.commands]);
+
+  return <>{props.children}</>;
+};
+
+export { CommandsProvider, useCommands, CommandsWrapper };

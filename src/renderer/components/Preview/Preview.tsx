@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { usePreview, useCommands, useManagers } from '@fm/hooks';
+import { usePreview, useCommands, useManagers, CommandsWrapper } from '@fm/hooks';
 import './style.css';
 import { includes, merge, clamp } from 'lodash';
-import { ignoredExtentions, imageExtentions } from './fileExtentions';
+import { ignoredExtensions, imageExtensions } from './fileExtentions';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { extname } from 'path';
 import { HOHandlers, HotKeysWrapper } from '@fm/components';
@@ -14,8 +14,6 @@ interface PreviewProps extends HOHandlers {
 
 const Preview = (props: PreviewProps) => {
   const { item } = usePreview();
-  const [focused, setFocused] = useState<boolean>(false);
-  const { addCommands, emptyCommands } = useCommands();
   const { directoryManager } = useManagers();
   const [fontSize, setFontSize] = useState<number>(15);
 
@@ -32,26 +30,11 @@ const Preview = (props: PreviewProps) => {
     zoomOut: decreaseFontSize,
   };
 
-  useEffect(() => {
-    if (!focused && props.focused) {
-      onFocus();
-      setFocused(true);
-    } else if (focused && !props.focused) {
-      setFocused(false);
-    }
-  }, [props.focused]);
-
-  const onFocus = () => {
-    emptyCommands();
-
-    addCommands(merge({}, props.commands));
-  };
-
   if (item) {
-    const extention = extname(item.name);
+    const extension = extname(item.name);
 
-    if (!includes(ignoredExtentions, extention)) {
-      if (includes(imageExtentions, extention)) {
+    if (!includes(ignoredExtensions, extension)) {
+      if (includes(imageExtensions, extension)) {
         return (
           <HotKeysWrapper handlers={hotkeys}>
             <div className="preview">
