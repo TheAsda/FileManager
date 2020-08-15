@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { usePreview, useManagers } from '@fm/hooks';
+import { useManagers } from '@fm/hooks';
 import './style.css';
 import { includes, clamp } from 'lodash';
 import { ignoredExtensions, imageExtensions } from './fileExtensions';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { extname } from 'path';
 import { HOHandlers, HotKeysWrapper } from '@fm/components';
+import { useStore } from 'effector-react';
+import { useStoreState } from 'renderer/Store';
 
 interface PreviewProps extends HOHandlers {
   width?: number;
@@ -13,7 +15,9 @@ interface PreviewProps extends HOHandlers {
 }
 
 const Preview = (props: PreviewProps) => {
-  const { item } = usePreview();
+  const {
+    preview: { item },
+  } = useStoreState();
   const { directoryManager } = useManagers();
   const [fontSize, setFontSize] = useState<number>(15);
 

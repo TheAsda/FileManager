@@ -3,7 +3,7 @@ import { map, noop, size } from 'lodash';
 import { FileInfo } from '@fm/common';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useExplorers, useManagers, usePaths, useSettings } from '@fm/hooks';
+import { useManagers, usePaths, useSettings } from '@fm/hooks';
 import {
   SplitPanels,
   ErrorBoundary,

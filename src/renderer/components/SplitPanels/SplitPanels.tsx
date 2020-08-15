@@ -13,6 +13,7 @@ interface SplitPanelsProps {
   splitType: SplitType;
   className?: string;
   onResize?: (sizes: number[]) => void;
+  initialSizes?: number[];
 }
 
 interface SplitPanelsState {
@@ -38,8 +39,10 @@ class SplitPanels extends Component<SplitPanelsProps, SplitPanelsState> {
 
     const children = isArray(props.children) ? props.children : [props.children];
 
+    console.log('SplitPanels -> constructor -> props.initialSizes', props.initialSizes);
+    // TODO: check initialSizes 
     this.state = {
-      sizes: [],
+      sizes: props.initialSizes ?? [],
       active: false,
       x: 0,
       y: 0,

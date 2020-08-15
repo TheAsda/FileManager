@@ -2,12 +2,10 @@ import React from 'react';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useFocus } from '@fm/hooks';
-import { FileInfo } from '@fm/common';
 import { HOHandlers, Preview } from '@fm/components';
 
 interface PreviewPanelProps extends HOHandlers {
   onHide?: () => void;
-  item?: FileInfo | null;
   width?: number;
 }
 

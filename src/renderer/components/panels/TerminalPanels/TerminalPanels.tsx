@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { map } from 'lodash';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useTerminals, useManagers, useTheme, usePaths } from '@fm/hooks';
+import { useManagers, useTheme, usePaths } from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
 import {
   HOHandlers,

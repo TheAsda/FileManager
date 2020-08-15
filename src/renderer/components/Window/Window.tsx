@@ -1,9 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   useManagers,
-  usePreview,
   useCommands,
-  useTerminals,
   useTheme,
   CommandsWrapper,
   useKeyMap,
@@ -249,7 +247,6 @@ const Window = () => {
                   (({ width }) => {
                     return (
                       <PreviewPanel
-                        item={state.preview.item}
                         onHide={togglePreview}
                         width={width}
                       />
