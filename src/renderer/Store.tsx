@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createStore, createEvent } from 'effector';
 import { useStore } from 'effector-react';
-import { ITerminalManager, IExplorerManager, ExplorerManager, TerminalManager } from '@fm/common';
+import {
+  ITerminalManager,
+  IExplorerManager,
+  ExplorerManager,
+  TerminalManager,
+  FileInfo,
+  Settings,
+} from '@fm/common';
+import { isEqual, clone } from 'lodash';
 
 interface ExplorersStore {
   height: number;
@@ -37,11 +45,11 @@ interface ApplicationStore {
   };
   preview: {
     hidden: boolean;
-    path?: string;
+    item?: FileInfo;
   };
 }
 
-const store = createStore<ApplicationStore>({
+const initialState = {
   window: {
     height: 800,
     width: 600,
@@ -76,14 +84,16 @@ const store = createStore<ApplicationStore>({
       height: 800,
     },
   },
-});
+};
+
+const store = createStore<ApplicationStore>(initialState);
 
 const setWindowSize = createEvent<{ width: number; height: number }>();
 store.on(setWindowSize, (state, value) => {
   state.window.height = value.height;
   state.window.width = value.width;
 
-  return state;
+  return clone(state);
 });
 
 const setSectionsSize = createEvent<{
@@ -96,28 +106,29 @@ store.on(setSectionsSize, (state, value) => {
   state.window.sections.preview = value.preview;
   state.window.sections.terminal = value.terminal;
 
-  return state;
+  console.log('state', state);
+  return clone(state);
 });
 
 const toggleExplorers = createEvent<void>();
 store.on(toggleExplorers, (state) => {
   state.explorers.hidden = !state.explorers.hidden;
 
-  return state;
+  return clone(state);
 });
 
 const toggleAutoPreview = createEvent<void>();
 store.on(toggleAutoPreview, (state) => {
   state.explorers.autoPreview = !state.explorers.autoPreview;
 
-  return state;
+  return clone(state);
 });
 
 const toggleShowHidden = createEvent<void>();
 store.on(toggleShowHidden, (state) => {
   state.explorers.showHidden = !state.explorers.showHidden;
 
-  return state;
+  return clone(state);
 });
 
 const openExplorer = createEvent<{
@@ -134,7 +145,7 @@ store.on(openExplorer, (state, value) => {
       state.explorers.panel0.manager.setPath(value.path);
     }
 
-    return state;
+    return clone(state);
   }
   if (!state.explorers.panel1) {
     state.explorers.panel1 = {
@@ -146,23 +157,23 @@ store.on(openExplorer, (state, value) => {
       state.explorers.panel1.manager.setPath(value.path);
     }
 
-    return state;
+    return clone(state);
   }
 
-  console.warn('Cannot open explorer');
+  console.warn('Cannot open explorer', state);
 });
 
-const closeExplorer = createEvent<0 | 1>();
+const closeExplorer = createEvent<number>();
 store.on(closeExplorer, (state, value) => {
   if (value === 1 && state.explorers.panel1) {
     state.explorers.panel1 = undefined;
 
-    return state;
+    return clone(state);
   }
   if (value === 0 && state.explorers.panel0) {
     state.explorers.panel0 = undefined;
 
-    return state;
+    return clone(state);
   }
 
   console.warn(`Incorrect index: ${value}`);
@@ -170,18 +181,37 @@ store.on(closeExplorer, (state, value) => {
 
 const setExplorerSize = createEvent<{
   height: number;
-  index: 0 | 1;
+  index: number;
 }>();
 store.on(setExplorerSize, (state, value) => {
   if (value.index === 1 && state.explorers.panel1) {
     state.explorers.panel1.height = value.height;
 
-    return state;
+    return clone(state);
   }
   if (value.index === 0 && state.explorers.panel0) {
     state.explorers.panel0.height = value.height;
 
-    return state;
+    return clone(state);
+  }
+
+  console.warn(`Incorrect index: ${value.index}`);
+});
+
+const changeExplorerDirectory = createEvent<{
+  path: string;
+  index: number;
+}>();
+store.on(changeExplorerDirectory, (state, value) => {
+  if (value.index === 1 && state.explorers.panel1) {
+    state.explorers.panel1.manager.setPath(value.path);
+
+    return clone(state);
+  }
+  if (value.index === 0 && state.explorers.panel0) {
+    state.explorers.panel0.manager.setPath(value.path);
+
+    return clone(state);
   }
 
   console.warn(`Incorrect index: ${value.index}`);
@@ -201,7 +231,7 @@ store.on(openTerminal, (state, value) => {
       state.terminals.panel0.manager.changeDirectory(value.path);
     }
 
-    return state;
+    return clone(state);
   }
   if (!state.terminals.panel1) {
     state.terminals.panel1 = {
@@ -213,23 +243,23 @@ store.on(openTerminal, (state, value) => {
       state.terminals.panel1.manager.changeDirectory(value.path);
     }
 
-    return state;
+    return clone(state);
   }
 
-  console.warn('Cannot open terminal');
+  console.warn('Cannot open terminal', state);
 });
 
-const closeTerminal = createEvent<0 | 1>();
+const closeTerminal = createEvent<number>();
 store.on(closeTerminal, (state, value) => {
   if (value === 1 && state.terminals.panel1) {
     state.terminals.panel1 = undefined;
 
-    return state;
+    return clone(state);
   }
   if (value === 0 && state.terminals.panel0) {
     state.terminals.panel0 = undefined;
 
-    return state;
+    return clone(state);
   }
 
   console.warn(`Incorrect index: ${value}`);
@@ -237,18 +267,37 @@ store.on(closeTerminal, (state, value) => {
 
 const setTerminalSize = createEvent<{
   height: number;
-  index: 0 | 1;
+  index: number;
 }>();
 store.on(setTerminalSize, (state, value) => {
   if (value.index === 1 && state.terminals.panel1) {
     state.terminals.panel1.height = value.height;
 
-    return state;
+    return clone(state);
   }
   if (value.index === 0 && state.terminals.panel0) {
     state.terminals.panel0.height = value.height;
 
-    return state;
+    return clone(state);
+  }
+
+  console.warn(`Incorrect index: ${value.index}`);
+});
+
+const changeTerminalDirectory = createEvent<{
+  path: string;
+  index: number;
+}>();
+store.on(changeTerminalDirectory, (state, value) => {
+  if (value.index === 1 && state.terminals.panel1) {
+    state.terminals.panel1.manager.changeDirectory(value.path);
+
+    return clone(state);
+  }
+  if (value.index === 0 && state.terminals.panel0) {
+    state.terminals.panel0.manager.changeDirectory(value.path);
+
+    return clone(state);
   }
 
   console.warn(`Incorrect index: ${value.index}`);
@@ -258,8 +307,32 @@ const togglePreview = createEvent<void>();
 store.on(togglePreview, (state) => {
   state.preview.hidden = !state.preview.hidden;
 
-  return state;
+  return clone(state);
 });
+
+const setPreviewItem = createEvent<FileInfo>();
+store.on(setPreviewItem, (state, value) => {
+  state.preview.item = value;
+
+  return clone(state);
+});
+
+const useStoreState = () => {
+  const [state, setState] = useState<ApplicationStore>(initialState);
+
+  useEffect(
+    () =>
+      store.watch((newState) => {
+        if (!isEqual(state, newState)) {
+          console.log(newState);
+        }
+        setState(newState);
+      }),
+    []
+  );
+
+  return clone(state);
+};
 
 export {
   store,
@@ -275,4 +348,9 @@ export {
   closeTerminal,
   setTerminalSize,
   togglePreview,
+  changeExplorerDirectory,
+  changeTerminalDirectory,
+  setPreviewItem,
+  ApplicationStore,
+  useStoreState,
 };

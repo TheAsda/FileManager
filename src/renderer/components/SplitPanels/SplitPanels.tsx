@@ -12,6 +12,7 @@ interface SplitPanelsProps {
   children: ((data: { width?: number }) => ReactNode) | ReactNode | ReactNode[];
   splitType: SplitType;
   className?: string;
+  onResize?: (sizes: number[]) => void;
 }
 
 interface SplitPanelsState {
@@ -153,6 +154,8 @@ class SplitPanels extends Component<SplitPanelsProps, SplitPanelsState> {
 
       newSizes[leftPanelIndex] = newLeftPanelSize;
       newSizes[rightPanelIndex] = newRightPanelSize;
+
+      this.props.onResize && this.props.onResize(newSizes);
 
       if (this.props.splitType === 'vertical') {
         this.setState((state) => ({

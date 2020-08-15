@@ -12,6 +12,8 @@ import {
   Terminal,
   HotKeysWrapper,
 } from '@fm/components';
+import { useStore } from 'effector-react';
+import { store, setTerminalSize, closeTerminal, openTerminal } from 'renderer/Store';
 
 interface TerminalPanelsProps extends HOHandlers {
   selectModeActivated?: boolean;
@@ -20,7 +22,8 @@ interface TerminalPanelsProps extends HOHandlers {
 }
 
 const TerminalPanels = (props: TerminalPanelsProps) => {
-  const { terminals, closeTerminal, openTerminal } = useTerminals();
+  // const { terminals, closeTerminal, openTerminal } = useTerminals();
+  const { terminals } = useStore(store);
   const { getIdentityManager } = useManagers();
   const { theme } = useTheme();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
@@ -48,11 +51,13 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   };
 
   const onClose = (index: number) => () => {
-    closeTerminal(terminals[index].getId());
+    closeTerminal(index);
+    // closeTerminal(terminals[index].getId());
   };
 
   const splitTerminal = () => {
-    openTerminal();
+    openTerminal({});
+    // openTerminal();
   };
 
   const hotkeys = {
@@ -63,16 +68,82 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
     closeGotoPalette();
   };
 
+  const onResize = (value: number[]) => {
+    if (terminals.panel0 && terminals.panel1) {
+      setTerminalSize({
+        height: value[0],
+        index: 0,
+      });
+      setTerminalSize({
+        height: value[1],
+        index: 1,
+      });
+      return;
+    }
+    if (!terminals.panel0) {
+      setTerminalSize({
+        height: value[0],
+        index: 1,
+      });
+      return;
+    }
+    if (!terminals.panel1) {
+      setTerminalSize({
+        height: value[0],
+        index: 0,
+      });
+      return;
+    }
+
+    console.error('WTF Resizing', terminals);
+  };
+
   return (
     <DefaultPanel
       // onFocus={() => focusPanel('terminal')}
       onSplit={splitTerminal}
-      splitable={terminals.length < 2}
+      splitable={!terminals.panel0 || !terminals.panel1}
     >
       {theme && (
         <HotKeysWrapper handlers={hotkeys}>
-          <SplitPanels className="terminal-panels" splitType="horizontal">
-            {map(terminals, (item, i) => {
+          <SplitPanels className="terminal-panels" splitType="horizontal" onResize={onResize}>
+            {terminals.panel0 && (
+              <ErrorBoundary>
+                <Terminal
+                  closable={terminals.panel1 !== undefined}
+                  onClose={onClose(0)}
+                  onExit={onClose(0)}
+                  terminalManager={terminals.panel0.manager}
+                  theme={theme}
+                />
+                {props.selectModeActivated && (
+                  <SelectPanel
+                    hotkey={(1).toString()}
+                    onSelect={() => props.onSelect(0)}
+                    text={1}
+                  />
+                )}
+              </ErrorBoundary>
+            )}
+            {terminals.panel1 && (
+              <ErrorBoundary>
+                <Terminal
+                  closable={terminals.panel0 !== undefined}
+                  onClose={onClose(1)}
+                  onExit={onClose(1)}
+                  terminalManager={terminals.panel1.manager}
+                  theme={theme}
+                />
+                {props.selectModeActivated && (
+                  <SelectPanel
+                    hotkey={(2).toString()}
+                    onSelect={() => props.onSelect(0)}
+                    text={2}
+                  />
+                )}
+              </ErrorBoundary>
+            )}
+            {/* {map(terminals, (item, i) => {
               return (
                 <ErrorBoundary key={item.getId()}>
                   <Terminal
@@ -91,7 +162,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
                   )}
                 </ErrorBoundary>
               );
-            })}
+            })} */}
           </SplitPanels>
         </HotKeysWrapper>
       )}

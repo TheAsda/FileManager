@@ -23,9 +23,12 @@ import {
 } from '@fm/components';
 import { remote, app } from 'electron';
 import { GoToPalette } from '../modals';
+import { useStore } from 'effector-react';
+import { store, changeTerminalDirectory, setSectionsSize, setPreviewItem } from 'renderer/Store';
 
 const Window = () => {
   const { getIdentityManager, directoryManager } = useManagers();
+  const state = useStore(store);
   const { commands } = useCommands();
   const { keymap } = useKeyMap();
 
@@ -78,7 +81,7 @@ const Window = () => {
     closeThemeSelector();
   };
 
-  const { terminals } = useTerminals();
+  // const { terminals } = useTerminals();
   const [terminalSelect, setTerminalSelect] = useState<{
     isShown: boolean;
     onSelect: (index: number) => void;
@@ -97,18 +100,21 @@ const Window = () => {
     setTerminalSelect({
       isShown: true,
       onSelect: (index: number) => {
-        terminals[index].changeDirectory(path);
+        changeTerminalDirectory({
+          index,
+          path,
+        });
+        // terminals[index].changeDirectory(path);
         closeSelect();
       },
     });
   };
 
-  const { hidden, item, toggleHidden, setItem } = usePreview();
   const previewHandler = (item: FileInfo) => {
-    setItem(item);
+    setPreviewItem(item);
   };
   const togglePreview = () => {
-    toggleHidden();
+    togglePreview();
   };
 
   const hotkeys = {
@@ -125,23 +131,137 @@ const Window = () => {
     'Select theme': openThemeSelector,
   };
 
+  const onResize = (value: number[]) => {
+    console.log('onResize -> value', value);
+    if (!state.explorers.hidden && !state.preview.hidden && !state.terminals.hidden) {
+      setSectionsSize({
+        explorer: {
+          width: value[0],
+        },
+        preview: {
+          width: value[1],
+        },
+        terminal: {
+          width: value[2],
+        },
+      });
+      return;
+    }
+    if (state.explorers.hidden && !state.preview.hidden && !state.terminals.hidden) {
+      setSectionsSize({
+        explorer: {
+          width: 0,
+        },
+        preview: {
+          width: value[0],
+        },
+        terminal: {
+          width: value[1],
+        },
+      });
+      return;
+    }
+    if (!state.explorers.hidden && state.preview.hidden && !state.terminals.hidden) {
+      setSectionsSize({
+        explorer: {
+          width: value[0],
+        },
+        preview: {
+          width: 0,
+        },
+        terminal: {
+          width: value[1],
+        },
+      });
+      return;
+    }
+    if (!state.explorers.hidden && !state.preview.hidden && state.terminals.hidden) {
+      setSectionsSize({
+        explorer: {
+          width: value[0],
+        },
+        preview: {
+          width: value[1],
+        },
+        terminal: {
+          width: 0,
+        },
+      });
+      return;
+    }
+    if (!state.explorers.hidden && state.preview.hidden && state.terminals.hidden) {
+      setSectionsSize({
+        explorer: {
+          width: value[0],
+        },
+        preview: {
+          width: 0,
+        },
+        terminal: {
+          width: 0,
+        },
+      });
+      return;
+    }
+    if (state.explorers.hidden && !state.preview.hidden && state.terminals.hidden) {
+      setSectionsSize({
+        explorer: {
+          width: 0,
+        },
+        preview: {
+          width: value[0],
+        },
+        terminal: {
+          width: 0,
+        },
+      });
+      return;
+    }
+    if (state.explorers.hidden && state.preview.hidden && !state.terminals.hidden) {
+      setSectionsSize({
+        explorer: {
+          width: 0,
+        },
+        preview: {
+          width: 0,
+        },
+        terminal: {
+          width: value[0],
+        },
+      });
+      return;
+    }
+
+    console.error('WTF Resizing');
+  };
+
   return (
     <HotKeysWrapper keyMap={keymap}>
       <CSSApplicator theme={theme}>
         <HotKeysWrapper handlers={hotkeys}>
           <div className="window">
             <CommandsWrapper commands={localCommands} scope="window">
-              <SplitPanels minSize={200} splitType="vertical">
-                <ExplorerPanels onPreview={previewHandler} openInTerminal={openInTerminal} />
-                {!hidden &&
+              <SplitPanels minSize={200} splitType="vertical" onResize={onResize}>
+                {!state.explorers.hidden && (
+                  <ExplorerPanels onPreview={previewHandler} openInTerminal={openInTerminal} />
+                )}
+                {!state.preview.hidden &&
                   (({ width }) => {
-                    return <PreviewPanel item={item} onHide={togglePreview} width={width} />;
+                    return (
+                      <PreviewPanel
+                        item={state.preview.item}
+                        onHide={togglePreview}
+                        width={width}
+                      />
+                    );
                   })}
-                <TerminalPanels
-                  onSelect={terminalSelect.onSelect}
-                  onSelectClose={closeSelect}
-                  selectModeActivated={terminalSelect.isShown}
-                />
+                {!state.terminals.hidden && (
+                  <TerminalPanels
+                    onSelect={terminalSelect.onSelect}
+                    onSelectClose={closeSelect}
+                    selectModeActivated={terminalSelect.isShown}
+                  />
+                )}
               </SplitPanels>
             </CommandsWrapper>
           </div>

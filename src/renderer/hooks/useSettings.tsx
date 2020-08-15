@@ -30,7 +30,6 @@ const SettingsProvider = ({ children }: PropsWithChildren<unknown>) => {
   useEffect(() => {
     // Action before application quits
     ipcRenderer.on(Channels.BEFORE_QUIT, () => {
-      console.log('SettingsProvider -> state', state);
       // Save settings
       ipcRenderer.send(Channels.SET_SETTINGS, state);
 
@@ -39,9 +38,7 @@ const SettingsProvider = ({ children }: PropsWithChildren<unknown>) => {
     });
   }, [state]);
 
-  console.log('SettingsProvider -> state', state);
   const setValue = (settings: Settings) => {
-    console.log('setValue -> settings', settings);
     setState(settings);
   };
 
