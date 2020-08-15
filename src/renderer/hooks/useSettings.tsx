@@ -3,7 +3,6 @@ import { Settings, Channels, ConfirmTypes } from '@fm/common';
 import { noop } from 'lodash';
 import { ipcRenderer } from 'electron';
 import { useValidatedContext } from './useValidatedContext';
-import { stat } from 'fs';
 
 const SettingsContext = createContext<{
   settings?: Settings;

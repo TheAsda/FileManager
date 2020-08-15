@@ -32,6 +32,7 @@ interface ExplorerPanelsProps extends HOHandlers {
 const ExplorerPanels = (props: ExplorerPanelsProps) => {
   // const { data, dispatch } = useExplorers();
   const { explorers } = useStoreState();
+  console.log('ExplorerPanels -> explorers', explorers);
   const { getIdentityManager, directoryManager } = useManagers();
   const { settings, setValue } = useSettings();
   const { paths, addPath } = usePaths();
@@ -197,46 +198,41 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
       onSplit={splitExplorer}
       splitable={!explorers.panel0 || !explorers.panel1}
     >
-      {settings && (
-        <HotKeysWrapper handlers={hotkeys}>
-          <SplitPanels minSize={200} splitType="horizontal" onResize={onResize}>
-            {explorers.panel0 && (
-              <ErrorBoundary>
-                <Explorer
-                  closable={explorers.panel1 !== undefined}
-                  directoryManager={directoryManager}
-                  explorerManager={explorers.panel0.manager}
-                  onClose={onClose(0)}
-                  onCopy={onCopy(0)}
-                  onDirectoryChange={addPath}
-                  onMove={onMove(0)}
-                  onPreview={props.onPreview}
-                  openInTerminal={props.openInTerminal}
-                  setSettings={setValue}
-                  settings={settings}
-                />
-              </ErrorBoundary>
-            )}
-            {explorers.panel1 && (
-              <ErrorBoundary>
-                <Explorer
-                  closable={explorers.panel0 !== undefined}
-                  directoryManager={directoryManager}
-                  explorerManager={explorers.panel1.manager}
-                  onClose={onClose(1)}
-                  onCopy={onCopy(1)}
-                  onDirectoryChange={addPath}
-                  onMove={onMove(1)}
-                  onPreview={props.onPreview}
-                  openInTerminal={props.openInTerminal}
-                  setSettings={setValue}
-                  settings={settings}
-                />
-              </ErrorBoundary>
-            )}
-          </SplitPanels>
-        </HotKeysWrapper>
-      )}
+      <HotKeysWrapper handlers={hotkeys}>
+        <SplitPanels minSize={200} onResize={onResize} splitType="horizontal">
+          {explorers.panel0 && (
+            <ErrorBoundary>
+              <Explorer
+                closable={explorers.panel1 !== undefined}
+                directoryManager={directoryManager}
+                explorerManager={explorers.panel0.manager}
+                onClose={onClose(0)}
+                onCopy={onCopy(0)}
+                onDirectoryChange={addPath}
+                onMove={onMove(0)}
+                onPreview={props.onPreview}
+                openInTerminal={props.openInTerminal}
+              />
+            </ErrorBoundary>
+          )}
+          {explorers.panel1 && (
+            <ErrorBoundary>
+              <Explorer
+                closable={explorers.panel0 !== undefined}
+                directoryManager={directoryManager}
+                explorerManager={explorers.panel1.manager}
+                onClose={onClose(1)}
+                onCopy={onCopy(1)}
+                onDirectoryChange={addPath}
+                onMove={onMove(1)}
+                onPreview={props.onPreview}
+                openInTerminal={props.openInTerminal}
+              />
+            </ErrorBoundary>
+          )}
+        </SplitPanels>
+      </HotKeysWrapper>
+
       <InputModal
         initialValue={inputModalState.inputValue}
         isOpened={inputModalState.isShown}

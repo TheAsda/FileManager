@@ -37,8 +37,6 @@ interface ExplorerProps extends HOHandlers {
   openInTerminal?: (path: string) => void;
   onDirectoryChange?: (path: string) => void;
   focused?: boolean;
-  settings: Settings;
-  setSettings: (settings: Settings) => void;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
@@ -156,10 +154,10 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   toggleAutoPreview() {
-    this.props.setSettings({
-      ...this.props.settings,
-      autoPreview: !this.props.settings.autoPreview,
-    });
+    // this.props.setSettings({
+    //   ...this.props.settings,
+    //   autoPreview: !this.props.settings.autoPreview,
+    // });
   }
 
   @autobind
@@ -182,13 +180,13 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     const newIndex = clamp(index, 0, this.state.directoryState.length - 1);
     const newSelectedItem = this.state.directoryState[newIndex];
 
-    if (
-      !this.props.settings?.layout?.preview.hidden &&
-      this.props.settings.autoPreview &&
-      newSelectedItem.attributes.directory === false
-    ) {
-      this.props.onPreview && this.props.onPreview(newSelectedItem);
-    }
+    // if (
+    //   !this.props.settings?.layout?.preview.hidden &&
+    //   this.props.settings.autoPreview &&
+    //   newSelectedItem.attributes.directory === false
+    // ) {
+    //   this.props.onPreview && this.props.onPreview(newSelectedItem);
+    // }
 
     this.setState((state) => ({
       ...state,

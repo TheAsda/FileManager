@@ -1,11 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  useManagers,
-  useCommands,
-  useTheme,
-  CommandsWrapper,
-  useKeyMap,
-} from '@fm/hooks';
+import { useManagers, useCommands, useTheme, CommandsWrapper, useKeyMap } from '@fm/hooks';
 import { noop, map, reject, toPairs, reduce, merge } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
@@ -27,6 +21,7 @@ import { store, changeTerminalDirectory, setSectionsSize, setPreviewItem } from 
 const Window = () => {
   const { getIdentityManager, directoryManager } = useManagers();
   const state = useStore(store);
+  console.log('Window -> state', state);
   const { commands } = useCommands();
   const { keymap } = useKeyMap();
 
@@ -239,18 +234,13 @@ const Window = () => {
         <HotKeysWrapper handlers={hotkeys}>
           <div className="window">
             <CommandsWrapper commands={localCommands} scope="window">
-              <SplitPanels minSize={200} splitType="vertical" onResize={onResize}>
+              <SplitPanels minSize={200} onResize={onResize} splitType="vertical">
                 {!state.explorers.hidden && (
                   <ExplorerPanels onPreview={previewHandler} openInTerminal={openInTerminal} />
                 )}
                 {!state.preview.hidden &&
                   (({ width }) => {
-                    return (
-                      <PreviewPanel
-                        onHide={togglePreview}
-                        width={width}
-                      />
-                    );
+                    return <PreviewPanel onHide={togglePreview} width={width} />;
                   })}
                 {!state.terminals.hidden && (
                   <TerminalPanels

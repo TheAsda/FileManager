@@ -10,9 +10,4 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-render(
-  <SettingsProvider>
-    <App />
-  </SettingsProvider>,
-  document.getElementById('root')
-);
+render(<App />, document.getElementById('root'));

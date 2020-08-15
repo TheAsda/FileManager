@@ -3,8 +3,16 @@ import { clone, fill, isArray, reduce, times, map, compact, isEqual, isFunction 
 import { Resizer } from './Resizer';
 import { SplitPanel } from './SplitPanel';
 import { SplitType } from './splitType';
-import './style.css';
 import autobind from 'autobind-decorator';
+import styled from 'styled-components';
+
+const Container = styled.div<{ type: SplitType }>`
+  display: flex;
+  flex-direction: ${(props) => (props.type === 'horizontal' ? 'column' : 'row')};
+  flex-wrap: nowrap;
+  width: 100%;
+  height: 100%;
+`;
 
 interface SplitPanelsProps {
   minSize?: number | number[];
@@ -40,7 +48,7 @@ class SplitPanels extends Component<SplitPanelsProps, SplitPanelsState> {
     const children = isArray(props.children) ? props.children : [props.children];
 
     console.log('SplitPanels -> constructor -> props.initialSizes', props.initialSizes);
-    // TODO: check initialSizes 
+    // TODO: check initialSizes
     this.state = {
       sizes: props.initialSizes ?? [],
       active: false,
@@ -111,6 +119,8 @@ class SplitPanels extends Component<SplitPanelsProps, SplitPanelsState> {
         } else {
           totalLength = containerInfo.height;
         }
+
+        totalLength -= (this.children.length - 1) * 4;
 
         const sizes = times(this.children.length, () => totalLength / this.children.length);
 
@@ -244,18 +254,8 @@ class SplitPanels extends Component<SplitPanelsProps, SplitPanelsState> {
   }
 
   render() {
-    const classes = ['split-panels'];
-
-    if (this.props.splitType === 'horizontal') {
-      classes.push('split-panels--horizontal');
-    }
-
-    if (this.props.className) {
-      classes.push(this.props.className);
-    }
-
     return (
-      <div className={classes.join(' ')} ref={(ref) => (this.containerRef = ref)}>
+      <Container ref={(ref) => (this.containerRef = ref)} type={this.props.splitType}>
         {reduce<ReactNode, ReactNode[]>(
           this.children,
           (acc, cur, i) => {
@@ -280,7 +280,7 @@ class SplitPanels extends Component<SplitPanelsProps, SplitPanelsState> {
           },
           []
         )}
-      </div>
+      </Container>
     );
   }
 }

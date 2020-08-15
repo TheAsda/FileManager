@@ -1,5 +1,12 @@
 import React, { PropsWithChildren } from 'react';
 import { SplitType } from '../splitType';
+import styled from 'styled-components';
+
+const Panel = styled.div<{ size: number; type: SplitType }>`
+  position: relative;
+  height: ${(props) => (props.type === 'horizontal' ? `${props.size}px` : '100%')};
+  width: ${(props) => (props.type === 'horizontal' ? '100%' : `${props.size}px`)};
+`;
 
 interface SplitPanelProps {
   type: SplitType;
@@ -7,18 +14,10 @@ interface SplitPanelProps {
 }
 
 const SplitPanel = (props: PropsWithChildren<SplitPanelProps>) => {
-  let style;
-
-  if (props.type === 'horizontal') {
-    style = { height: `${props.size}px` };
-  } else {
-    style = { width: `${props.size}px` };
-  }
-
   return (
-    <div className="split-panels__panel" style={style}>
+    <Panel size={props.size} type={props.type}>
       {props.children}
-    </div>
+    </Panel>
   );
 };
 
