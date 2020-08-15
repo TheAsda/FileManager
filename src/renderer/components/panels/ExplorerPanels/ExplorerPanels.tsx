@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { map, noop, size } from 'lodash';
+import { noop } from 'lodash';
 import { FileInfo } from '@fm/common';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useManagers, usePaths, useSettings } from '@fm/hooks';
+import { useManagers, usePaths } from '@fm/hooks';
 import {
   SplitPanels,
   ErrorBoundary,
@@ -13,16 +13,7 @@ import {
   InputModal,
   HotKeysWrapper,
 } from '@fm/components';
-import {
-  changeExplorerDirectory,
-  closeExplorer,
-  openExplorer,
-  setExplorerSize,
-  ApplicationStore,
-  useStoreState,
-} from 'renderer/Store';
-import { useStore } from 'effector-react';
-import { Store } from 'effector';
+import { useStoreState, storeApi } from 'renderer/store';
 
 interface ExplorerPanelsProps extends HOHandlers {
   onPreview?: (item: FileInfo) => void;
@@ -34,7 +25,6 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
   const { explorers } = useStoreState();
   console.log('ExplorerPanels -> explorers', explorers);
   const { getIdentityManager, directoryManager } = useManagers();
-  const { settings, setValue } = useSettings();
   const { paths, addPath } = usePaths();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
@@ -86,7 +76,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
   };
 
   const onClose = (index: number) => () => {
-    closeExplorer(index);
+    storeApi.closeExplorer(index);
     // dispatch({
     //   type: 'destroy',
     //   index,
@@ -94,7 +84,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
   };
 
   const splitExplorer = () => {
-    openExplorer({});
+    storeApi.openExplorer({});
     // dispatch({
     //   type: 'spawn',
     // });
@@ -154,7 +144,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
     //   data[focus.index].setPath(path);
     // }
     if (isGotoPaletteOpen.panelIndex) {
-      changeExplorerDirectory({
+      storeApi.changeExplorerDirectory({
         index: isGotoPaletteOpen.panelIndex,
         path,
       });
@@ -164,25 +154,25 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
 
   const onResize = (value: number[]) => {
     if (explorers.panel0 && explorers.panel1) {
-      setExplorerSize({
+      storeApi.setExplorerSize({
         height: value[0],
         index: 0,
       });
-      setExplorerSize({
+      storeApi.setExplorerSize({
         height: value[1],
         index: 1,
       });
       return;
     }
     if (!explorers.panel0) {
-      setExplorerSize({
+      storeApi.setExplorerSize({
         height: value[0],
         index: 1,
       });
       return;
     }
     if (!explorers.panel1) {
-      setExplorerSize({
+      storeApi.setExplorerSize({
         height: value[0],
         index: 0,
       });

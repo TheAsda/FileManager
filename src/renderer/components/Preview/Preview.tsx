@@ -7,7 +7,7 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { extname } from 'path';
 import { HOHandlers, HotKeysWrapper } from '@fm/components';
 import { useStore } from 'effector-react';
-import { useStoreState } from 'renderer/Store';
+import { useStoreState } from 'renderer/store/store';
 
 interface PreviewProps extends HOHandlers {
   width?: number;

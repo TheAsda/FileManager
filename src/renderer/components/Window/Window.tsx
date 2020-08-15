@@ -15,12 +15,11 @@ import {
 } from '@fm/components';
 import { remote, app } from 'electron';
 import { GoToPalette } from '../modals';
-import { useStore } from 'effector-react';
-import { store, changeTerminalDirectory, setSectionsSize, setPreviewItem } from 'renderer/Store';
+import { useStoreState, storeApi, setSectionsSize } from 'renderer/store';
 
 const Window = () => {
   const { getIdentityManager, directoryManager } = useManagers();
-  const state = useStore(store);
+  const state = useStoreState();
   console.log('Window -> state', state);
   const { commands } = useCommands();
   const { keymap } = useKeyMap();
@@ -93,7 +92,7 @@ const Window = () => {
     setTerminalSelect({
       isShown: true,
       onSelect: (index: number) => {
-        changeTerminalDirectory({
+        storeApi.changeTerminalDirectory({
           index,
           path,
         });
@@ -104,7 +103,7 @@ const Window = () => {
   };
 
   const previewHandler = (item: FileInfo) => {
-    setPreviewItem(item);
+    storeApi.setPreviewItem(item);
   };
   const togglePreview = () => {
     togglePreview();

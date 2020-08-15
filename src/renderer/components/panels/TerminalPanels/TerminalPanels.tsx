@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { map } from 'lodash';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useManagers, useTheme, usePaths } from '@fm/hooks';
@@ -12,8 +11,7 @@ import {
   Terminal,
   HotKeysWrapper,
 } from '@fm/components';
-import { useStore } from 'effector-react';
-import { store, setTerminalSize, closeTerminal, openTerminal } from 'renderer/Store';
+import { useStoreState, storeApi } from 'renderer/store';
 
 interface TerminalPanelsProps extends HOHandlers {
   selectModeActivated?: boolean;
@@ -23,7 +21,7 @@ interface TerminalPanelsProps extends HOHandlers {
 
 const TerminalPanels = (props: TerminalPanelsProps) => {
   // const { terminals, closeTerminal, openTerminal } = useTerminals();
-  const { terminals } = useStore(store);
+  const { terminals } = useStoreState();
   const { getIdentityManager } = useManagers();
   const { theme } = useTheme();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
@@ -51,12 +49,12 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   };
 
   const onClose = (index: number) => () => {
-    closeTerminal(index);
+    storeApi.closeTerminal(index);
     // closeTerminal(terminals[index].getId());
   };
 
   const splitTerminal = () => {
-    openTerminal({});
+    storeApi.openTerminal({});
     // openTerminal();
   };
 
@@ -70,25 +68,25 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
 
   const onResize = (value: number[]) => {
     if (terminals.panel0 && terminals.panel1) {
-      setTerminalSize({
+      storeApi.setTerminalSize({
         height: value[0],
         index: 0,
       });
-      setTerminalSize({
+      storeApi.setTerminalSize({
         height: value[1],
         index: 1,
       });
       return;
     }
     if (!terminals.panel0) {
-      setTerminalSize({
+      storeApi.setTerminalSize({
         height: value[0],
         index: 1,
       });
       return;
     }
     if (!terminals.panel1) {
-      setTerminalSize({
+      storeApi.setTerminalSize({
         height: value[0],
         index: 0,
       });
@@ -106,7 +104,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
     >
       {theme && (
         <HotKeysWrapper handlers={hotkeys}>
-          <SplitPanels className="terminal-panels" splitType="horizontal" onResize={onResize}>
+          <SplitPanels className="terminal-panels" onResize={onResize} splitType="horizontal">
             {terminals.panel0 && (
               <ErrorBoundary>
                 <Terminal

@@ -44,10 +44,10 @@ const createWindow = () => {
   mainWindow = new Window({
     file: `file://${__dirname}/index.html`,
     openDevTools: isDev(),
-    frame: false,
+    // frame: false,
   });
 
-  mainWindow.setMenu(null);
+  // mainWindow.setMenu(null);
 
   mainWindow.on('closed', () => {
     console.log('close');
