@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import { useManagers, useCommands, useTheme, CommandsWrapper, useKeyMap } from '@fm/hooks';
-import { noop, map, reject, toPairs, reduce, merge } from 'lodash';
+import React, { useState } from 'react';
+import { useCommands, useTheme, CommandsWrapper, useKeyMap } from '@fm/hooks';
+import { noop, map, toPairs, reduce, merge } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
 import {
@@ -13,64 +13,35 @@ import {
   CSSApplicator,
   HotKeysWrapper,
 } from '@fm/components';
-import { remote, app } from 'electron';
-import { GoToPalette } from '../modals';
+import { remote } from 'electron';
 import { useStoreState, storeApi, setSectionsSize } from 'renderer/store';
+import { ThemeSelector } from '../modals/ThemeSelector';
 
 const Window = () => {
-  const { getIdentityManager, directoryManager } = useManagers();
   const state = useStoreState();
   console.log('Window -> state', state);
   const { commands } = useCommands();
   const { keymap } = useKeyMap();
 
-  const themeSelectorManager = useMemo(() => {
-    return getIdentityManager();
-  }, []);
   const { resetTheme, theme, setTheme } = useTheme();
-  const [themeSelectorState, setThemeSelectorState] = useState<{
-    isShown: boolean;
-    options: string[];
-  }>({
-    isShown: false,
-    options: [],
-  });
-  const openThemeSelector = async () => {
-    const options = map(
-      reject(
-        await directoryManager.listDirectory((app || remote.app).getPath('userData') + '/themes'),
-        ['name', '..']
-      ),
-      (item) => item.name.substr(0, item.name.lastIndexOf('.'))
-    );
+  const [isThemeSelectorOpened, setThemeSelectorState] = useState<boolean>(false);
 
-    setThemeSelectorState({
-      isShown: true,
-      options,
-    });
+  const openThemeSelector = () => {
+    console.log('openThemeSelector -> openThemeSelector');
+    setThemeSelectorState(true);
   };
   const closeThemeSelector = () => {
-    setThemeSelectorState({
-      isShown: false,
-      options: [],
-    });
-  };
-  const onThemeSelect = (themeName: string) => {
-    setTheme(themeName);
-    closeThemeSelector();
+    console.log('closeThemeSelector -> setThemeSelectorState');
+    setThemeSelectorState(false);
   };
 
-  const commandPaletteManager = useMemo(() => {
-    return getIdentityManager();
-  }, []);
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
   const openCommandPalette = () => {
     setCommandPalette(true);
   };
+
   const closeCommandPalette = () => {
     setCommandPalette(false);
-
-    closeThemeSelector();
   };
 
   // const { terminals } = useTerminals();
@@ -226,6 +197,7 @@ const Window = () => {
 
     console.error('WTF Resizing');
   };
+  console.log('Window -> themeSelectorState', isThemeSelectorOpened);
 
   return (
     <HotKeysWrapper keyMap={keymap}>
@@ -270,16 +242,9 @@ const Window = () => {
               {}
             )}
             isOpened={isCommandPaletteOpen}
-            manager={commandPaletteManager}
             onClose={closeCommandPalette}
           />
-          <GoToPalette
-            isOpened={themeSelectorState?.isShown}
-            manager={themeSelectorManager}
-            onClose={closeThemeSelector}
-            onSelect={onThemeSelect}
-            options={themeSelectorState.options}
-          />
+          <ThemeSelector isOpened={isThemeSelectorOpened} onClose={closeThemeSelector} />
           <Popup />
         </HotKeysWrapper>
       </CSSApplicator>

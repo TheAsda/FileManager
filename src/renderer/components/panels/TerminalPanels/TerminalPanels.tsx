@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useManagers, useTheme, usePaths } from '@fm/hooks';
+import { useTheme, usePaths } from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
 import {
   HOHandlers,
@@ -20,9 +20,7 @@ interface TerminalPanelsProps extends HOHandlers {
 }
 
 const TerminalPanels = (props: TerminalPanelsProps) => {
-  // const { terminals, closeTerminal, openTerminal } = useTerminals();
   const { terminals } = useStoreState();
-  const { getIdentityManager } = useManagers();
   const { theme } = useTheme();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
@@ -30,9 +28,6 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   }>({
     isShown: false,
   });
-  const gotoManager = useMemo(() => {
-    return getIdentityManager();
-  }, []);
   const { paths } = usePaths();
 
   const closeGotoPalette = () => {
@@ -166,7 +161,6 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
       )}
       <GoToPalette
         isOpened={isGotoPaletteOpen.isShown}
-        manager={gotoManager}
         onClose={closeGotoPalette}
         onSelect={onGotoSelect}
         options={paths}

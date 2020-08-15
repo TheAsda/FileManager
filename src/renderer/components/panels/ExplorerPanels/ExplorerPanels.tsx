@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { noop } from 'lodash';
 import { FileInfo } from '@fm/common';
 import './style.css';
@@ -21,10 +21,8 @@ interface ExplorerPanelsProps extends HOHandlers {
 }
 
 const ExplorerPanels = (props: ExplorerPanelsProps) => {
-  // const { data, dispatch } = useExplorers();
   const { explorers } = useStoreState();
-  console.log('ExplorerPanels -> explorers', explorers);
-  const { getIdentityManager, directoryManager } = useManagers();
+  const { directoryManager } = useManagers();
   const { paths, addPath } = usePaths();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
@@ -32,9 +30,6 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
   }>({
     isShown: false,
   });
-  const gotoManager = useMemo(() => {
-    return getIdentityManager();
-  }, []);
 
   const [inputModalState, setInputModalState] = useState<{
     isShown: boolean;
@@ -233,7 +228,6 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
       />
       <GoToPalette
         isOpened={isGotoPaletteOpen.isShown}
-        manager={gotoManager}
         onClose={closeGotoPalette}
         onSelect={onGotoSelect}
         options={paths}

@@ -1,9 +1,8 @@
 import React from 'react';
 import { keys } from 'lodash';
 import { Commands, SelectPalette } from '../SelectPalette';
-import { HOHandlers } from '@fm/components';
 
-interface CommandPaletteProps extends HOHandlers {
+interface CommandPaletteProps {
   isOpened: boolean;
   onClose: () => void;
   commands: Commands;
@@ -20,7 +19,6 @@ const CommandPalette = (props: CommandPaletteProps) => {
   return (
     <SelectPalette
       isOpened={props.isOpened}
-      manager={props.manager}
       onClose={props.onClose}
       onSelect={onSelect}
       options={keys(props.commands)}
