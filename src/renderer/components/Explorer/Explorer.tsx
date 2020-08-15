@@ -1,4 +1,4 @@
-import { FileInfo, IDirectoryManager, IExplorerManager, Settings } from '@fm/common';
+import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
 import React, { Component } from 'react';
 import { clamp, filter, concat, sortBy } from 'lodash';
 import { DetailView } from './DetailView';
@@ -10,7 +10,6 @@ import { Commands } from '../modals';
 import { ExplorerCommands } from './explorerCommands';
 import { normalizePath, openWithDefaultApp } from 'filemancore';
 import { join } from 'path';
-import { HOHandlers } from '../common/HOHandlers';
 import { HotKeysWrapper } from '..';
 import { CommandsWrapper } from '@fm/hooks';
 
@@ -21,22 +20,21 @@ interface ExplorerState {
   directoryState: FileInfo[];
   editableIndex?: number;
   editType?: 'create' | 'rename';
-  focused: boolean;
 }
 
-interface ExplorerProps extends HOHandlers {
+interface ExplorerProps {
   directoryManager: IDirectoryManager;
   explorerManager: IExplorerManager;
   onPreview?: (item: FileInfo) => void;
   onClose?: () => void;
   closable: boolean;
-  onFocus?: () => void;
-  onBlur?: (options: Commands) => void;
   onMove?: (files: FileInfo[]) => void;
   onCopy?: (files: FileInfo[]) => void;
   openInTerminal?: (path: string) => void;
   onDirectoryChange?: (path: string) => void;
-  focused?: boolean;
+  autoPreview: boolean;
+  showHidden: boolean;
+  index: number;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
@@ -51,7 +49,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       viewType: 'detail',
       directoryState: [],
       currentPath: props.explorerManager.getPath(),
-      focused: props.focused ?? false,
     };
 
     this.handlers = {
@@ -79,26 +76,15 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       'Open in terminal': this.openInTerminal,
       'Copy item': this.copy,
       'Move item': this.move,
-      'Toggle auto preview': this.toggleAutoPreview,
       'Open item': this.openItem,
     };
   }
 
   componentDidMount() {
     this.onDirectoryChange();
-
-    if (this.props.focused) {
-      this.onFocus();
-    }
   }
 
-  componentDidUpdate(prevProps: ExplorerProps) {
-    if (!prevProps.focused && this.props.focused) {
-      this.onFocus();
-    } else if (prevProps.focused && !this.props.focused) {
-      this.onBlur();
-    }
-
+  componentDidUpdate() {
     if (this.props.explorerManager.getPath() !== this.state.currentPath) {
       this.onDirectoryChange();
     }
@@ -153,14 +139,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   }
 
   @autobind
-  toggleAutoPreview() {
-    // this.props.setSettings({
-    //   ...this.props.settings,
-    //   autoPreview: !this.props.settings.autoPreview,
-    // });
-  }
-
-  @autobind
   selectNextItem(keyEvent?: KeyboardEvent | undefined) {
     keyEvent?.preventDefault();
     this.selectItem(this.state.selectedIndex + 1);
@@ -180,13 +158,9 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     const newIndex = clamp(index, 0, this.state.directoryState.length - 1);
     const newSelectedItem = this.state.directoryState[newIndex];
 
-    // if (
-    //   !this.props.settings?.layout?.preview.hidden &&
-    //   this.props.settings.autoPreview &&
-    //   newSelectedItem.attributes.directory === false
-    // ) {
-    //   this.props.onPreview && this.props.onPreview(newSelectedItem);
-    // }
+    if (this.props.autoPreview && newSelectedItem.attributes.directory === false) {
+      this.props.onPreview && this.props.onPreview(newSelectedItem);
+    }
 
     this.setState((state) => ({
       ...state,
@@ -365,18 +339,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   }
 
   @autobind
-  onBlur() {
-    this.props.onBlur && this.props.onBlur(this.options);
-    this.setState((state) => ({ ...state, focused: false }));
-  }
-
-  @autobind
-  onFocus() {
-    this.props.onFocus && this.props.onFocus();
-    this.setState((state) => ({ ...state, focused: true }));
-  }
-
-  @autobind
   onClick(index: number) {
     if (this.state.selectedIndex === index) {
       this.activateItem();
@@ -387,17 +349,14 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   render() {
     return (
-      <CommandsWrapper
-        commands={this.options}
-        scope={`explorer: ${this.props.explorerManager.getId()}`}
-      >
+      <CommandsWrapper commands={this.options} scope={`explorer ${this.props.index}`}>
         <PathWrapper
           closable={this.props.closable}
           onClose={this.onClose}
           path={this.props.explorerManager.getPath()}
         >
           <HotKeysWrapper handlers={this.handlers}>
-            <div className="explorer" onClick={this.onFocus}>
+            <div className="explorer">
               {this.state.viewType === 'detail' ? (
                 <DetailView
                   data={this.state.directoryState}

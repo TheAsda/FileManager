@@ -23,7 +23,7 @@ const Window = () => {
   const { commands } = useCommands();
   const { keymap } = useKeyMap();
 
-  const { resetTheme, theme, setTheme } = useTheme();
+  const { resetTheme, theme } = useTheme();
   const [isThemeSelectorOpened, setThemeSelectorState] = useState<boolean>(false);
 
   const openThemeSelector = () => {
@@ -77,7 +77,7 @@ const Window = () => {
     storeApi.setPreviewItem(item);
   };
   const togglePreview = () => {
-    togglePreview();
+    storeApi.togglePreview();
   };
 
   const hotkeys = {

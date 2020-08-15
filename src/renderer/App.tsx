@@ -1,8 +1,8 @@
 import React from 'react';
 import { Window } from './components';
 import { CommandsProvider, ThemeProvider, KeyMapProvider } from '@fm/hooks';
-import './style.css';
 import { Titlebar } from './components/Titlebar';
+import './style.css';
 
 const App = () => {
   return (

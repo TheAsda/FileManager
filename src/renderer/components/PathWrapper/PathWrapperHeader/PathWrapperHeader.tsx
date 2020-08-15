@@ -1,4 +1,27 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const Header = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Path = styled.div`
+  white-space: nowrap;
+  overflow: auto;
+  margin: 0 0.5rem;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const Button = styled.button`
+  border: none;
+  padding: 5px 10px;
+  height: 100%;
+`;
 
 interface DefaultPanelHeaderProps {
   closable?: boolean;
@@ -8,14 +31,10 @@ interface DefaultPanelHeaderProps {
 
 const PathWrapperHeader = (props: DefaultPanelHeaderProps) => {
   return (
-    <div className="path-wrapper__header">
-      <div className="path-wrapper__path">{props.path}</div>
-      {props.closable && (
-        <button className="path-wrapper__close" onClick={props.onClose}>
-          Close
-        </button>
-      )}
-    </div>
+    <Header>
+      <Path>{props.path}</Path>
+      {props.closable && <Button onClick={props.onClose}>Close</Button>}
+    </Header>
   );
 };
 

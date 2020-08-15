@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SelectPalette } from '../SelectPalette';
 import { remote } from 'electron';
-import { useManagers } from '@fm/hooks';
+import { useDirectoryManager } from '@fm/hooks';
 import { reject, filter, endsWith, map, noop } from 'lodash';
 
 const themesFolderPath = remote.app.getPath('userData') + '/themes';
@@ -13,7 +13,7 @@ interface ThemeSelectorProps {
 
 const ThemeSelector = (props: ThemeSelectorProps) => {
   const [state, setState] = useState<string[]>([]);
-  const { directoryManager } = useManagers();
+  const { directoryManager } = useDirectoryManager();
 
   useEffect(() => {
     if (props.isOpened) {

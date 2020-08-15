@@ -3,17 +3,10 @@ import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { useTheme, usePaths } from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
-import {
-  HOHandlers,
-  ErrorBoundary,
-  SplitPanels,
-  GoToPalette,
-  Terminal,
-  HotKeysWrapper,
-} from '@fm/components';
+import { ErrorBoundary, SplitPanels, GoToPalette, Terminal, HotKeysWrapper } from '@fm/components';
 import { useStoreState, storeApi } from 'renderer/store';
 
-interface TerminalPanelsProps extends HOHandlers {
+interface TerminalPanelsProps {
   selectModeActivated?: boolean;
   onSelect: (index: number) => void;
   onSelectClose: () => void;
@@ -104,6 +97,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
               <ErrorBoundary>
                 <Terminal
                   closable={terminals.panel1 !== undefined}
+                  index={1}
                   onClose={onClose(0)}
                   onExit={onClose(0)}
                   terminalManager={terminals.panel0.manager}
@@ -122,6 +116,7 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
               <ErrorBoundary>
                 <Terminal
                   closable={terminals.panel0 !== undefined}
+                  index={2}
                   onClose={onClose(1)}
                   onExit={onClose(1)}
                   terminalManager={terminals.panel1.manager}

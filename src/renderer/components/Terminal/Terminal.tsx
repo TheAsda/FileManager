@@ -6,32 +6,24 @@ import 'xterm/css/xterm.css';
 import './style.css';
 import autobind from 'autobind-decorator';
 import { PathWrapper } from '../PathWrapper';
-import { HOHandlers } from '../common/HOHandlers';
 import { noop } from 'lodash';
 import { TerminalCommands } from './terminalCommands';
 import ResizeObserver from 'rc-resize-observer';
 import { HotKeysWrapper } from '..';
 import { CommandsWrapper } from '@fm/hooks';
 
-interface TerminalProps extends HOHandlers {
+interface TerminalProps {
   terminalManager: ITerminalManager;
   initialDirectory?: string;
   onExit?: (exitCode: number) => void;
   onClose?: () => void;
   closable: boolean;
-  onFocus?: () => void;
-  onBlur?: () => void;
-  focused?: boolean;
   onReload?: () => void;
   theme: Theme;
+  index: number;
 }
 
-class Terminal extends Component<
-  TerminalProps,
-  {
-    path: string;
-  }
-> {
+class Terminal extends Component<TerminalProps, { path: string }> {
   private containerRef: RefObject<HTMLDivElement>;
   private terminal: XTerm;
   private TerminalManager: ITerminalManager;
@@ -47,8 +39,8 @@ class Terminal extends Component<
     this.terminal = new XTerm({
       convertEol: true,
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      fontFamily: `${props.theme['terminal-font-family']}, 'Consolas'`,
-      fontSize: props.theme['terminal-font-size'],
+      fontFamily: `${props.theme['terminal.fontFamily']}, 'Consolas'`,
+      fontSize: props.theme['terminal.fontSize'],
       rendererType: 'dom', // default is canvas
       theme: this.mapTheme(props.theme),
     });
@@ -92,44 +84,36 @@ class Terminal extends Component<
   }
 
   componentDidUpdate(prevProps: TerminalProps) {
-    if (!prevProps.focused && this.props.focused) {
-      this.onFocus();
-      this.containerRef.current?.focus();
-      this.terminal.focus();
-    } else if (prevProps.focused && !this.props.focused) {
-      this.onBlur();
-    }
-
     if (prevProps.theme !== this.props.theme) {
       this.terminal.setOption('theme', this.mapTheme(this.props.theme));
-      this.terminal.setOption('fontFamily', this.props.theme['terminal-font-family']);
-      this.terminal.setOption('fontSize', this.props.theme['terminal-font-size']);
+      this.terminal.setOption('fontFamily', this.props.theme['terminal.fontFamily']);
+      this.terminal.setOption('fontSize', this.props.theme['terminal.fontSize']);
     }
   }
 
   private mapTheme(theme: Theme) {
     return {
-      background: theme['terminal-background-color'],
-      black: theme['terminal-black-color'],
-      blue: theme['terminal-blue-color'],
-      brightBlack: theme['terminal-brightBlack-color'],
-      brightBlue: theme['terminal-brightBlue-color'],
-      brightCyan: theme['terminal-brightCyan-color'],
-      brightGreen: theme['terminal-brightGreen-color'],
-      brightMagenta: theme['terminal-brightMagenta-color'],
-      brightRed: theme['terminal-brightRed-color'],
-      brightWhite: theme['terminal-brightWhite-color'],
-      brightYellow: theme['terminal-brightYellow-color'],
-      cursor: theme['terminal-cursor-color'],
-      cursorAccent: theme['terminal-cursorAccent-color'],
-      cyan: theme['terminal-cyan-color'],
-      foreground: theme['terminal-foreground-color'],
-      green: theme['terminal-green-color'],
-      magenta: theme['terminal-magenta-color'],
-      red: theme['terminal-red-color'],
-      selection: theme['terminal-selection-color'],
-      white: theme['terminal-white-color'],
-      yellow: theme['terminal-yellow-color'],
+      background: theme['terminal.backgroundColor'],
+      black: theme['terminal.blackColor'],
+      blue: theme['terminal.blueColor'],
+      brightBlack: theme['terminal.brightBlackColor'],
+      brightBlue: theme['terminal.brightBlueColor'],
+      brightCyan: theme['terminal.brightCyanColor'],
+      brightGreen: theme['terminal.brightGreenColor'],
+      brightMagenta: theme['terminal.brightMagentaColor'],
+      brightRed: theme['terminal.brightRedColor'],
+      brightWhite: theme['terminal.brightWhiteColor'],
+      brightYellow: theme['terminal.brightYellowColor'],
+      cursor: theme['terminal.cursorColor'],
+      cursorAccent: theme['terminal.cursorAccentColor'],
+      cyan: theme['terminal.cyanColor'],
+      foreground: theme['terminal.foregroundColor'],
+      green: theme['terminal.greenColor'],
+      magenta: theme['terminal.magentaColor'],
+      red: theme['terminal.redColor'],
+      selection: theme['terminal.selectionColor'],
+      white: theme['terminal.whiteColor'],
+      yellow: theme['terminal.yellowColor'],
     };
   }
 
@@ -142,20 +126,9 @@ class Terminal extends Component<
     window.removeEventListener('resize', this.resize);
   }
 
-  @autobind
-  onFocus() {
-    this.props.onFocus && this.props.onFocus();
-  }
-
-  @autobind
-  onBlur() {
-    this.terminal.blur();
-    this.props.onBlur && this.props.onBlur();
-  }
-
   render() {
     return (
-      <CommandsWrapper commands={this.options} scope={`terminal ${this.TerminalManager.getId()}`}>
+      <CommandsWrapper commands={this.options} scope={`terminal ${this.props.index}`}>
         <HotKeysWrapper handlers={this.handlers}>
           <PathWrapper
             closable={this.props.closable}
