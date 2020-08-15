@@ -1,35 +1,25 @@
 import { ipcMain } from 'electron';
 import { ISettingsStore } from '../interfaces/ISettingsStore';
-import { ThemesManager } from '../stores/SettingsStore';
+import { SettingsStore } from '../stores/SettingsStore';
 import { Channels } from '../../common/Channels';
-import { forEach } from 'lodash';
+import { Settings } from '@fm/common';
 
 class SettingsManager {
   settingsStore: ISettingsStore;
 
   constructor() {
-    this.settingsStore = new ThemesManager();
+    this.settingsStore = new SettingsStore();
 
     ipcMain.on(Channels.GET_SETTINGS, (event) => {
       event.reply(Channels.SETTINGS, this.settingsStore.getAll());
     });
 
-    ipcMain.on(
-      Channels.SET_SETTINGS,
-      (
-        event,
-        args: {
-          key: string;
-          value: unknown;
-        }[]
-      ) => {
-        forEach(args, (item) => {
-          this.settingsStore.setValue(item.key, item.value);
-        });
+    ipcMain.on(Channels.SET_SETTINGS, (event, args: Settings) => {
+      console.log('SettingsManager -> constructor -> args', args);
+      this.settingsStore.saveSettings(args);
 
-        event.reply(Channels.SETTINGS, this.settingsStore.getAll());
-      }
-    );
+      event.reply(Channels.SETTINGS, this.settingsStore.getAll());
+    });
 
     ipcMain.on(Channels.RESET_SETTINGS, (event) => {
       this.settingsStore.resetSettings();
@@ -39,6 +29,10 @@ class SettingsManager {
 
     ipcMain.on(Channels.OPEN_SETTINGS, () => {
       this.settingsStore.openInEditor();
+    });
+
+    ipcMain.on(Channels.SAVE_SETTINGS, (event, args: Settings) => {
+      this.settingsStore.saveSettings(args);
     });
   }
 }

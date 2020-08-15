@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { app, protocol, ipcMain } from 'electron';
 import { resolve, join } from 'path';
 import { Window } from './Window';
@@ -8,6 +7,9 @@ import { SettingsManager } from './managers/SettingsManager';
 import { ThemesManager } from './managers/ThemesManager';
 import { PathManager } from './managers/PathManager';
 import { KeyMapManager } from './managers/KeyMapManager';
+import { values, isEqual } from 'lodash';
+import { Channels } from '../common/Channels';
+import { ConfirmTypes } from '../common/ConfirmTypes';
 
 const mode = process.env.NODE_ENV || 'production';
 const isDev = () => mode !== 'production';
@@ -47,13 +49,29 @@ const createWindow = () => {
 
   mainWindow.setMenu(null);
 
-  mainWindow.on('closed', () => (mainWindow = null));
+  mainWindow.on('closed', () => {
+    console.log('close');
+    mainWindow = null;
+  });
 
   registerIconsProtocol();
 };
 
 ipcMain.handle('close-event', () => {
-  app.quit();
+  mainWindow?.webContents.send(Channels.BEFORE_QUIT);
+  // app.quit();
+});
+
+const quitConfirms: string[] = [];
+
+ipcMain.on(Channels.QUIT_CONFIRM, (event, args: string) => {
+  quitConfirms.push(args);
+
+  console.log('quitConfirms', quitConfirms);
+
+  if (isEqual(values(ConfirmTypes), quitConfirms)) {
+    app.quit();
+  }
 });
 
 app.on('browser-window-focus', () => {
@@ -67,6 +85,7 @@ app.on('browser-window-blur', () => {
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
+  console.log('window-all-closed');
   app.quit();
 });
 

@@ -38,7 +38,7 @@ interface ExplorerProps extends HOHandlers {
   onDirectoryChange?: (path: string) => void;
   focused?: boolean;
   settings: Settings;
-  setSettings: (key: string, value: unknown) => void;
+  setSettings: (settings: Settings) => void;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
@@ -156,7 +156,10 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   toggleAutoPreview() {
-    this.props.setSettings('autoPreview', !this.props.settings.autoPreview);
+    this.props.setSettings({
+      ...this.props.settings,
+      autoPreview: !this.props.settings.autoPreview,
+    });
   }
 
   @autobind

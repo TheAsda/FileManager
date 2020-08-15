@@ -1,5 +1,8 @@
 {
   "cSpell.words": [
-    "filemancore"
-  ]
+    "Reaload",
+    "filemancore",
+    "hygen"
+  ],
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

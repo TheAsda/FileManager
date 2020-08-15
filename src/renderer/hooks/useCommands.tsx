@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, PropsWithChildren, useEffect } from 'react';
+import React, { createContext, useState, PropsWithChildren, useEffect } from 'react';
 import { noop, merge } from 'lodash';
 import { Commands } from '@fm/common';
+import { useValidatedContext } from './useValidatedContext';
 
 interface CommandsState {
   [key: string]: Commands;
@@ -46,7 +47,7 @@ const CommandsProvider = ({ children }: PropsWithChildren<unknown>) => {
   );
 };
 
-const useCommands = () => useContext(CommandsContext);
+const useCommands = () => useValidatedContext(CommandsContext);
 
 interface CommandsProps {
   commands: Commands;

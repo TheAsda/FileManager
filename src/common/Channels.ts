@@ -4,6 +4,7 @@ const Channels = {
   RESET_SETTINGS: 'reset-settings',
   SETTINGS: 'settings',
   OPEN_SETTINGS: 'open-settings',
+  SAVE_SETTINGS: 'save-settings',
   THEME: 'theme',
   SET_THEME: 'set-theme',
   RESET_THEME: 'reset-theme',
@@ -15,6 +16,8 @@ const Channels = {
   GET_KEYMAP: 'get-keymap',
   RESET_KEYMAP: 'reset-keymap',
   KEYMAP: 'keymap',
+  BEFORE_QUIT: 'before-quit',
+  QUIT_CONFIRM: 'quit-confirm',
 };
 
 export { Channels };

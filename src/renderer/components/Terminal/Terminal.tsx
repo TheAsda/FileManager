@@ -26,7 +26,12 @@ interface TerminalProps extends HOHandlers {
   theme: Theme;
 }
 
-class Terminal extends Component<TerminalProps> {
+class Terminal extends Component<
+  TerminalProps,
+  {
+    path: string;
+  }
+> {
   private containerRef: RefObject<HTMLDivElement>;
   private terminal: XTerm;
   private TerminalManager: ITerminalManager;
@@ -47,6 +52,7 @@ class Terminal extends Component<TerminalProps> {
       rendererType: 'dom', // default is canvas
       theme: this.mapTheme(props.theme),
     });
+
     this.fitAddon = new FitAddon();
 
     this.handlers = {};
@@ -54,6 +60,10 @@ class Terminal extends Component<TerminalProps> {
     this.options = {
       'Close panel': this.props.onClose ?? noop,
       'Reload terminal': this.props.onReload ?? noop,
+    };
+
+    this.state = {
+      path: this.props.terminalManager.getDirectory(),
     };
   }
 
@@ -68,6 +78,11 @@ class Terminal extends Component<TerminalProps> {
         return true;
       });
       this.TerminalManager.attach(this.terminal, this.props.onExit);
+      this.terminal.onData((data) => {
+        if (/[\r\n]/.test(data)) {
+          this.setState({ path: this.props.terminalManager.getDirectory() });
+        }
+      });
       this.props.initialDirectory &&
         this.TerminalManager.changeDirectory(this.props.initialDirectory);
       this.terminal.onResize((size) => {
@@ -130,27 +145,22 @@ class Terminal extends Component<TerminalProps> {
   @autobind
   onFocus() {
     this.props.onFocus && this.props.onFocus();
-    this.setState((state) => ({ ...state, focused: true }));
   }
 
   @autobind
   onBlur() {
     this.terminal.blur();
     this.props.onBlur && this.props.onBlur();
-    this.setState((state) => ({ ...state, focused: false }));
   }
 
   render() {
     return (
-      <CommandsWrapper
-        commands={this.options}
-        scope={`terminal ${this.TerminalManager.getId()}`}
-      >
+      <CommandsWrapper commands={this.options} scope={`terminal ${this.TerminalManager.getId()}`}>
         <HotKeysWrapper handlers={this.handlers}>
           <PathWrapper
             closable={this.props.closable}
             onClose={this.props.onClose}
-            path={this.props.terminalManager.getDirectory()}
+            path={this.state.path}
           >
             <ResizeObserver onResize={this.resize}>
               <div className="terminal" ref={this.containerRef} />

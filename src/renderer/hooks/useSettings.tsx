@@ -1,11 +1,13 @@
-import React, { createContext, useContext, useState, PropsWithChildren, useEffect } from 'react';
-import { Settings, Channels } from '@fm/common';
+import React, { createContext, useState, PropsWithChildren, useEffect } from 'react';
+import { Settings, Channels, ConfirmTypes } from '@fm/common';
 import { noop } from 'lodash';
 import { ipcRenderer } from 'electron';
+import { useValidatedContext } from './useValidatedContext';
+import { stat } from 'fs';
 
 const SettingsContext = createContext<{
   settings?: Settings;
-  setValue: (key: string, value: unknown) => void;
+  setValue: (settings: Settings) => void;
   resetSettings: () => void;
 }>({
   setValue: noop,
@@ -16,14 +18,31 @@ const SettingsProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [state, setState] = useState<Settings>();
 
   useEffect(() => {
+    // On first render request settings
     ipcRenderer.send(Channels.GET_SETTINGS);
+
+    // Save incoming settings
     ipcRenderer.on(Channels.SETTINGS, (event, args: Settings) => {
       setState(args);
     });
   }, []);
 
-  const setValue = (key: string, value: unknown) => {
-    ipcRenderer.send(Channels.SET_SETTINGS, { key, value });
+  useEffect(() => {
+    // Action before application quits
+    ipcRenderer.on(Channels.BEFORE_QUIT, () => {
+      console.log('SettingsProvider -> state', state);
+      // Save settings
+      ipcRenderer.send(Channels.SET_SETTINGS, state);
+
+      // Confirm saving
+      ipcRenderer.send(Channels.QUIT_CONFIRM, ConfirmTypes.SETTINGS);
+    });
+  }, [state]);
+
+  console.log('SettingsProvider -> state', state);
+  const setValue = (settings: Settings) => {
+    console.log('setValue -> settings', settings);
+    setState(settings);
   };
 
   const resetSettings = () => {
@@ -37,6 +56,6 @@ const SettingsProvider = ({ children }: PropsWithChildren<unknown>) => {
   );
 };
 
-const useSettings = () => useContext(SettingsContext);
+const useSettings = () => useValidatedContext(SettingsContext);
 
 export { SettingsProvider, useSettings };

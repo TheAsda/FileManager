@@ -28,7 +28,6 @@ const Window = () => {
   const { getIdentityManager, directoryManager } = useManagers();
   const { commands } = useCommands();
   const { keymap } = useKeyMap();
-  console.log('Window -> keymap', keymap);
 
   const themeSelectorManager = useMemo(() => {
     return getIdentityManager();
@@ -79,7 +78,7 @@ const Window = () => {
     closeThemeSelector();
   };
 
-  const { data: terminals } = useTerminals();
+  const { terminals } = useTerminals();
   const [terminalSelect, setTerminalSelect] = useState<{
     isShown: boolean;
     onSelect: (index: number) => void;

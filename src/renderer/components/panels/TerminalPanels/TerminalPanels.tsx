@@ -20,7 +20,7 @@ interface TerminalPanelsProps extends HOHandlers {
 }
 
 const TerminalPanels = (props: TerminalPanelsProps) => {
-  const { data, dispatch } = useTerminals();
+  const { terminals, closeTerminal, openTerminal } = useTerminals();
   const { getIdentityManager } = useManagers();
   const { theme } = useTheme();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
@@ -48,16 +48,11 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   };
 
   const onClose = (index: number) => () => {
-    dispatch({
-      type: 'destroy',
-      id: data[index].getId(),
-    });
+    closeTerminal(terminals[index].getId());
   };
 
   const splitTerminal = () => {
-    dispatch({
-      type: 'spawn',
-    });
+    openTerminal();
   };
 
   const hotkeys = {
@@ -65,9 +60,6 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   };
 
   const onGotoSelect = () => {
-    // if (focus.index !== undefined) {
-    //   data[focus.index].changeDirectory(path);
-    // }
     closeGotoPalette();
   };
 
@@ -75,16 +67,16 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
     <DefaultPanel
       // onFocus={() => focusPanel('terminal')}
       onSplit={splitTerminal}
-      splitable={data.length < 2}
+      splitable={terminals.length < 2}
     >
       {theme && (
         <HotKeysWrapper handlers={hotkeys}>
           <SplitPanels className="terminal-panels" splitType="horizontal">
-            {map(data, (item, i) => {
+            {map(terminals, (item, i) => {
               return (
                 <ErrorBoundary key={item.getId()}>
                   <Terminal
-                    closable={data.length > 1}
+                    closable={terminals.length > 1}
                     onClose={onClose(i)}
                     onExit={onClose(i)}
                     terminalManager={item}

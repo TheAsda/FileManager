@@ -22,9 +22,19 @@ const PreviewProvider = ({ children }: PropsWithChildren<unknown>) => {
 
   const toggleHidden = () => {
     const currentState = settings?.layout?.preview.hidden;
-    console.log('toggleHidden -> currentState', currentState);
 
-    setValue('layout.preview.hidden', !currentState);
+    if (settings && settings.layout) {
+      setValue({
+        ...settings,
+        layout: {
+          ...settings.layout,
+          preview: {
+            ...settings?.layout?.preview,
+            hidden: !currentState,
+          },
+        },
+      });
+    }
     setHidden(!currentState);
   };
 

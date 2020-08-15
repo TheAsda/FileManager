@@ -1,72 +1,85 @@
-import React, { createContext, useReducer, useContext, Dispatch, PropsWithChildren } from 'react';
+import React, { createContext, useContext, PropsWithChildren, useState, useEffect } from 'react';
 import { ITerminalManager, TerminalManager } from '@fm/common';
-import { map, isString, noop, filter } from 'lodash';
+import { map, noop, filter } from 'lodash';
 import { TerminalPanelInfo } from 'common/interfaces/Layout';
+import { useSettings } from './useSettings';
 
-type Action = { type: 'spawn'; path?: string } | { type: 'destroy'; id: number };
-
-const getTerminalManager = () => {
-  return new TerminalManager();
-};
-
-const terminalReducer = (state: ITerminalManager[], action: Action) => {
-  switch (action.type) {
-    case 'spawn': {
-      if (state.length === 2) {
-        return state;
-      }
-
-      const manager = getTerminalManager();
-
-      if (isString(action.path)) {
-        manager.changeDirectory(action.path);
-      }
-
-      return [...state, manager];
-    }
-    case 'destroy': {
-      return filter(state, (item) => {
-        if (item.getId() === action.id) {
-          item.destroy();
-          return false;
-        }
-        return true;
-      });
-    }
-  }
-};
-
-const TerminalsContext = createContext<{ data: ITerminalManager[]; dispatch: Dispatch<Action> }>({
-  data: [],
-  dispatch: noop,
+const TerminalsContext = createContext<{
+  terminals: ITerminalManager[];
+  closeTerminal: (id: number) => void;
+  openTerminal: () => void;
+}>({
+  terminals: [],
+  closeTerminal: noop,
+  openTerminal: noop,
 });
 
 interface TerminalsProviderProps {
   initialState?: TerminalPanelInfo[];
 }
 
-const TerminalsProvider = ({
-  children,
-  initialState,
-}: PropsWithChildren<TerminalsProviderProps>) => {
-  const [data, dispatch] = useReducer(terminalReducer, [], () => {
-    if (!initialState || initialState.length === 0) {
-      return [getTerminalManager()];
-    }
+const TerminalsProvider = ({ children }: PropsWithChildren<TerminalsProviderProps>) => {
+  const [state, setState] = useState<ITerminalManager[]>([]);
+  const { settings, setValue } = useSettings();
 
-    return map(initialState, (item) => {
-      const manager = getTerminalManager();
-      if (item.directory) {
-        manager.changeDirectory(item.directory);
-      } else {
-        manager.changeDirectory(process.cwd());
+  useEffect(() => {
+    if (state.length !== settings?.layout?.terminals.panels.length) {
+      if (settings?.layout?.terminals.panels && settings.layout.terminals.panels.length > 0) {
+        setState(
+          map(settings.layout.terminals.panels, (item) => {
+            const manager = new TerminalManager();
+            manager.changeDirectory(item.directory);
+            return manager;
+          })
+        );
       }
-      return manager;
-    });
-  });
+    }
+  }, [settings?.layout?.terminals]);
+
+  const closeTerminal = (id: number) => {
+    setState((state) => filter(state, (item) => item.getId() !== id));
+    setValue
+  };
+
+  const openTerminal = (path?: string) => {
+    if (
+      settings?.layout?.explorers.hidden !== true &&
+      settings?.layout?.explorers.panels &&
+      settings?.layout?.explorers.panels.length < 2
+    ) {
+      const manager = new TerminalManager();
+      if (path) {
+        setValue({
+          ...settings,
+          layout: {
+            ...settings.layout,
+            terminals: {
+              ...settings.layout.terminals,
+              panels: [...settings.layout.explorers.panels, { directory: path }],
+            },
+          },
+        });
+        manager.changeDirectory(path);
+      } else {
+        setValue({
+          ...settings,
+          layout: {
+            ...settings.layout,
+            terminals: {
+              ...settings.layout.terminals,
+              panels: [...settings.layout.explorers.panels, { directory: process.cwd() }],
+            },
+          },
+        });
+      }
+      setState((state) => [...state, manager]);
+    }
+  };
 
   return (
-    <TerminalsContext.Provider value={{ data, dispatch }}>{children}</TerminalsContext.Provider>
+    <TerminalsContext.Provider value={{ terminals: state, closeTerminal, openTerminal }}>
+      {children}
+    </TerminalsContext.Provider>
   );
 };
 

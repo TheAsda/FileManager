@@ -10,6 +10,8 @@ interface ISettingsStore {
   resetSettings(): void;
 
   openInEditor(): void;
+
+  saveSettings(settings: Settings): void;
 }
 
 export { ISettingsStore };

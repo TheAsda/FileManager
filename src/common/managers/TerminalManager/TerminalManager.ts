@@ -3,7 +3,7 @@ import { IPty, spawn } from 'node-pty';
 import { platform, homedir } from 'os';
 import { Terminal } from 'xterm';
 import { IdentityManager } from '../IdentityManager';
-import { constant } from 'lodash';
+import { getRemoteCWD } from 'filemancore';
 
 class TerminalManager extends IdentityManager implements ITerminalManager {
   private process: IPty;
@@ -18,7 +18,7 @@ class TerminalManager extends IdentityManager implements ITerminalManager {
 
   attach(terminal: Terminal, onExit?: (code: number) => void): void {
     if (!this.process) {
-      console.error('Terminal process has not been inicialized');
+      console.error('Terminal process has not been initialized');
       return;
     }
 
@@ -50,7 +50,9 @@ class TerminalManager extends IdentityManager implements ITerminalManager {
   }
 
   // TODO: add getting cwd by pid
-  getDirectory = constant('to\\do\\path');
+  getDirectory(): string {
+    return getRemoteCWD(this.process.pid);
+  }
 }
 
 export { TerminalManager };

@@ -111,7 +111,7 @@ const settingsSchema: Schema<Settings> = {
   },
 };
 
-class ThemesManager implements ISettingsStore {
+class SettingsStore implements ISettingsStore {
   store: Store<Settings>;
 
   constructor() {
@@ -119,6 +119,10 @@ class ThemesManager implements ISettingsStore {
       name: 'settings',
       schema: settingsSchema,
     });
+  }
+
+  saveSettings(settings: Settings): void {
+    this.store.set(settings);
   }
 
   openInEditor(): void {
@@ -142,4 +146,4 @@ class ThemesManager implements ISettingsStore {
   }
 }
 
-export { ThemesManager };
+export { SettingsStore };
