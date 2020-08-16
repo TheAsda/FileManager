@@ -1,6 +1,6 @@
 import React, { useState, createContext, PropsWithChildren, useContext, useEffect } from 'react';
-import { noop } from 'lodash';
-import { Theme, Channels } from '@fm/common';
+import { noop, merge } from 'lodash';
+import { Theme, Channels, DEFAULT_THEME } from '@fm/common';
 import { ipcRenderer } from 'electron';
 
 interface ThemeContextContent {
@@ -20,7 +20,7 @@ const ThemeProvider = ({ children }: PropsWithChildren<unknown>) => {
   useEffect(() => {
     ipcRenderer.send(Channels.GET_THEME);
     ipcRenderer.on(Channels.THEME, (event, args: Theme) => {
-      setState(args);
+      setState(merge(DEFAULT_THEME, args));
     });
   }, []);
 

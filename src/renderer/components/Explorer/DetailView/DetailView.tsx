@@ -1,8 +1,31 @@
 import React from 'react';
-import { FileInfo } from '@fm/common';
-import { DetailViewItem } from './DetailViewItem';
+import { FileInfo, Theme } from '@fm/common';
+import { DetailViewItem, Row, Item } from './DetailViewItem';
 import { map } from 'lodash';
-import './style.css';
+import styled from 'styled-components';
+import { useTheme } from '@fm/hooks';
+
+const Container = styled.div<Theme>`
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: ${(props) => props['explorer.backgroundColor']};
+`;
+
+const Header = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  font-weight: bold;
+`;
+
+const Body = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: auto;
+`;
 
 interface DetailViewProps {
   data: FileInfo[];
@@ -16,16 +39,22 @@ interface DetailViewProps {
 }
 
 const DetailView = (props: DetailViewProps) => {
+  const { theme } = useTheme();
+
+  if (!theme) {
+    return null;
+  }
+
   return (
-    <div className="detail-view">
-      <div className="detail-view__header">
-        <div className="detail-view__row">
-          <span className="detail-view__item detail-view__item--header">Name</span>
-          <span className="detail-view__item detail-view__item--header">Size</span>
-          <span className="detail-view__item detail-view__item--header">Creation Date</span>
-        </div>
-      </div>
-      <div className="detail-view__body">
+    <Container {...theme}>
+      <Header>
+        <Row {...theme}>
+          <Item {...theme}>Name</Item>
+          <Item {...theme}>Size</Item>
+          <Item {...theme}>Creation Date</Item>
+        </Row>
+      </Header>
+      <Body>
         {map(props.data, (item, i) => {
           return (
             <DetailViewItem
@@ -42,8 +71,8 @@ const DetailView = (props: DetailViewProps) => {
             />
           );
         })}
-      </div>
-    </div>
+      </Body>
+    </Container>
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { noop } from 'lodash';
 import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
-import { useDirectoryManager, usePaths, CommandsWrapper } from '@fm/hooks';
+import { useDirectoryManager, usePaths, CommandsWrapper, useTheme } from '@fm/hooks';
 import {
   SplitPanels,
   ErrorBoundary,
@@ -22,6 +22,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
   const { explorers } = useStoreState();
   const { directoryManager } = useDirectoryManager();
   const { paths, addPath } = usePaths();
+  const { theme } = useTheme();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
     panelIndex?: number;
@@ -180,6 +181,10 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
     'Toggle show hidden': () => storeApi.toggleShowHidden(),
   };
 
+  if (!theme) {
+    return null;
+  }
+
   return (
     <DefaultPanel
       // onFocus={() => focusPanel('explorer')}
@@ -205,6 +210,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
                   onPreview={props.onPreview}
                   openInTerminal={props.openInTerminal}
                   showHidden={explorers.showHidden}
+                  theme={theme}
                 />
               </ErrorBoundary>
             )}
@@ -223,6 +229,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
                   onPreview={props.onPreview}
                   openInTerminal={props.openInTerminal}
                   showHidden={explorers.showHidden}
+                  theme={theme}
                 />
               </ErrorBoundary>
             )}

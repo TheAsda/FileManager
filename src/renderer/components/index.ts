@@ -6,6 +6,5 @@ export * from './ErrorBoundary';
 export * from './common';
 export * from './Explorer';
 export * from './Terminal';
-export * from './CSSApplicator';
 export * from './PathWrapper';
 export * from './Preview';

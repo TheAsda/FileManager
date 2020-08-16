@@ -10,7 +10,6 @@ import {
   CommandPalette,
   Popup,
   PreviewPanel,
-  CSSApplicator,
   HotKeysWrapper,
 } from '@fm/components';
 import { remote } from 'electron';
@@ -23,7 +22,7 @@ const Window = () => {
   const { commands } = useCommands();
   const { keymap } = useKeyMap();
 
-  const { resetTheme, theme } = useTheme();
+  const { resetTheme } = useTheme();
   const [isThemeSelectorOpened, setThemeSelectorState] = useState<boolean>(false);
 
   const openThemeSelector = () => {
@@ -201,53 +200,51 @@ const Window = () => {
 
   return (
     <HotKeysWrapper keyMap={keymap}>
-      <CSSApplicator theme={theme}>
-        <HotKeysWrapper handlers={hotkeys}>
-          <div className="window">
-            <CommandsWrapper commands={localCommands} scope="window">
-              <SplitPanels minSize={200} onResize={onResize} splitType="vertical">
-                {!state.explorers.hidden && (
-                  <ExplorerPanels onPreview={previewHandler} openInTerminal={openInTerminal} />
-                )}
-                {!state.preview.hidden &&
-                  (({ width }) => {
-                    return <PreviewPanel onHide={togglePreview} width={width} />;
-                  })}
-                {!state.terminals.hidden && (
-                  <TerminalPanels
-                    onSelect={terminalSelect.onSelect}
-                    onSelectClose={closeSelect}
-                    selectModeActivated={terminalSelect.isShown}
-                  />
-                )}
-              </SplitPanels>
-            </CommandsWrapper>
-          </div>
-          <CommandPalette
-            commands={reduce(
-              map(toPairs(commands), ([scope, commands]) => {
-                return reduce<[string, () => void], Commands>(
-                  toPairs(commands),
-                  (acc, [name, command]) => {
-                    acc[scope + ': ' + name] = command;
+      <HotKeysWrapper handlers={hotkeys}>
+        <div className="window">
+          <CommandsWrapper commands={localCommands} scope="window">
+            <SplitPanels minSize={200} onResize={onResize} splitType="vertical">
+              {!state.explorers.hidden && (
+                <ExplorerPanels onPreview={previewHandler} openInTerminal={openInTerminal} />
+              )}
+              {!state.preview.hidden &&
+                (({ width }) => {
+                  return <PreviewPanel onHide={togglePreview} width={width} />;
+                })}
+              {!state.terminals.hidden && (
+                <TerminalPanels
+                  onSelect={terminalSelect.onSelect}
+                  onSelectClose={closeSelect}
+                  selectModeActivated={terminalSelect.isShown}
+                />
+              )}
+            </SplitPanels>
+          </CommandsWrapper>
+        </div>
+        <CommandPalette
+          commands={reduce(
+            map(toPairs(commands), ([scope, commands]) => {
+              return reduce<[string, () => void], Commands>(
+                toPairs(commands),
+                (acc, [name, command]) => {
+                  acc[scope + ': ' + name] = command;
 
-                    return acc;
-                  },
-                  {}
-                );
-              }),
-              (acc, cur) => {
-                return merge(acc, cur);
-              },
-              {}
-            )}
-            isOpened={isCommandPaletteOpen}
-            onClose={closeCommandPalette}
-          />
-          <ThemeSelector isOpened={isThemeSelectorOpened} onClose={closeThemeSelector} />
-          <Popup />
-        </HotKeysWrapper>
-      </CSSApplicator>
+                  return acc;
+                },
+                {}
+              );
+            }),
+            (acc, cur) => {
+              return merge(acc, cur);
+            },
+            {}
+          )}
+          isOpened={isCommandPaletteOpen}
+          onClose={closeCommandPalette}
+        />
+        <ThemeSelector isOpened={isThemeSelectorOpened} onClose={closeThemeSelector} />
+        <Popup />
+      </HotKeysWrapper>
     </HotKeysWrapper>
   );
 };

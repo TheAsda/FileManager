@@ -1,10 +1,9 @@
-import { FileInfo, IDirectoryManager, IExplorerManager } from '@fm/common';
+import { FileInfo, IDirectoryManager, IExplorerManager, Theme } from '@fm/common';
 import React, { Component } from 'react';
 import { clamp, filter, concat, sortBy } from 'lodash';
 import { DetailView } from './DetailView';
 import { StateLine } from './StateLine';
 import autobind from 'autobind-decorator';
-import './style.css';
 import { PathWrapper } from '../PathWrapper';
 import { Commands } from '../modals';
 import { ExplorerCommands } from './explorerCommands';
@@ -12,6 +11,18 @@ import { normalizePath, openWithDefaultApp } from 'filemancore';
 import { join } from 'path';
 import { HotKeysWrapper } from '..';
 import { CommandsWrapper } from '@fm/hooks';
+import styled from 'styled-components';
+
+const Container = styled.div<Theme>`
+  height: 100%;
+  width: 100%;
+  background-color: ${(props) => props['explorer.backgroundColor']};
+  color: ${(props) => props['explorer.textColor']};
+  display: grid;
+  grid-template-rows: calc(100% - 20px) 20px;
+  font-size: ${(props) => props['explorer.fontSize']};
+  font-family: ${(props) => props['explorer.fontFamily']};
+`;
 
 interface ExplorerState {
   currentPath: string;
@@ -35,6 +46,7 @@ interface ExplorerProps {
   autoPreview: boolean;
   showHidden: boolean;
   index: number;
+  theme: Theme;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
@@ -356,7 +368,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
           path={this.props.explorerManager.getPath()}
         >
           <HotKeysWrapper handlers={this.handlers}>
-            <div className="explorer">
+            <Container {...this.props.theme}>
               {this.state.viewType === 'detail' ? (
                 <DetailView
                   data={this.state.directoryState}
@@ -368,7 +380,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
                 />
               ) : null}
               <StateLine count={this.state.directoryState.length} />
-            </div>
+            </Container>
           </HotKeysWrapper>
         </PathWrapper>
       </CommandsWrapper>

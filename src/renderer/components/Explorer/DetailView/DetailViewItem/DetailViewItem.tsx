@@ -2,6 +2,44 @@ import React, { useEffect, useRef } from 'react';
 import { extname } from 'path';
 import { FileIcon, defaultStyles, DefaultExtensionType } from 'react-file-icon';
 import { FolderIcon } from '@fm/components';
+import styled from 'styled-components';
+import { Theme } from '@fm/common';
+import { useTheme } from '@fm/hooks';
+
+const Row = styled.div<Theme & { selected?: boolean }>`
+  width: 100%;
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-columns: 50% 20% 30%;
+  align-items: center;
+  cursor: pointer;
+  background-color: ${(props) =>
+    props.selected ? props['explorer.selectedColor'] : props['explorer.backgroundColor']};
+
+  &:hover {
+    background-color: ${(props) => props['explorer.hoverColor']};
+  }
+`;
+
+const Item = styled.div<Theme>`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: grid;
+  grid-template-columns: ${(props) =>
+    `${props['explorer.fontSize']}px calc(100% - ${props['explorer.fontSize']}px)`};
+  grid-template-rows: 100%;
+  align-items: center;
+  gap: 10px;
+  margin: 5px;
+`;
+
+const Icon = styled.div<Theme>`
+  width: ${(props) => props['explorer.fontSize']};
+  height: ${(props) => props['explorer.fontSize']};
+`;
 
 interface DetailViewItemProps {
   name: string;
@@ -23,15 +61,15 @@ const getIcon = (isFolder: boolean, file: string) => {
 
   const ext = extname(file).slice(1);
 
-  return <FileIcon extension={ext} {...defaultStyles[ext as DefaultExtensionType]} />;
+  return <FileIcon {...defaultStyles[ext as DefaultExtensionType]} extension={ext} />;
 };
 
 const DetailViewItem = (props: DetailViewItemProps) => {
-  const classes = ['detail-view__row'];
+  const { theme } = useTheme();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  if (props.selected) {
-    classes.push('detail-view__row--selected');
+  if (!theme) {
+    return null;
   }
 
   const handleKeyboard = (event: KeyboardEvent) => {
@@ -56,8 +94,8 @@ const DetailViewItem = (props: DetailViewItemProps) => {
   }, [props.editable]);
 
   return (
-    <div
-      className={classes.join(' ')}
+    <Row
+      {...theme}
       onClick={props.onClick}
       onDoubleClick={props.onDoubleClick}
       ref={(ref) =>
@@ -67,21 +105,24 @@ const DetailViewItem = (props: DetailViewItemProps) => {
           block: 'nearest',
         })
       }
+      selected={props.selected}
     >
-      <span className="detail-view__item">
+      <Item {...theme}>
         {props.editable ? (
           <input defaultValue={props.name} ref={inputRef} autoFocus />
         ) : (
           <>
-            {props.showIcon !== false && getIcon(props.isFolder ?? false, props.name)}
+            {props.showIcon !== false && (
+              <Icon {...theme}>{getIcon(props.isFolder ?? false, props.name)}</Icon>
+            )}
             {props.name}
           </>
         )}
-      </span>
-      <span className="detail-view__item">{props.size}</span>
-      <span className="detail-view__item">{props.created?.toLocaleString()}</span>
-    </div>
+      </Item>
+      <Item {...theme}>{props.size}</Item>
+      <Item {...theme}>{props.created?.toLocaleString()}</Item>
+    </Row>
   );
 };
 
-export { DetailViewItem };
+export { DetailViewItem, Row, Item };
