@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
-import { useDirectoryManager } from '@fm/hooks';
-import { includes, clamp } from 'lodash';
+import React from 'react';
+import { includes } from 'lodash';
 import { ignoredExtensions, imageExtensions } from './fileExtensions';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { extname } from 'path';
-import { HotKeysWrapper } from '@fm/components';
-import { useStore } from 'effector-react';
 import { useStoreState } from 'renderer/store/store';
 import styled from 'styled-components';
 import { ImagePreview } from './ImagePreview';

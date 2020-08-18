@@ -4,18 +4,19 @@ import { Theme, Channels, DEFAULT_THEME } from '@fm/common';
 import { ipcRenderer } from 'electron';
 
 interface ThemeContextContent {
-  theme?: Theme;
+  theme: Theme;
   resetTheme: () => void;
   setTheme: (themeName: string) => void;
 }
 
 const ThemeContext = createContext<ThemeContextContent>({
+  theme: DEFAULT_THEME,
   resetTheme: noop,
   setTheme: noop,
 });
 
 const ThemeProvider = ({ children }: PropsWithChildren<unknown>) => {
-  const [state, setState] = useState<Theme>();
+  const [state, setState] = useState<Theme>(DEFAULT_THEME);
 
   useEffect(() => {
     ipcRenderer.send(Channels.GET_THEME);

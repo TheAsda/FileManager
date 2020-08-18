@@ -7,3 +7,4 @@ const storeApi = merge(explorerApi, previewApi, terminalApi);
 
 export { storeApi };
 export * from './store';
+export * from './fileAction';

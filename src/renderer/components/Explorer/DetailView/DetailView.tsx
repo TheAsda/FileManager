@@ -22,6 +22,7 @@ const Header = styled.div`
 `;
 
 const Body = styled.div`
+  flex: 1;
   display: flex;
   flex-flow: column nowrap;
   overflow: auto;
@@ -40,10 +41,6 @@ interface DetailViewProps {
 
 const DetailView = (props: DetailViewProps) => {
   const { theme } = useTheme();
-
-  if (!theme) {
-    return null;
-  }
 
   return (
     <Container {...theme}>

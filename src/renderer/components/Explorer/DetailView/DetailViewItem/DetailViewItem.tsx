@@ -8,7 +8,7 @@ import { useTheme } from '@fm/hooks';
 
 const Row = styled.div<Theme & { selected?: boolean }>`
   width: 100%;
-  display: grid;
+  display: flex;
   grid-template-rows: 100%;
   grid-template-columns: 50% 20% 30%;
   align-items: center;
@@ -24,21 +24,30 @@ const Row = styled.div<Theme & { selected?: boolean }>`
 const Item = styled.div<Theme>`
   width: 100%;
   height: 100%;
+  align-items: center;
+  gap: 10px;
+  margin: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`;
+
+const Name = styled(Item)`
   display: grid;
   grid-template-columns: ${(props) =>
     `${props['explorer.fontSize']}px calc(100% - ${props['explorer.fontSize']}px)`};
   grid-template-rows: 100%;
-  align-items: center;
-  gap: 10px;
-  margin: 5px;
+`;
+
+const Text = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Icon = styled.div<Theme>`
-  width: ${(props) => props['explorer.fontSize']};
-  height: ${(props) => props['explorer.fontSize']};
+  width: ${(props) => props['explorer.fontSize']}px;
+  height: ${(props) => props['explorer.fontSize']}px;
 `;
 
 interface DetailViewItemProps {
@@ -67,10 +76,6 @@ const getIcon = (isFolder: boolean, file: string) => {
 const DetailViewItem = (props: DetailViewItemProps) => {
   const { theme } = useTheme();
   const inputRef = useRef<HTMLInputElement>(null);
-
-  if (!theme) {
-    return null;
-  }
 
   const handleKeyboard = (event: KeyboardEvent) => {
     if (event.key === 'Enter' && inputRef.current) {
@@ -107,7 +112,7 @@ const DetailViewItem = (props: DetailViewItemProps) => {
       }
       selected={props.selected}
     >
-      <Item {...theme}>
+      <Name {...theme}>
         {props.editable ? (
           <input defaultValue={props.name} ref={inputRef} autoFocus />
         ) : (
@@ -115,10 +120,10 @@ const DetailViewItem = (props: DetailViewItemProps) => {
             {props.showIcon !== false && (
               <Icon {...theme}>{getIcon(props.isFolder ?? false, props.name)}</Icon>
             )}
-            {props.name}
+            <Text>{props.name}</Text>
           </>
         )}
-      </Item>
+      </Name>
       <Item {...theme}>{props.size}</Item>
       <Item {...theme}>{props.created?.toLocaleString()}</Item>
     </Row>

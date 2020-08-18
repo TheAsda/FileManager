@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
-import { noop } from 'lodash';
 import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
 import { useDirectoryManager, usePaths, CommandsWrapper, useTheme } from '@fm/hooks';
-import {
-  SplitPanels,
-  ErrorBoundary,
-  GoToPalette,
-  Explorer,
-  InputModal,
-  HotKeysWrapper,
-} from '@fm/components';
-import { useStoreState, storeApi } from 'renderer/store';
+import { SplitPanels, ErrorBoundary, GoToPalette, Explorer, HotKeysWrapper } from '@fm/components';
+import { useStoreState, storeApi, fileActionApi } from 'renderer/store';
 
 interface ExplorerPanelsProps {
   onPreview?: (item: FileInfo) => void;
@@ -29,27 +21,6 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
   }>({
     isShown: false,
   });
-
-  const [inputModalState, setInputModalState] = useState<{
-    isShown: boolean;
-    title?: string;
-    subtitle?: string;
-    inputValue?: string;
-    onAccept: (value: string) => void;
-    onDecline: () => void;
-  }>({
-    isShown: false,
-    onAccept: noop,
-    onDecline: noop,
-  });
-
-  const resetInputModal = () => {
-    setInputModalState({
-      isShown: false,
-      onAccept: noop,
-      onDecline: noop,
-    });
-  };
 
   const openGotoPalette = () => {
     setGotoPalette({
@@ -71,17 +42,10 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
 
   const onClose = (index: number) => () => {
     storeApi.closeExplorer(index);
-    // dispatch({
-    //   type: 'destroy',
-    //   index,
-    // });
   };
 
   const splitExplorer = () => {
     storeApi.openExplorer({});
-    // dispatch({
-    //   type: 'spawn',
-    // });
   };
 
   const onCopy = (panelIndex: number) => (filesToCopy: FileInfo[]) => {
@@ -89,54 +53,56 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
       return;
     }
     let destinationPath: string;
-    // if (data.length > 1) {
-    //   const otherPanelIndex = panelIndex ^ 1;
-    //   destinationPath = data[otherPanelIndex].getPath();
-    // } else {
-    //   destinationPath = data[panelIndex].getPath();
-    // }
+    if (panelIndex === 0 && explorers.panel0) {
+      if (explorers.panel1) {
+        destinationPath = explorers.panel1.manager.getPath();
+      } else {
+        destinationPath = explorers.panel0.manager.getPath();
+      }
+    } else {
+      if (explorers.panel0) {
+        destinationPath = explorers.panel0.manager.getPath();
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        destinationPath = explorers.panel1!.manager.getPath();
+      }
+    }
 
-    // setInputModalState({
-    //   isShown: true,
-    //   onAccept: (path: string) => {
-    //     directoryManager.copyItems(filesToCopy, path);
-    //     resetInputModal();
-    //   },
-    //   onDecline: () => {
-    //     resetInputModal();
-    //   },
-    //   inputValue: destinationPath,
-    //   title: filesToCopy.length === 1 ? `Copy ${filesToCopy[0].name}` : 'Copy items',
-    // });
+    fileActionApi.activate({
+      destinationPath,
+      files: filesToCopy,
+      type: 'copy',
+    });
   };
 
-  const onMove = (panelIndex: number) => (filesToCopy: FileInfo[]) => {
+  const onMove = (panelIndex: number) => (filesToMove: FileInfo[]) => {
+    if (filesToMove.length === 0) {
+      return;
+    }
     let destinationPath: string;
-    // if (data.length > 1) {
-    //   const otherPanelIndex = panelIndex ^ 1;
-    //   destinationPath = data[otherPanelIndex].getPath();
-    // } else {
-    //   destinationPath = data[panelIndex].getPath();
-    // }
+    if (panelIndex === 0 && explorers.panel0) {
+      if (explorers.panel1) {
+        destinationPath = explorers.panel1.manager.getPath();
+      } else {
+        destinationPath = explorers.panel0.manager.getPath();
+      }
+    } else {
+      if (explorers.panel0) {
+        destinationPath = explorers.panel0.manager.getPath();
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        destinationPath = explorers.panel1!.manager.getPath();
+      }
+    }
 
-    // setInputModalState({
-    //   isShown: true,
-    //   onAccept: (path: string) => {
-    //     directoryManager.moveItems(filesToCopy, path);
-    //     resetInputModal();
-    //   },
-    //   onDecline: () => {
-    //     resetInputModal();
-    //   },
-    //   inputValue: destinationPath,
-    //   title: filesToCopy.length === 1 ? `Move ${filesToCopy[0].name}` : 'Move items',
-    // });
+    fileActionApi.activate({
+      destinationPath,
+      files: filesToMove,
+      type: 'move',
+    });
   };
 
   const onGotoSelect = (path: string) => {
-    // if (focus.index !== undefined) {
-    //   data[focus.index].setPath(path);
-    // }
     if (isGotoPaletteOpen.panelIndex) {
       storeApi.changeExplorerDirectory({
         index: isGotoPaletteOpen.panelIndex,
@@ -181,13 +147,8 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
     'Toggle show hidden': () => storeApi.toggleShowHidden(),
   };
 
-  if (!theme) {
-    return null;
-  }
-
   return (
     <DefaultPanel
-      // onFocus={() => focusPanel('explorer')}
       onHide={() => storeApi.toggleExplorers()}
       onSplit={splitExplorer}
       splitable={!explorers.panel0 || !explorers.panel1}
@@ -236,15 +197,6 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
           </SplitPanels>
         </HotKeysWrapper>
       </CommandsWrapper>
-
-      <InputModal
-        initialValue={inputModalState.inputValue}
-        isOpened={inputModalState.isShown}
-        onAccept={inputModalState.onAccept}
-        onClose={inputModalState.onDecline}
-        subtitle={inputModalState.subtitle}
-        title={inputModalState.title}
-      />
       <GoToPalette
         isOpened={isGotoPaletteOpen.isShown}
         onClose={closeGotoPalette}

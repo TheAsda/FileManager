@@ -15,6 +15,7 @@ import {
 import { remote } from 'electron';
 import { useStoreState, storeApi, setSectionsSize } from 'renderer/store';
 import { ThemeSelector } from '../modals/ThemeSelector';
+import { FileModal } from '../modals';
 
 const Window = () => {
   const state = useStoreState();
@@ -43,7 +44,6 @@ const Window = () => {
     setCommandPalette(false);
   };
 
-  // const { terminals } = useTerminals();
   const [terminalSelect, setTerminalSelect] = useState<{
     isShown: boolean;
     onSelect: (index: number) => void;
@@ -196,7 +196,6 @@ const Window = () => {
 
     console.error('WTF Resizing');
   };
-  console.log('Window -> themeSelectorState', isThemeSelectorOpened);
 
   return (
     <HotKeysWrapper keyMap={keymap}>
@@ -221,6 +220,7 @@ const Window = () => {
             </SplitPanels>
           </CommandsWrapper>
         </div>
+        <FileModal />
         <CommandPalette
           commands={reduce(
             map(toPairs(commands), ([scope, commands]) => {
