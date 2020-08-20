@@ -1,4 +1,18 @@
 import React from 'react';
+import styled from 'styled-components';
+import { Theme } from '@fm/common';
+import { useTheme } from '@fm/hooks';
+
+const Item = styled.div<Theme & { selected?: boolean }>`
+  cursor: pointer;
+  &:hover {
+    background-color: ${(props) => props['palette.hoverColor']};
+  }
+
+  &--selected {
+    background-color: ${(props) => props['palette.selectedColor']};
+  }
+`;
 
 interface SelectPaletteItemProps {
   selected?: boolean;
@@ -7,13 +21,12 @@ interface SelectPaletteItemProps {
 }
 
 const SelectPaletteItem = (props: SelectPaletteItemProps) => {
+  const { theme } = useTheme();
+
   return (
-    <div
-      className={`select-palette__item ${props.selected ? 'select-palette__item--selected' : ''}`}
-      onClick={props.onSelect}
-    >
+    <Item {...theme} onClick={props.onSelect} selected={props.selected}>
       {props.command}
-    </div>
+    </Item>
   );
 };
 

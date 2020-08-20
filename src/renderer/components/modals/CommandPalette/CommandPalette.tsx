@@ -1,6 +1,7 @@
 import React from 'react';
 import { keys } from 'lodash';
 import { Commands, SelectPalette } from '../SelectPalette';
+import { useTheme } from '@fm/hooks';
 
 interface CommandPaletteProps {
   isOpened: boolean;
@@ -9,6 +10,8 @@ interface CommandPaletteProps {
 }
 
 const CommandPalette = (props: CommandPaletteProps) => {
+  const { theme } = useTheme();
+
   const onSelect = (selectedItem: string) => {
     console.log(selectedItem);
 
@@ -22,6 +25,7 @@ const CommandPalette = (props: CommandPaletteProps) => {
       onClose={props.onClose}
       onSelect={onSelect}
       options={keys(props.commands)}
+      theme={theme}
     />
   );
 };

@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
 import { clamp, map, includes, isEqual, indexOf } from 'lodash';
-import './style.css';
 import { SelectPaletteItem } from './SelectPaletteItem';
 import Modal from 'react-modal';
 import { HotKeysWrapper } from '@fm/components';
 import Fuse from 'fuse.js';
+import styled from 'styled-components';
+import { Theme } from '@fm/common';
+
+const Header = styled.div`
+  $spaceSize: 5px;
+  border-bottom: 2px solid $spaceSize;
+  padding-bottom: $spaceSize;
+  margin-bottom: $spaceSize;
+`;
+
+const Search = styled.input`
+  width: 100%;
+  outline: none;
+`;
 
 interface SelectPaletteProps {
   options: string[];
@@ -13,6 +26,7 @@ interface SelectPaletteProps {
   onSelect: (selectedItem: string) => void;
   onClose: () => void;
   isOpened: boolean;
+  theme: Theme;
 }
 
 interface SelectPaletteState {
@@ -111,15 +125,23 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
     return (
       <Modal
         ariaHideApp={false}
-        className="select-palette"
         isOpen={this.props.isOpened}
         onRequestClose={this.props.onClose}
         shouldCloseOnOverlayClick={true}
+
+        style={{
+          content: {
+            margin: '0 80px',
+            marginTop: '20px',
+            padding: '10px',
+            color: this.props.theme['palette.textColor'],
+            backgroundColor: this.props.theme['palette.backgroundColor'],
+          },
+        }}
       >
         <HotKeysWrapper handlers={this.handlers}>
-          <div className="select-palette__header">
-            <input
-              className="select-palette__search"
+          <Header>
+            <Search
               onChange={this.handleInput}
               ref={(ref) => {
                 this.inputRef = ref;
@@ -133,7 +155,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
               }}
               type="text"
             />
-          </div>
+          </Header>
           {map(this.state.options, (option, i) => (
             <SelectPaletteItem
               command={option}

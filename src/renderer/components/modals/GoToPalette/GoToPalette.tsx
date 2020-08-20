@@ -1,6 +1,7 @@
 import React from 'react';
 import './style.css';
 import { SelectPalette } from '../SelectPalette';
+import { useTheme } from '@fm/hooks';
 
 interface GoToPaletteProps {
   isOpened: boolean;
@@ -10,12 +11,15 @@ interface GoToPaletteProps {
 }
 
 const GoToPalette = (props: GoToPaletteProps) => {
+  const { theme } = useTheme();
+
   return (
     <SelectPalette
       isOpened={props.isOpened}
       onClose={props.onClose}
       onSelect={props.onSelect}
       options={props.options}
+      theme={theme}
     />
   );
 };
