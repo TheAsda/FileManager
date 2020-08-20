@@ -9,9 +9,8 @@ const Item = styled.div<Theme & { selected?: boolean }>`
     background-color: ${(props) => props['palette.hoverColor']};
   }
 
-  &--selected {
-    background-color: ${(props) => props['palette.selectedColor']};
-  }
+  background-color: ${(props) =>
+    props.selected ? props['palette.selectedColor'] : props['palette.backgroundColor']};
 `;
 
 interface SelectPaletteItemProps {

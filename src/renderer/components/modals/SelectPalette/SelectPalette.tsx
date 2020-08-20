@@ -128,7 +128,6 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
         isOpen={this.props.isOpened}
         onRequestClose={this.props.onClose}
         shouldCloseOnOverlayClick={true}
-
         style={{
           content: {
             margin: '0 80px',
