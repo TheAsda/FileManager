@@ -2,7 +2,8 @@ import React from 'react';
 import { includes } from 'lodash';
 import { ignoredExtensions, imageExtensions } from './fileExtensions';
 import { extname } from 'path';
-import { useStoreState } from 'renderer/store/store';
+import { store } from 'renderer/store/application/store';
+import { useStore } from 'effector-react';
 import styled from 'styled-components';
 import { ImagePreview } from './ImagePreview';
 import { TextPreview } from './TextPreview';
@@ -13,7 +14,6 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
-  overflow: auto;
 `;
 
 interface PreviewProps {
@@ -23,7 +23,7 @@ interface PreviewProps {
 const Preview = (props: PreviewProps) => {
   const {
     preview: { item },
-  } = useStoreState();
+  } = useStore(store);
 
   if (item) {
     const extension = extname(item.name);

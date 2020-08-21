@@ -1,7 +1,6 @@
 import { Terminal } from 'xterm';
-import { IIdentityManager } from '../IdentityManager';
 
-interface ITerminalManager extends IIdentityManager {
+interface ITerminalManager {
   attach(terminal: Terminal, onExit?: (code: number) => void): void;
 
   changeDirectory(path: string): void;

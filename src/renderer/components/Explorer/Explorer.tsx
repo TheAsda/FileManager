@@ -1,4 +1,4 @@
-import { FileInfo, IDirectoryManager, IExplorerManager, Theme } from '@fm/common';
+import { FileInfo, IDirectoryManager, Theme } from '@fm/common';
 import React, { Component } from 'react';
 import { clamp, filter, concat, sortBy } from 'lodash';
 import { DetailView } from './DetailView';
@@ -11,7 +11,9 @@ import { normalizePath, openWithDefaultApp } from 'filemancore';
 import { join } from 'path';
 import { HotKeysWrapper } from '..';
 import { CommandsWrapper } from '@fm/hooks';
+import {} from 'module';
 import styled from 'styled-components';
+import { ExplorerState as StoreExplorerState } from 'renderer/store';
 
 const Container = styled.div<Theme>`
   height: 100%;
@@ -35,7 +37,7 @@ interface ExplorerState {
 
 interface ExplorerProps {
   directoryManager: IDirectoryManager;
-  explorerManager: IExplorerManager;
+  explorerState: StoreExplorerState;
   onPreview?: (item: FileInfo) => void;
   onClose?: () => void;
   closable: boolean;
@@ -60,7 +62,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       selectedIndex: 0,
       viewType: 'detail',
       directoryState: [],
-      currentPath: props.explorerManager.getPath(),
+      currentPath: props.explorerState.path,
     };
 
     this.handlers = {
@@ -98,7 +100,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   }
 
   componentDidUpdate() {
-    if (this.props.explorerManager.getPath() !== this.state.currentPath) {
+    if (this.props.explorerState.path !== this.state.currentPath) {
       this.onDirectoryChange();
     }
 
@@ -141,12 +143,12 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   onDirectoryChange() {
-    this.props.directoryManager.listDirectory(this.props.explorerManager.getPath()).then((data) => {
+    this.props.directoryManager.listDirectory(this.props.explorerState.path).then((data) => {
       this.setState((state) => ({
         ...state,
         selectedIndex: 0,
         directoryState: this.sortFilterItems(data),
-        currentPath: this.props.explorerManager.getPath(),
+        currentPath: this.props.explorerState.path,
       }));
     });
   }
@@ -192,17 +194,22 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   @autobind
   activateDirectory() {
-    this.props.explorerManager.setPath(
-      normalizePath(join(this.selectedItem.path, this.selectedItem.name))
-    );
+    // this.props.explorerManager.setPath(
+    //   normalizePath(join(this.selectedItem.path, this.selectedItem.name))
+    // );
+
     this.props.onDirectoryChange &&
-      this.props.onDirectoryChange(this.props.explorerManager.getPath());
+      this.props.onDirectoryChange(
+        normalizePath(join(this.selectedItem.path, this.selectedItem.name))
+      );
     this.onDirectoryChange();
   }
 
   @autobind
   exitDirectory() {
-    this.props.explorerManager.setPath(normalizePath(join(this.selectedItem.path, '..')));
+    // this.props.explorerManager.setPath(normalizePath(join(this.selectedItem.path, '..')));
+    this.props.onDirectoryChange &&
+      this.props.onDirectoryChange(normalizePath(join(this.selectedItem.path, '..')));
     this.onDirectoryChange();
   }
 
@@ -231,17 +238,9 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
     if (this.state.editType === 'create') {
       if (this.state.directoryState[this.state.editableIndex].attributes.directory) {
-        await this.props.directoryManager.createItem(
-          name,
-          this.props.explorerManager.getPath(),
-          'folder'
-        );
+        await this.props.directoryManager.createItem(name, this.props.explorerState.path, 'folder');
       } else {
-        await this.props.directoryManager.createItem(
-          name,
-          this.props.explorerManager.getPath(),
-          'file'
-        );
+        await this.props.directoryManager.createItem(name, this.props.explorerState.path, 'file');
       }
 
       this.updateDirectoryState();
@@ -251,7 +250,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       await this.props.directoryManager.renameItem(
         this.state.directoryState[this.state.editableIndex].name,
         name,
-        this.props.explorerManager.getPath()
+        this.props.explorerState.path
       );
 
       this.updateDirectoryState();
@@ -272,7 +271,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   @autobind
   private async updateDirectoryState() {
     const newDirectoryState = await this.props.directoryManager.listDirectory(
-      this.props.explorerManager.getPath()
+      this.props.explorerState.path
     );
 
     this.setState((state) => ({
@@ -296,7 +295,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         {
           name: '',
           accessible: true,
-          path: this.props.explorerManager.getPath(),
+          path: this.props.explorerState.path,
           attributes: { directory: false, hidden: false, readonly: false, system: false },
         },
       ],
@@ -320,7 +319,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         {
           name: '',
           accessible: true,
-          path: this.props.explorerManager.getPath(),
+          path: this.props.explorerState.path,
           attributes: { directory: true, hidden: false, readonly: false, system: false },
         },
       ],
@@ -372,7 +371,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
           closable={this.props.closable}
           onClose={this.onClose}
           onRefresh={this.refresh}
-          path={this.props.explorerManager.getPath()}
+          path={this.props.explorerState.path}
           refreshable
         >
           <HotKeysWrapper handlers={this.handlers}>

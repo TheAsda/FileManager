@@ -13,12 +13,13 @@ import {
   HotKeysWrapper,
 } from '@fm/components';
 import { remote } from 'electron';
-import { useStoreState, storeApi, setSectionsSize } from 'renderer/store';
+import { storeApi, setSectionsSize, store } from '@fm/store';
 import { ThemeSelector } from '../modals/ThemeSelector';
 import { FileModal } from '../modals';
+import { useStore } from 'effector-react';
 
 const Window = () => {
-  const state = useStoreState();
+  const state = useStore(store);
   console.log('Window -> state', state);
   const { commands } = useCommands();
   const { keymap } = useKeyMap();

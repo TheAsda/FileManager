@@ -2,14 +2,12 @@ import { ITerminalManager } from './ITerminalManager';
 import { IPty, spawn } from 'node-pty';
 import { platform, homedir } from 'os';
 import { Terminal } from 'xterm';
-import { IdentityManager } from '../IdentityManager';
 import { getRemoteCWD } from 'filemancore';
 
-class TerminalManager extends IdentityManager implements ITerminalManager {
+class TerminalManager implements ITerminalManager {
   private process: IPty;
 
   constructor() {
-    super();
     const shell = platform() === 'win32' ? 'powershell.exe' : 'bash';
     this.process = spawn(shell, [], {
       cwd: homedir(),

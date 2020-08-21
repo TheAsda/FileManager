@@ -3,7 +3,8 @@ import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
 import { useDirectoryManager, usePaths, CommandsWrapper, useTheme } from '@fm/hooks';
 import { SplitPanels, ErrorBoundary, GoToPalette, Explorer, HotKeysWrapper } from '@fm/components';
-import { useStoreState, storeApi, fileActionApi } from 'renderer/store';
+import { store, storeApi, fileActionApi } from 'renderer/store';
+import { useStore } from 'effector-react';
 
 interface ExplorerPanelsProps {
   onPreview?: (item: FileInfo) => void;
@@ -11,7 +12,7 @@ interface ExplorerPanelsProps {
 }
 
 const ExplorerPanels = (props: ExplorerPanelsProps) => {
-  const { explorers } = useStoreState();
+  const { explorers } = useStore(store);
   const { directoryManager } = useDirectoryManager();
   const { paths, addPath } = usePaths();
   const { theme } = useTheme();
@@ -25,7 +26,6 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
   const openGotoPalette = () => {
     setGotoPalette({
       isShown: true,
-      // panelIndex: focus.index,
     });
   };
 
@@ -55,16 +55,16 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
     let destinationPath: string;
     if (panelIndex === 0 && explorers.panel0) {
       if (explorers.panel1) {
-        destinationPath = explorers.panel1.manager.getPath();
+        destinationPath = explorers.panel1.state.path;
       } else {
-        destinationPath = explorers.panel0.manager.getPath();
+        destinationPath = explorers.panel0.state.path;
       }
     } else {
       if (explorers.panel0) {
-        destinationPath = explorers.panel0.manager.getPath();
+        destinationPath = explorers.panel0.state.path;
       } else {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        destinationPath = explorers.panel1!.manager.getPath();
+        destinationPath = explorers.panel1!.state.path;
       }
     }
 
@@ -82,16 +82,16 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
     let destinationPath: string;
     if (panelIndex === 0 && explorers.panel0) {
       if (explorers.panel1) {
-        destinationPath = explorers.panel1.manager.getPath();
+        destinationPath = explorers.panel1.state.path;
       } else {
-        destinationPath = explorers.panel0.manager.getPath();
+        destinationPath = explorers.panel0.state.path;
       }
     } else {
       if (explorers.panel0) {
-        destinationPath = explorers.panel0.manager.getPath();
+        destinationPath = explorers.panel0.state.path;
       } else {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        destinationPath = explorers.panel1!.manager.getPath();
+        destinationPath = explorers.panel1!.state.path;
       }
     }
 
@@ -142,6 +142,14 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
     console.error('WTF Resizing');
   };
 
+  const onDirectoryChange = (index: 0 | 1) => (path: string) => {
+    addPath(path);
+    storeApi.changeExplorerDirectory({
+      path,
+      index,
+    });
+  };
+
   const commands = {
     'Toggle auto preview': () => storeApi.toggleAutoPreview(),
     'Toggle show hidden': () => storeApi.toggleShowHidden(),
@@ -162,11 +170,11 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
                   autoPreview={explorers.autoPreview}
                   closable={explorers.panel1 !== undefined}
                   directoryManager={directoryManager}
-                  explorerManager={explorers.panel0.manager}
+                  explorerState={explorers.panel0.state}
                   index={1}
                   onClose={onClose(0)}
                   onCopy={onCopy(0)}
-                  onDirectoryChange={addPath}
+                  onDirectoryChange={onDirectoryChange(0)}
                   onMove={onMove(0)}
                   onPreview={props.onPreview}
                   openInTerminal={props.openInTerminal}
@@ -181,11 +189,11 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
                   autoPreview={explorers.autoPreview}
                   closable={explorers.panel0 !== undefined}
                   directoryManager={directoryManager}
-                  explorerManager={explorers.panel1.manager}
+                  explorerState={explorers.panel1.state}
                   index={2}
                   onClose={onClose(1)}
                   onCopy={onCopy(1)}
-                  onDirectoryChange={addPath}
+                  onDirectoryChange={onDirectoryChange(1)}
                   onMove={onMove(1)}
                   onPreview={props.onPreview}
                   openInTerminal={props.openInTerminal}

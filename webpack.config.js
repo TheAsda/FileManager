@@ -86,6 +86,7 @@ const rendererConfig = {
       '@fm/common': resolve(__dirname, 'src/common'),
       '@fm/hooks': resolve(__dirname, 'src/renderer/hooks'),
       '@fm/components': resolve(__dirname, 'src/renderer/components'),
+      '@fm/store': resolve(__dirname, 'src/renderer/store'),
     },
     modules: ['src', 'node_modules'],
   },

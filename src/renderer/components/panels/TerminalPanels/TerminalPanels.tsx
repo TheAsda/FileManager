@@ -4,7 +4,8 @@ import { DefaultPanel } from '../DefaultPanel';
 import { useTheme, usePaths } from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
 import { ErrorBoundary, SplitPanels, GoToPalette, Terminal, HotKeysWrapper } from '@fm/components';
-import { useStoreState, storeApi } from 'renderer/store';
+import { store, storeApi } from 'renderer/store';
+import { useStore } from 'effector-react';
 
 interface TerminalPanelsProps {
   selectModeActivated?: boolean;
@@ -13,7 +14,7 @@ interface TerminalPanelsProps {
 }
 
 const TerminalPanels = (props: TerminalPanelsProps) => {
-  const { terminals } = useStoreState();
+  const { terminals } = useStore(store);
   const { theme } = useTheme();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;

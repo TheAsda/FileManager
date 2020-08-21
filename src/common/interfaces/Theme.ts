@@ -17,6 +17,7 @@ interface Theme {
   'preview.backgroundColor': string;
   'preview.textColor': string;
   'preview.fontFamily': string;
+  'preview.fontSize': number;
 
   'terminal.backgroundColor': string;
   'terminal.blackColor': string;

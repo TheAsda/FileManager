@@ -1,7 +1,6 @@
 import { createApi } from 'effector';
-import { store } from './store';
+import { store } from '../store';
 import { clone } from 'lodash';
-import { ExplorerManager } from '@fm/common';
 
 const explorerApi = createApi(store, {
   toggleExplorers: (state) => {
@@ -28,24 +27,20 @@ const explorerApi = createApi(store, {
     if (!state.explorers.panel0) {
       state.explorers.panel0 = {
         height: 200,
-        manager: new ExplorerManager(),
+        state: {
+          path: value.path ?? process.cwd(),
+        },
       };
-
-      if (value.path) {
-        state.explorers.panel0.manager.setPath(value.path);
-      }
 
       return clone(state);
     }
     if (!state.explorers.panel1) {
       state.explorers.panel1 = {
         height: 200,
-        manager: new ExplorerManager(),
+        state: {
+          path: value.path ?? process.cwd(),
+        },
       };
-
-      if (value.path) {
-        state.explorers.panel1.manager.setPath(value.path);
-      }
 
       return clone(state);
     }
@@ -97,12 +92,12 @@ const explorerApi = createApi(store, {
     }
   ) => {
     if (value.index === 1 && state.explorers.panel1) {
-      state.explorers.panel1.manager.setPath(value.path);
+      state.explorers.panel1.state.path = value.path;
 
       return clone(state);
     }
     if (value.index === 0 && state.explorers.panel0) {
-      state.explorers.panel0.manager.setPath(value.path);
+      state.explorers.panel0.state.path = value.path;
 
       return clone(state);
     }

@@ -19,6 +19,7 @@ const DEFAULT_THEME: Theme = {
   'preview.backgroundColor': '#30323D',
   'preview.textColor': '#CDD1C4',
   'preview.fontFamily': 'Consolas',
+  'preview.fontSize': 17,
 
   'terminal.backgroundColor': '#30323D',
   'terminal.blackColor': '#2e3436',

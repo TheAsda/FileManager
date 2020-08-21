@@ -1,5 +1,5 @@
 import { createApi } from 'effector';
-import { store } from './store';
+import { store } from '../store';
 import { clone } from 'lodash';
 import { FileInfo } from '@fm/common';
 

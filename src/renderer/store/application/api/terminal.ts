@@ -1,5 +1,5 @@
 import { createApi } from 'effector';
-import { store } from './store';
+import { store } from '../store';
 import { TerminalManager } from '@fm/common';
 import { clone } from 'lodash';
 

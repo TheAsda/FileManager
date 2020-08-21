@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
-import { useDirectoryManager } from '@fm/hooks';
+import { useDirectoryManager, useTheme } from '@fm/hooks';
 import { clamp } from 'lodash';
-import { HotKeys } from 'react-hotkeys';
-import { FileInfo } from '@fm/common';
+import { FileInfo, Theme } from '@fm/common';
+import styled from 'styled-components';
+import { HotKeysWrapper } from '../common';
+
+const Text = styled.pre<Theme & { fontSize: number }>`
+  background-color: ${(props) => props['preview.backgroundColor']};
+  color: ${(props) => props['preview.textColor']};
+  font-family: ${(props) => props['preview.fontFamily']};
+  font-size: ${(props) => props.fontSize}px;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+`;
 
 interface TextPreviewProps {
   item: FileInfo;
@@ -10,7 +21,8 @@ interface TextPreviewProps {
 
 const TextPreview = (props: TextPreviewProps) => {
   const { directoryManager } = useDirectoryManager();
-  const [fontSize, setFontSize] = useState<number>(15);
+  const { theme } = useTheme();
+  const [fontSize, setFontSize] = useState<number>(theme['preview.fontSize']);
 
   const increaseFontSize = () => {
     setFontSize((state) => clamp(state + 2, 10, 64));
@@ -28,9 +40,11 @@ const TextPreview = (props: TextPreviewProps) => {
   const text = directoryManager.readFileSync(props.item.path + props.item.name);
 
   return (
-    <HotKeys handlers={hotkeys}>
-      <pre style={{ fontSize: fontSize }}>{text}</pre>
-    </HotKeys>
+    <HotKeysWrapper handlers={hotkeys}>
+      <Text {...theme} fontSize={fontSize}>
+        {text}
+      </Text>
+    </HotKeysWrapper>
   );
 };
 
