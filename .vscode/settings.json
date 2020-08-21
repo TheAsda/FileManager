@@ -1,4 +1,12 @@
 {
-  "cSpell.words": ["Reaload", "filemancore", "hygen"],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "cSpell.words": [
+    "Reaload",
+    "filemancore",
+    "hygen",
+    "noninteractive",
+    "refresable",
+    "refreshable"
+  ],
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "cSpell.language": "en,en-GB,en-US"
 }

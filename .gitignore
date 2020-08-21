@@ -90,8 +90,10 @@ out/
 
 dist
 
-build/*
+build/
 
 _templates
 
 devAppData
+
+.vscode/

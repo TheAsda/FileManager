@@ -18,6 +18,8 @@ interface PathWrapperProps {
   path: string;
   closable?: boolean;
   onClose?: () => void;
+  refreshable?: boolean;
+  onRefresh?: () => void;
 }
 
 const PathWrapper = (props: PropsWithChildren<PathWrapperProps>) => {
@@ -25,7 +27,13 @@ const PathWrapper = (props: PropsWithChildren<PathWrapperProps>) => {
 
   return (
     <Container {...theme}>
-      <PathWrapperHeader closable={props.closable} onClose={props.onClose} path={props.path} />
+      <PathWrapperHeader
+        closable={props.closable}
+        onClose={props.onClose}
+        onRefresh={props.onRefresh}
+        path={props.path}
+        refreshable={props.refreshable}
+      />
       {props.children}
     </Container>
   );

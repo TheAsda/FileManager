@@ -75,6 +75,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
       sendToTrash: this.sendToTrash,
       copy: this.copy,
       move: this.move,
+      refresh: this.refresh,
     };
 
     this.options = {
@@ -257,6 +258,11 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     }
   }
 
+  @autobind
+  refresh() {
+    this.updateDirectoryState();
+  }
+
   sortFilterItems(items: FileInfo[]): FileInfo[] {
     const folders = filter(items, ['attributes.directory', true]);
     const files = filter(items, ['attributes.directory', false]);
@@ -365,7 +371,9 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
         <PathWrapper
           closable={this.props.closable}
           onClose={this.onClose}
+          onRefresh={this.refresh}
           path={this.props.explorerManager.getPath()}
+          refreshable
         >
           <HotKeysWrapper handlers={this.handlers}>
             <Container {...this.props.theme}>

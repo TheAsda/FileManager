@@ -45,7 +45,7 @@ const DetailView = (props: DetailViewProps) => {
   return (
     <Container {...theme}>
       <Header>
-        <Row {...theme}>
+        <Row {...theme} noninteractive>
           <Item {...theme}>Name</Item>
           <Item {...theme}>Size</Item>
           <Item {...theme}>Creation Date</Item>

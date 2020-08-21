@@ -12,6 +12,22 @@ const Container = styled.div<Theme>`
   background-color: ${(props) => props['explorer.backgroundColor']};
 `;
 
+const Header = styled.div``;
+
+const Button = styled.button<Theme>`
+  border: none;
+  padding: 5px 10px;
+  height: 100%;
+  background-color: ${(props) => props['primary.backgroundColor']};
+  color: ${(props) => props['primary.textColor']};
+
+  &:hover {
+    background-color: ${(props) => props['primary.hoverColor']};
+  }
+`;
+
+const Context = styled.div``;
+
 interface DefaultPanelProps {
   splitable?: boolean;
   onSplit?: () => void;
@@ -24,11 +40,17 @@ const DefaultPanel = forwardRef<HTMLDivElement, PropsWithChildren<DefaultPanelPr
 
     return (
       <Container {...theme} ref={ref}>
-        <div className="default-panel__header">
-          {props.splitable && <button onClick={props.onSplit}>Split</button>}
-          <button onClick={props.onHide}>Hide</button>
-        </div>
-        <div className="default-panel__content">{props.children}</div>
+        <Header>
+          {props.splitable && (
+            <Button {...theme} onClick={props.onSplit}>
+              Split
+            </Button>
+          )}
+          <Button {...theme} onClick={props.onHide}>
+            Hide
+          </Button>
+        </Header>
+        <Context>{props.children}</Context>
       </Container>
     );
   }

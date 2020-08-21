@@ -6,19 +6,24 @@ import styled from 'styled-components';
 import { Theme } from '@fm/common';
 import { useTheme } from '@fm/hooks';
 
-const Row = styled.div<Theme & { selected?: boolean }>`
+const Row = styled.div<Theme & { selected?: boolean; noninteractive?: boolean }>`
   width: 100%;
   display: flex;
   grid-template-rows: 100%;
   grid-template-columns: 50% 20% 30%;
   align-items: center;
-  cursor: pointer;
+
   background-color: ${(props) =>
     props.selected ? props['explorer.selectedColor'] : props['explorer.backgroundColor']};
 
-  &:hover {
-    background-color: ${(props) => props['explorer.hoverColor']};
-  }
+  ${(props) =>
+    !props.noninteractive
+      ? `
+      cursor: pointer;
+      &:hover {
+        background-color: ${props['explorer.hoverColor']};
+      }`
+      : ''}
 `;
 
 const Item = styled.div<Theme>`
