@@ -2,7 +2,7 @@ import React from 'react';
 import { includes } from 'lodash';
 import { ignoredExtensions, imageExtensions } from './fileExtensions';
 import { extname } from 'path';
-import { store } from 'renderer/store/application/store';
+import { store } from '@fm/store';
 import { useStore } from 'effector-react';
 import styled from 'styled-components';
 import { ImagePreview } from './ImagePreview';

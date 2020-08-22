@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { InputModal } from '../InputModal';
-import { fileActionStore, FileActionStore, fileActionApi } from 'renderer/store';
+import { fileActionStore, FileActionStore, fileActionApi } from '@fm/store';
 import { useDirectoryManager } from '@fm/hooks';
 import { toast } from 'react-toastify';
 

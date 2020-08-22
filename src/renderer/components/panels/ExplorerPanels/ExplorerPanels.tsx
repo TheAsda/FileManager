@@ -3,7 +3,7 @@ import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
 import { useDirectoryManager, usePaths, CommandsWrapper, useTheme } from '@fm/hooks';
 import { SplitPanels, ErrorBoundary, GoToPalette, Explorer, HotKeysWrapper } from '@fm/components';
-import { store, storeApi, fileActionApi } from 'renderer/store';
+import { store, storeApi, fileActionApi } from '@fm/store';
 import { useStore } from 'effector-react';
 
 interface ExplorerPanelsProps {

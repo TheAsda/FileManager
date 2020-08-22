@@ -4,7 +4,7 @@ import { DefaultPanel } from '../DefaultPanel';
 import { useTheme, usePaths } from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
 import { ErrorBoundary, SplitPanels, GoToPalette, Terminal, HotKeysWrapper } from '@fm/components';
-import { store, storeApi } from 'renderer/store';
+import { store, storeApi } from '@fm/store';
 import { useStore } from 'effector-react';
 
 interface TerminalPanelsProps {
