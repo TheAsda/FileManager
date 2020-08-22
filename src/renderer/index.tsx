@@ -14,4 +14,8 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-render(<App />, document.getElementById('root'));
+const root = document.createElement('div');
+root.id = 'root';
+document.body.appendChild(root);
+
+render(<App />, root);

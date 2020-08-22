@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCommands, useTheme, CommandsWrapper, useKeyMap } from '@fm/hooks';
-import { noop, map, toPairs, reduce, merge, size } from 'lodash';
+import { noop, map, toPairs, reduce, merge } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
 import {
@@ -95,7 +95,6 @@ const Window = () => {
   };
 
   const onResize = (value: number[]) => {
-    console.log('onResize -> value', value);
     if (!state.explorers.hidden && !state.preview.hidden && !state.terminals.hidden) {
       setSectionsSize({
         explorer: {
@@ -199,7 +198,7 @@ const Window = () => {
   };
 
   const sizes: number[] = [];
-  
+
   if (state.window.sections.explorer.width !== 0) {
     sizes.push(state.window.sections.explorer.width);
   }

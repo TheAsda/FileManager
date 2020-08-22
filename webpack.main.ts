@@ -12,4 +12,7 @@ export default (_: unknown, args: CliConfigOptions): Configuration =>
     node: {
       __dirname: false,
     },
+    externals: {
+      'electron-reload': 'commonjs2 electron-reload',
+    },
   });

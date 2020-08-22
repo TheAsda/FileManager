@@ -3,9 +3,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { join } from 'path';
 
-const hotReaload = () =>
-  require('electron-reload')(__dirname, {
+function hotReload(): void {
+  return require('electron-reload')(__dirname, {
     electron: join(__dirname, 'node_modules', '.bin', 'electron'),
   });
+}
 
-export { hotReaload };
+export { hotReload };

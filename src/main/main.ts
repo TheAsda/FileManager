@@ -1,8 +1,6 @@
-import { app, protocol, ipcMain } from 'electron';
-import { resolve, join } from 'path';
-import { Window } from './Window';
-import { hotReaload } from './hotReload';
-import { init } from '@sentry/electron';
+import { app, ipcMain, BrowserWindow } from 'electron';
+import { resolve } from 'path';
+import { hotReload } from './hotReload';
 import { SettingsManager } from './managers/SettingsManager';
 import { ThemesManager } from './managers/ThemesManager';
 import { PathManager } from './managers/PathManager';
@@ -11,56 +9,101 @@ import { values, isEqual } from 'lodash';
 import { Channels } from '../common/Channels';
 import { ConfirmTypes } from '../common/ConfirmTypes';
 import { LayoutManager } from './managers/LayoutManager';
+import { setDevAppData } from './setDevAppData';
+import { initLogger } from './initLogger';
+import { setWindow, getWindow } from './window';
+import isDev from 'electron-is-dev';
+import { openDevTools } from './openDevTools';
+// import { log } from 'electron-log';
 
-const mode = process.env.NODE_ENV || 'production';
-const isDev = () => mode !== 'production';
+initLogger();
 
-if (isDev()) {
-  if (process.env.SENTRY_DSN) {
-    init({
-      dsn: process.env.SENTRY_DSN,
-    });
-  }
-  hotReaload();
-  app.setPath('userData', resolve('./devAppData'));
+if (isDev) {
+  hotReload();
+  setDevAppData();
+  openDevTools();
 }
 
 app.allowRendererProcessReuse = false;
 
-const registerIconsProtocol = () => {
-  protocol.registerFileProtocol('icons', (req, callback) => {
-    const filePath = join(__dirname, '/icons/' + req.url.substring('icons://'.length));
-
-    callback({ path: filePath });
-  });
-};
-
-let mainWindow: Window | null;
 const settingsManager = new SettingsManager();
 const themesManager = new ThemesManager();
 const pathManager = new PathManager();
 const keymapManager = new KeyMapManager();
 const layoutManager = new LayoutManager();
 
-const createWindow = () => {
-  mainWindow = new Window({
-    file: `file://${__dirname}/index.html`,
-    openDevTools: isDev(),
+const createWindow = async (): Promise<BrowserWindow> => {
+  const window = new BrowserWindow({
     frame: false,
+    width: layoutManager.layoutStore.get().window.width,
+    height: layoutManager.layoutStore.get().window.height,
+    minHeight: 600,
+    minWidth: 800,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+    show: false,
+    titleBarStyle: 'hiddenInset',
   });
 
-  // mainWindow.setMenu(null);
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
+  window.on('ready-to-show', () => {
+    window.show();
   });
 
-  registerIconsProtocol();
+  window.on('closed', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setWindow(null);
+  });
+
+  await window.loadFile(resolve(__dirname, 'index.html'));
+
+  return window;
 };
 
-ipcMain.handle('close-event', () => {
-  mainWindow?.webContents.send(Channels.BEFORE_QUIT);
+app.on('window-all-closed', () => {
+  app.quit();
 });
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.on('activate', async () => {
+  if (!getWindow()) {
+    setWindow(await createWindow());
+  }
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.on('ready', async () => {
+  setWindow(await createWindow());
+
+  getWindow().once('ready-to-show', () => {
+    getWindow().show();
+  });
+
+  getWindow().on('maximize', () => {
+    getWindow().webContents.send('maximized');
+  });
+
+  getWindow().on('unmaximize', () => {
+    getWindow().webContents.send('unmaximized');
+  });
+});
+
+ipcMain.handle('minimize-event', () => {
+  getWindow().minimize();
+});
+
+ipcMain.handle('maximize-event', () => {
+  getWindow().maximize();
+});
+
+ipcMain.handle('unmaximize-event', () => {
+  getWindow().unmaximize();
+});
+
+// ipcMain.handle('close-event', () => {
+// mainWindow?.webContents.send(Channels.BEFORE_QUIT);
+// });
 
 const quitConfirms: string[] = [];
 
@@ -70,28 +113,14 @@ ipcMain.on(Channels.QUITTER, (event, args: string) => {
   console.log('quitConfirms', quitConfirms);
 
   if (isEqual(values(ConfirmTypes), quitConfirms)) {
-    mainWindow?.destroy();
     app.quit();
   }
 });
 
-app.on('browser-window-focus', () => {
-  mainWindow?.webContents.send('focused');
-});
+// app.on('browser-window-focus', () => {
+//   mainWindow?.webContents.send('focused');
+// });
 
-app.on('browser-window-blur', () => {
-  mainWindow?.webContents.send('blurred');
-});
-
-app.on('ready', createWindow);
-
-app.on('window-all-closed', () => {
-  console.log('window-all-closed');
-  app.quit();
-});
-
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow();
-  }
-});
+// app.on('browser-window-blur', () => {
+//   mainWindow?.webContents.send('blurred');
+// });

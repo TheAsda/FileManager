@@ -4,7 +4,7 @@
     "emitDecoratorMetadata": true,
     "target": "ES5",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -23,5 +23,5 @@
     },
     "sourceMap": true
   },
-  "exclude": ["_templates", "dist"]
+  "exclude": ["_templates", "dist", "build"]
 }
