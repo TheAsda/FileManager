@@ -12,7 +12,7 @@ interface ExplorerPanelsProps {
 }
 
 const ExplorerPanels = (props: ExplorerPanelsProps) => {
-  const { explorers } = useStore(store);
+  const { explorers, settings } = useStore(store);
   const { directoryManager } = useDirectoryManager();
   const { paths, addPath } = usePaths();
   const { theme } = useTheme();
@@ -167,7 +167,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
             {explorers.panel0 && (
               <ErrorBoundary>
                 <Explorer
-                  autoPreview={explorers.autoPreview}
+                  autoPreview={settings.autoPreview}
                   closable={explorers.panel1 !== undefined}
                   directoryManager={directoryManager}
                   explorerState={explorers.panel0.state}
@@ -178,7 +178,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
                   onMove={onMove(0)}
                   onPreview={props.onPreview}
                   openInTerminal={props.openInTerminal}
-                  showHidden={explorers.showHidden}
+                  showHidden={settings.showHidden}
                   theme={theme}
                 />
               </ErrorBoundary>
@@ -186,7 +186,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
             {explorers.panel1 && (
               <ErrorBoundary>
                 <Explorer
-                  autoPreview={explorers.autoPreview}
+                  autoPreview={settings.autoPreview}
                   closable={explorers.panel0 !== undefined}
                   directoryManager={directoryManager}
                   explorerState={explorers.panel1.state}
@@ -197,7 +197,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
                   onMove={onMove(1)}
                   onPreview={props.onPreview}
                   openInTerminal={props.openInTerminal}
-                  showHidden={explorers.showHidden}
+                  showHidden={settings.showHidden}
                   theme={theme}
                 />
               </ErrorBoundary>

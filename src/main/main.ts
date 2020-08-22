@@ -10,6 +10,7 @@ import { KeyMapManager } from './managers/KeyMapManager';
 import { values, isEqual } from 'lodash';
 import { Channels } from '../common/Channels';
 import { ConfirmTypes } from '../common/ConfirmTypes';
+import { LayoutManager } from './managers/LayoutManager';
 
 const mode = process.env.NODE_ENV || 'production';
 const isDev = () => mode !== 'production';
@@ -39,18 +40,18 @@ const settingsManager = new SettingsManager();
 const themesManager = new ThemesManager();
 const pathManager = new PathManager();
 const keymapManager = new KeyMapManager();
+const layoutManager = new LayoutManager();
 
 const createWindow = () => {
   mainWindow = new Window({
     file: `file://${__dirname}/index.html`,
     openDevTools: isDev(),
-    // frame: false,
+    frame: false,
   });
 
   // mainWindow.setMenu(null);
 
   mainWindow.on('closed', () => {
-    console.log('close');
     mainWindow = null;
   });
 
@@ -59,17 +60,17 @@ const createWindow = () => {
 
 ipcMain.handle('close-event', () => {
   mainWindow?.webContents.send(Channels.BEFORE_QUIT);
-  // app.quit();
 });
 
 const quitConfirms: string[] = [];
 
-ipcMain.on(Channels.QUIT_CONFIRM, (event, args: string) => {
+ipcMain.on(Channels.QUITTER, (event, args: string) => {
   quitConfirms.push(args);
 
   console.log('quitConfirms', quitConfirms);
 
   if (isEqual(values(ConfirmTypes), quitConfirms)) {
+    mainWindow?.destroy();
     app.quit();
   }
 });

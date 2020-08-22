@@ -2,6 +2,11 @@ import { TerminalManager } from '@fm/common';
 import { ApplicationStore } from './interfaces';
 
 const initialStore: ApplicationStore = {
+  settings: {
+    autoPreview: true,
+    showHidden: false,
+    theme: 'default',
+  },
   window: {
     height: 800,
     width: 600,
@@ -19,8 +24,6 @@ const initialStore: ApplicationStore = {
   },
   explorers: {
     hidden: false,
-    autoPreview: true,
-    showHidden: false,
     panel0: {
       state: {
         path: process.cwd(),

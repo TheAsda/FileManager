@@ -7,7 +7,7 @@ import './style.css';
 const App = () => {
   return (
     <>
-      {/* <Titlebar /> */}
+      <Titlebar />
       <ThemeProvider>
         <KeyMapProvider>
           <CommandsProvider>

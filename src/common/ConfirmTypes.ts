@@ -1,5 +1,6 @@
 const ConfirmTypes = {
-  SETTINGS: 'settings',
+  // SETTINGS: 'settings',
+  LAYOUT: 'layout',
 };
 
 export { ConfirmTypes };

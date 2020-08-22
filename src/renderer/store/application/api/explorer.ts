@@ -8,16 +8,6 @@ const explorerApi = createApi(store, {
 
     return clone(state);
   },
-  toggleAutoPreview: (state) => {
-    state.explorers.autoPreview = !state.explorers.autoPreview;
-
-    return clone(state);
-  },
-  toggleShowHidden: (state) => {
-    state.explorers.showHidden = !state.explorers.showHidden;
-
-    return clone(state);
-  },
   openExplorer: (
     state,
     value: {

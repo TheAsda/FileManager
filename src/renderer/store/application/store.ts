@@ -2,8 +2,18 @@ import { createStore, createEvent } from 'effector';
 import { clone } from 'lodash';
 import { ApplicationStore } from './interfaces';
 import { initialStore } from './initialStore';
+import { ipcRenderer } from 'electron';
+import { Channels, ConfirmTypes, Layout, Settings } from '@fm/common';
+import { mapLayout, mapSettings } from './storeMappers';
 
-const store = createStore<ApplicationStore>(initialStore);
+const layout = ipcRenderer.sendSync(Channels.GET_LAYOUT) as Layout;
+console.log("layout", layout)
+const settings = ipcRenderer.sendSync(Channels.GET_SETTINGS) as Settings;
+
+let s = mapLayout(initialStore, layout);
+s = mapSettings(s, settings);
+
+const store = createStore<ApplicationStore>(s);
 
 const setWindowSize = createEvent<{ width: number; height: number }>();
 store.on(setWindowSize, (state, value) => {
@@ -24,6 +34,11 @@ store.on(setSectionsSize, (state, value) => {
   state.window.sections.terminal = value.terminal;
 
   return clone(state);
+});
+
+ipcRenderer.on(Channels.BEFORE_QUIT, () => {
+  ipcRenderer.send(Channels.SAVE_LAYOUT, mapLayout(store.getState()));
+  ipcRenderer.send(Channels.QUITTER, ConfirmTypes.LAYOUT);
 });
 
 export { store, setWindowSize, setSectionsSize };

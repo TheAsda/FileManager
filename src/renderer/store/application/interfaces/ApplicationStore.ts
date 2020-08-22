@@ -3,6 +3,11 @@ import { TerminalStore } from './TerminalStore';
 import { ExplorersStore } from './ExplorerStore';
 
 interface ApplicationStore {
+  settings: {
+    autoPreview: boolean;
+    showHidden: boolean;
+    theme: string;
+  };
   window: {
     width: number;
     height: number;
@@ -14,8 +19,6 @@ interface ApplicationStore {
   };
   explorers: {
     hidden: boolean;
-    autoPreview: boolean;
-    showHidden: boolean;
     panel0?: ExplorersStore;
     panel1?: ExplorersStore;
   };

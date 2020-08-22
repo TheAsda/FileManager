@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCommands, useTheme, CommandsWrapper, useKeyMap } from '@fm/hooks';
-import { noop, map, toPairs, reduce, merge } from 'lodash';
+import { noop, map, toPairs, reduce, merge, size } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
 import {
@@ -20,7 +20,7 @@ import { useStore } from 'effector-react';
 
 const Window = () => {
   const state = useStore(store);
-  console.log('Window -> state', state);
+
   const { commands } = useCommands();
   const { keymap } = useKeyMap();
 
@@ -198,12 +198,29 @@ const Window = () => {
     console.error('WTF Resizing');
   };
 
+  const sizes: number[] = [];
+  
+  if (state.window.sections.explorer.width !== 0) {
+    sizes.push(state.window.sections.explorer.width);
+  }
+  if (state.window.sections.preview.width !== 0) {
+    sizes.push(state.window.sections.preview.width);
+  }
+  if (state.window.sections.terminal.width !== 0) {
+    sizes.push(state.window.sections.terminal.width);
+  }
+
   return (
     <HotKeysWrapper keyMap={keymap}>
       <HotKeysWrapper handlers={hotkeys}>
         <div className="window">
           <CommandsWrapper commands={localCommands} scope="window">
-            <SplitPanels minSize={200} onResize={onResize} splitType="vertical">
+            <SplitPanels
+              minSize={200}
+              onResize={onResize}
+              splitType="vertical"
+              initialSizes={sizes}
+            >
               {!state.explorers.hidden && (
                 <ExplorerPanels onPreview={previewHandler} openInTerminal={openInTerminal} />
               )}

@@ -17,7 +17,10 @@ const Channels = {
   RESET_KEYMAP: 'reset-keymap',
   KEYMAP: 'keymap',
   BEFORE_QUIT: 'before-quit',
-  QUIT_CONFIRM: 'quit-confirm',
+  GET_LAYOUT: 'get-layout',
+  SAVE_LAYOUT: 'save-layout',
+  LAYOUT: 'layout',
+  QUITTER: 'quitter',
 };
 
 export { Channels };

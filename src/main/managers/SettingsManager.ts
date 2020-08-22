@@ -11,7 +11,7 @@ class SettingsManager {
     this.settingsStore = new SettingsStore();
 
     ipcMain.on(Channels.GET_SETTINGS, (event) => {
-      event.reply(Channels.SETTINGS, this.settingsStore.getAll());
+      event.returnValue = this.settingsStore.getAll();
     });
 
     ipcMain.on(Channels.SET_SETTINGS, (event, args: Settings) => {
