@@ -13,6 +13,7 @@
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
+    "plugin:import/electron",
     "plugin:lodash/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
