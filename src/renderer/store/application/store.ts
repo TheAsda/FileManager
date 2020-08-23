@@ -5,10 +5,10 @@ import { initialStore } from './initialStore';
 import { ipcRenderer } from 'electron';
 import { Channels, ConfirmTypes, Layout, Settings } from '@fm/common';
 import { mapLayout, mapSettings } from './storeMappers';
+import { sendIpc } from '../ipc';
 
-const layout = ipcRenderer.sendSync(Channels.GET_LAYOUT) as Layout;
-console.log("layout", layout)
-const settings = ipcRenderer.sendSync(Channels.GET_SETTINGS) as Settings;
+const layout = sendIpc<Layout, never>(Channels.GET_LAYOUT);
+const settings = sendIpc<Settings, never>(Channels.GET_SETTINGS);
 
 let s = mapLayout(initialStore, layout);
 s = mapSettings(s, settings);

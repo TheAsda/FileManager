@@ -1,6 +1,7 @@
 import { Layout, TerminalPanelInfo } from 'common/interfaces/Layout';
 import { ApplicationStore } from './interfaces';
 import { TerminalManager, ExplorerPanelInfo, Settings } from '@fm/common';
+import { log } from 'electron-log';
 
 function mapLayout(store: ApplicationStore): Layout;
 function mapLayout(store: ApplicationStore, layout: Layout): ApplicationStore;
@@ -110,6 +111,7 @@ function mapLayout(store: ApplicationStore, layout?: Layout): Layout | Applicati
 function mapSettings(store: ApplicationStore): Settings;
 function mapSettings(store: ApplicationStore, settings: Settings): ApplicationStore;
 function mapSettings(store: ApplicationStore, settings?: Settings): Settings | ApplicationStore {
+  log('settings', settings);
   if (settings) {
     store.settings.autoPreview = settings.autoPreview;
     store.settings.theme = settings.theme;

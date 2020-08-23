@@ -14,6 +14,8 @@ import { initLogger } from './initLogger';
 import { setWindow, getWindow } from './window';
 import isDev from 'electron-is-dev';
 import { openDevTools } from './openDevTools';
+import { initLayoutIpc, layoutStore } from './managers/initLayoutIpc';
+import { initSettingsIpc } from './managers/initSettingsIpc';
 // import { log } from 'electron-log';
 
 initLogger();
@@ -26,17 +28,19 @@ if (isDev) {
 
 app.allowRendererProcessReuse = false;
 
-const settingsManager = new SettingsManager();
+// const settingsManager = new SettingsManager();
 const themesManager = new ThemesManager();
 const pathManager = new PathManager();
 const keymapManager = new KeyMapManager();
-const layoutManager = new LayoutManager();
+// const layoutManager = new LayoutManager();
+initLayoutIpc();
+initSettingsIpc();
 
 const createWindow = async (): Promise<BrowserWindow> => {
   const window = new BrowserWindow({
     frame: false,
-    width: layoutManager.layoutStore.get().window.width,
-    height: layoutManager.layoutStore.get().window.height,
+    width: layoutStore.get().window.width,
+    height: layoutStore.get().window.height,
     minHeight: 600,
     minWidth: 800,
     webPreferences: {
