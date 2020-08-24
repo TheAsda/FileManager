@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 import { Theme } from '@fm/common';
@@ -43,15 +43,17 @@ interface InputModalProps {
 
 const InputModal = (props: InputModalProps) => {
   const { theme } = useTheme();
-  const [state, setState] = useState<string>(props.initialValue ?? '');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const accept = () => {
-    props.onAccept(state);
+    if (inputRef.current) {
+      props.onAccept(inputRef.current.value);
+    }
   };
 
   useEffect(() => {
-    if (props.initialValue) {
-      setState(props.initialValue);
+    if (inputRef.current && props.initialValue) {
+      inputRef.current.value = props.initialValue;
     }
   }, [props.initialValue]);
 
@@ -77,12 +79,7 @@ const InputModal = (props: InputModalProps) => {
       <Title {...theme}>{props.title}</Title>
       <Content>
         <SubHeader {...theme}>{props.subtitle}</SubHeader>
-        <Input
-          {...theme}
-          onChange={(event) => setState(event.target.value)}
-          value={state}
-          autoFocus
-        />
+        <Input {...theme} ref={inputRef} autoFocus />
       </Content>
       <Footer>
         <Button {...theme} onClick={props.onClose}>
