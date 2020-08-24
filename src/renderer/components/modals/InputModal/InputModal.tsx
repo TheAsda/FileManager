@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import Modal from 'react-modal';
+import { Modal } from 'react-responsive-modal';
 import styled from 'styled-components';
 import { Theme } from '@fm/common';
 import { useTheme } from '@fm/hooks';
+import 'react-responsive-modal/styles.css';
 
 const Title = styled.h1<Theme>`
   font-size: ${(props) => props['palette.fontSize'] * 1.5}px;
@@ -59,22 +60,18 @@ const InputModal = (props: InputModalProps) => {
 
   return (
     <Modal
-      ariaHideApp={false}
-      isOpen={props.isOpened}
-      onRequestClose={props.onClose}
-      shouldCloseOnOverlayClick={true}
-      style={{
-        content: {
+      onClose={props.onClose}
+      open={props.isOpened}
+      showCloseIcon={false}
+      styles={{
+        modal: {
           padding: '10px',
           color: theme['palette.textColor'],
           backgroundColor: theme['palette.backgroundColor'],
-          top: '50%',
-          left: '50%',
-          bottom: undefined,
-          right: undefined,
-          transform: 'translate(-50%,-50%)',
         },
       }}
+      closeOnEsc
+      closeOnOverlayClick
     >
       <Title {...theme}>{props.title}</Title>
       <Content>

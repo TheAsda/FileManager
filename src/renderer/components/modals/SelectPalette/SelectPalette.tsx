@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
 import { clamp, map, includes, isEqual, indexOf } from 'lodash';
 import { SelectPaletteItem } from './SelectPaletteItem';
-import Modal from 'react-modal';
+import { Modal } from 'react-responsive-modal';
 import { HotKeysWrapper } from '@fm/components';
 import Fuse from 'fuse.js';
 import styled from 'styled-components';
 import { Theme } from '@fm/common';
 
 const Header = styled.div`
-  $spaceSize: 5px;
-  border-bottom: 2px solid $spaceSize;
-  padding-bottom: $spaceSize;
-  margin-bottom: $spaceSize;
+  border-bottom: 2px solid 5px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
 `;
 
 const Search = styled.input`
@@ -124,19 +123,19 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
   render() {
     return (
       <Modal
-        ariaHideApp={false}
-        isOpen={this.props.isOpened}
-        onRequestClose={this.props.onClose}
-        shouldCloseOnOverlayClick={true}
-        style={{
-          content: {
-            margin: '0 80px',
-            marginTop: '20px',
+        onClose={this.props.onClose}
+        open={this.props.isOpened}
+        showCloseIcon={false}
+        styles={{
+          modal: {
             padding: '10px',
             color: this.props.theme['palette.textColor'],
             backgroundColor: this.props.theme['palette.backgroundColor'],
+            width: '80%',
           },
         }}
+        closeOnEsc
+        closeOnOverlayClick
       >
         <HotKeysWrapper handlers={this.handlers}>
           <Header>
