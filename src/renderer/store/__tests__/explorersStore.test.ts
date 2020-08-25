@@ -1,10 +1,13 @@
 import { createEvent, createStore, Store } from 'effector';
 import {
   destroyExplorer,
+  explorersStateStore,
   explorersStore,
   ExplorerStore,
   mountExplorerEvents,
+  resizeExplorers,
   spawnExplorer,
+  toggleExplorers,
 } from '../explorersStore';
 import { transports } from 'electron-log';
 import { platform } from 'os';
@@ -115,6 +118,37 @@ describe('Explorers store', () => {
       } else {
         throw new Error('OS not supported');
       }
+    });
+  });
+
+  describe('Explorer state store', () => {
+    const reset = createEvent();
+    explorersStateStore.reset(reset);
+
+    beforeEach(() => {
+      reset();
+    });
+
+    it('should resize on event call', () => {
+      resizeExplorers(123);
+
+      expect(explorersStateStore.getState().width).toBe(123);
+
+      resizeExplorers(456);
+
+      expect(explorersStateStore.getState().width).toBe(456);
+    });
+
+    it('should toggle on event call', () => {
+      const initialHidden = explorersStateStore.getState().hidden;
+
+      toggleExplorers();
+
+      expect(explorersStateStore.getState().hidden).toBe(!initialHidden);
+
+      toggleExplorers();
+
+      expect(explorersStateStore.getState().hidden).toBe(initialHidden);
     });
   });
 });

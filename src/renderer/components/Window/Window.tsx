@@ -215,10 +215,10 @@ const Window = () => {
         <div className="window">
           <CommandsWrapper commands={localCommands} scope="window">
             <SplitPanels
+              initialSizes={sizes}
               minSize={200}
               onResize={onResize}
               splitType="vertical"
-              initialSizes={sizes}
             >
               {!state.explorers.hidden && (
                 <ExplorerPanels onPreview={previewHandler} openInTerminal={openInTerminal} />

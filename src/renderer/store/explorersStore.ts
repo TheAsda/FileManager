@@ -61,4 +61,40 @@ const mountExplorerEvents = (store: Store<ExplorerStore>) => {
   return { resizeExplorer, changePath };
 };
 
-export { explorersStore, spawnExplorer, destroyExplorer, mountExplorerEvents, ExplorerStore };
+interface ExplorersStateStore {
+  width: number;
+  hidden: boolean;
+}
+
+const explorersStateStore = domain.createStore<ExplorersStateStore>({
+  hidden: false,
+  width: 0,
+});
+
+const resizeExplorers = createEvent<number>();
+explorersStateStore.on(resizeExplorers, (state, value) => {
+  return {
+    ...state,
+    width: value,
+  };
+});
+
+const toggleExplorers = createEvent();
+explorersStateStore.on(toggleExplorers, (state) => {
+  return {
+    ...state,
+    hidden: !state.hidden,
+  };
+});
+
+export {
+  destroyExplorer,
+  explorersStateStore,
+  ExplorersStateStore,
+  explorersStore,
+  ExplorerStore,
+  mountExplorerEvents,
+  resizeExplorers,
+  spawnExplorer,
+  toggleExplorers,
+};
