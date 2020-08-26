@@ -20,7 +20,8 @@
     "pack:win": "yarn build && electron-builder --win",
     "pack:linux": "yarn build && electron-builder --linux",
     "postinstall": "electron-builder install-app-deps",
-    "test": "jest"
+    "test": "jest",
+    "commit": "cz"
   },
   "build": {
     "appId": "com.electron.filemanager",
@@ -52,6 +53,7 @@
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
     "css-loader": "^4.2.2",
+    "cz-conventional-changelog": "3.3.0",
     "dotenv-webpack": "^2.0.0",
     "electron": "^10.0.0",
     "electron-builder": "^22.8.0",
@@ -104,5 +106,10 @@
     "trash": "^6.1.1",
     "xterm": "^4.8.1",
     "xterm-addon-fit": "^0.4.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
