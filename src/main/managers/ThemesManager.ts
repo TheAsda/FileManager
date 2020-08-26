@@ -10,8 +10,9 @@ class ThemesManager {
   constructor() {
     this.themesStore = new ThemesStore();
 
-    ipcMain.on(Channels.GET_THEME, (event) => {
-      event.reply(Channels.THEME, this.themesStore.getTheme());
+    ipcMain.on(Channels.GET_THEME, (event, name: string) => {
+      this.themesStore.setThemeName(name);
+      event.returnValue = this.themesStore.getTheme();
     });
 
     ipcMain.on(Channels.SET_THEME, (event, args: string[]) => {
