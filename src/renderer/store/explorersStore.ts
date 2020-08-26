@@ -10,8 +10,8 @@ interface ExplorerStore {
 const domain = createDomain('explorers');
 const explorersStore = domain.createStore<Store<ExplorerStore>[]>([]);
 
-const spawnExplorer = createEvent<{ path?: string }>();
-explorersStore.on(spawnExplorer, (state, value: { path?: string }) => {
+const spawnExplorer = domain.createEvent<{ path?: string }>();
+explorersStore.on(spawnExplorer, (state, value) => {
   if (state.length > 1) {
     warn('Explorers store is full, cannot spawn new explorer');
     return state;
@@ -27,16 +27,16 @@ explorersStore.on(spawnExplorer, (state, value: { path?: string }) => {
   ];
 });
 
-const destroyExplorer = createEvent<number>();
+const destroyExplorer = domain.createEvent<number>();
 explorersStore.on(destroyExplorer, (state, value) => {
-  const storeToDestroy = state.splice(value, 1);
-  if (storeToDestroy.length === 0) {
-    warn(`Cannot destroy explorer with index ${value}`);
+  const storeToDestroy = state.splice(value, 1)[0];
+  if (!storeToDestroy) {
+    warn(`Cannot find explorer with index ${value}`);
     return state;
   }
   info(`Destroy explorer ${value}`);
 
-  clearNode(storeToDestroy[0], { deep: true });
+  clearNode(storeToDestroy, { deep: true });
 
   return [...state];
 });
@@ -71,7 +71,7 @@ const explorersStateStore = domain.createStore<ExplorersStateStore>({
   width: 0,
 });
 
-const resizeExplorers = createEvent<number>();
+const resizeExplorers = domain.createEvent<number>();
 explorersStateStore.on(resizeExplorers, (state, value) => {
   return {
     ...state,
@@ -79,7 +79,7 @@ explorersStateStore.on(resizeExplorers, (state, value) => {
   };
 });
 
-const toggleExplorers = createEvent();
+const toggleExplorers = domain.createEvent();
 explorersStateStore.on(toggleExplorers, (state) => {
   return {
     ...state,

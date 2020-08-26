@@ -7,10 +7,10 @@ import { getRemoteCWD } from 'filemancore';
 class TerminalManager implements ITerminalManager {
   private process: IPty;
 
-  constructor() {
+  constructor(path?: string) {
     const shell = platform() === 'win32' ? 'powershell.exe' : 'bash';
     this.process = spawn(shell, [], {
-      cwd: homedir(),
+      cwd: path ?? homedir(),
     });
   }
 
