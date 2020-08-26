@@ -1,5 +1,6 @@
 import { createStore, createApi } from 'effector';
 import { FileInfo } from '@fm/common';
+import { warn } from 'electron-log';
 
 type FileActionType = 'move' | 'copy';
 
@@ -20,6 +21,11 @@ const fileActionStore = createStore<FileActionStore>({
 
 const fileActionApi = createApi(fileActionStore, {
   activate: (state, value: FileActionInfo) => {
+    if (value.files.length === 0) {
+      warn('Empty array of files to make an action on');
+      return state;
+    }
+
     return {
       info: value,
       display: true,
@@ -33,4 +39,4 @@ const fileActionApi = createApi(fileActionStore, {
   },
 });
 
-export { FileActionType, FileActionStore, fileActionStore, fileActionApi };
+export { FileActionType, FileActionStore, FileActionInfo, fileActionStore, fileActionApi };
