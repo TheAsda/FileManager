@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { SelectPalette } from '../SelectPalette';
-import { remote } from 'electron';
+import { remote, app } from 'electron';
 import { useDirectoryManager, useTheme } from '@fm/hooks';
 import { reject, filter, endsWith, map, noop } from 'lodash';
 
-const themesFolderPath = remote.app.getPath('userData') + '/themes';
+const themesFolderPath = (app || remote.app).getPath('userData') + '/themes';
 
 interface ThemeSelectorProps {
   isOpened: boolean;

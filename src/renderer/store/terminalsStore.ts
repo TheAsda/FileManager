@@ -1,6 +1,6 @@
 import { ITerminalManager, TerminalManager } from '@fm/common';
-import { clearNode, createDomain, createEvent, Store } from 'effector';
-import { info, warn } from 'electron-log';
+import { clearNode, createDomain, createEvent, Store, Event, createApi } from 'effector';
+import { error, info, warn } from 'electron-log';
 
 interface TerminalStore {
   height: number;
@@ -10,6 +10,42 @@ interface TerminalStore {
 const domain = createDomain('terminals');
 const terminalsStore = domain.createStore<Store<TerminalStore>[]>([]);
 
+interface EventStore {
+  resizeTerminal: Event<number>;
+  changePath: Event<string>;
+}
+
+const terminalsEventsStore = domain.createStore<EventStore[]>([]);
+
+const explorersEventsStoreApi = createApi(terminalsEventsStore, {
+  add: (state, value: EventStore) => {
+    if (state.length > 1) {
+      error('Too many events in the store');
+      return state;
+    }
+
+    return [...state, value];
+  },
+  remove: (state, index: number) => {
+    if (state.length === 0) {
+      error('Cannot remove from empty events store');
+      return state;
+    }
+
+    const itemToDelete = state.splice(index, 1)[0];
+
+    if (!itemToDelete) {
+      warn(`Cannot remove item with index ${index} from events store`);
+      return state;
+    }
+
+    clearNode(itemToDelete.changePath);
+    clearNode(itemToDelete.resizeTerminal);
+
+    return [...state];
+  },
+});
+
 const spawnTerminal = domain.createEvent<{ path?: string }>();
 terminalsStore.on(spawnTerminal, (state, value) => {
   if (state.length > 1) {
@@ -18,13 +54,15 @@ terminalsStore.on(spawnTerminal, (state, value) => {
   }
   info('Spawn new terminal');
 
-  return [
-    ...state,
-    domain.createStore<TerminalStore>({
-      height: 0,
-      manager: new TerminalManager(value.path),
-    }),
-  ];
+  const store = domain.createStore<TerminalStore>({
+    height: 0,
+    manager: new TerminalManager(value.path),
+  });
+
+  const events = mountTerminalEvents(store);
+  explorersEventsStoreApi.add(events);
+
+  return [...state, store];
 });
 
 const destroyTerminal = domain.createEvent<number>();
@@ -99,4 +137,5 @@ export {
   terminalsStore,
   TerminalStore,
   toggleTerminals,
+  terminalsEventsStore,
 };

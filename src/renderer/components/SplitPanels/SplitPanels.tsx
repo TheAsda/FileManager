@@ -1,5 +1,17 @@
 import React, { Component, ReactNode } from 'react';
-import { clone, fill, isArray, reduce, times, map, compact, isEqual, isFunction } from 'lodash';
+import {
+  clone,
+  fill,
+  isArray,
+  reduce,
+  times,
+  map,
+  compact,
+  isEqual,
+  isFunction,
+  every,
+  isEmpty,
+} from 'lodash';
 import { Resizer } from './Resizer';
 import { SplitPanel } from './SplitPanel';
 import { SplitType } from './splitType';
@@ -47,10 +59,14 @@ class SplitPanels extends Component<SplitPanelsProps, SplitPanelsState> {
 
     const children = isArray(props.children) ? props.children : [props.children];
 
-    console.log('SplitPanels -> constructor -> props.initialSizes', props.initialSizes);
+    const initialSizes =
+      props.initialSizes && every(props.initialSizes, (size) => size !== 0)
+        ? props.initialSizes
+        : [];
+
     // TODO: check initialSizes
     this.state = {
-      sizes: props.initialSizes ?? [],
+      sizes: initialSizes,
       active: false,
       x: 0,
       y: 0,

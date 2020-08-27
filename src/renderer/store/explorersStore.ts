@@ -1,5 +1,5 @@
-import { clearNode, createDomain, createEvent, Store } from 'effector';
-import { warn, info } from 'electron-log';
+import { clearNode, createDomain, createEvent, Store, Event, createApi } from 'effector';
+import { warn, info, error } from 'electron-log';
 import { normalize } from 'path';
 
 interface ExplorerStore {
@@ -10,6 +10,42 @@ interface ExplorerStore {
 const domain = createDomain('explorers');
 const explorersStore = domain.createStore<Store<ExplorerStore>[]>([]);
 
+interface EventStore {
+  resizeExplorer: Event<number>;
+  changePath: Event<string>;
+}
+
+const explorersEventsStore = domain.createStore<EventStore[]>([]);
+
+const explorersEventsStoreApi = createApi(explorersEventsStore, {
+  add: (state, value: EventStore) => {
+    if (state.length > 1) {
+      error('Too many events in the store');
+      return state;
+    }
+
+    return [...state, value];
+  },
+  remove: (state, index: number) => {
+    if (state.length === 0) {
+      error('Cannot remove from empty events store');
+      return state;
+    }
+
+    const itemToDelete = state.splice(index, 1)[0];
+
+    if (!itemToDelete) {
+      warn(`Cannot remove item with index ${index} from events store`);
+      return state;
+    }
+
+    clearNode(itemToDelete.changePath);
+    clearNode(itemToDelete.resizeExplorer);
+
+    return [...state];
+  },
+});
+
 const spawnExplorer = domain.createEvent<{ path?: string }>();
 explorersStore.on(spawnExplorer, (state, value) => {
   if (state.length > 1) {
@@ -18,13 +54,16 @@ explorersStore.on(spawnExplorer, (state, value) => {
   }
   info('Spawn new explorer');
 
-  return [
-    ...state,
-    domain.createStore<ExplorerStore>({
-      height: 0,
-      path: value.path ?? process.cwd(),
-    }),
-  ];
+  const store = domain.createStore<ExplorerStore>({
+    height: 0,
+    path: value.path ?? process.cwd(),
+  });
+
+  const events = mountExplorerEvents(store);
+
+  explorersEventsStoreApi.add(events);
+
+  return [...state, store];
 });
 
 const destroyExplorer = domain.createEvent<number>();
@@ -36,6 +75,7 @@ explorersStore.on(destroyExplorer, (state, value) => {
   }
   info(`Destroy explorer ${value}`);
 
+  explorersEventsStoreApi.remove(value);
   clearNode(storeToDestroy, { deep: true });
 
   return [...state];
@@ -97,4 +137,5 @@ export {
   resizeExplorers,
   spawnExplorer,
   toggleExplorers,
+  explorersEventsStore,
 };

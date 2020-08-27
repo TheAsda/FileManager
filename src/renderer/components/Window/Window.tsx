@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useCommands, useTheme, CommandsWrapper, useKeyMap } from '@fm/hooks';
-import { noop, map, toPairs, reduce, merge } from 'lodash';
+import { map, toPairs, reduce, merge } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
 import {
@@ -13,13 +13,23 @@ import {
   HotKeysWrapper,
 } from '@fm/components';
 import { remote } from 'electron';
-import { storeApi, setSectionsSize, store } from '@fm/store';
+import {
+  setPreviewFile,
+  terminalsStateStore,
+  explorersStateStore,
+  previewStore,
+  resizeExplorers,
+  resizeTerminals,
+  resizePreview,
+} from '@fm/store';
 import { ThemeSelector } from '../modals/ThemeSelector';
 import { FileModal } from '../modals';
 import { useStore } from 'effector-react';
 
 const Window = () => {
-  const state = useStore(store);
+  const terminalsState = useStore(terminalsStateStore);
+  const explorersState = useStore(explorersStateStore);
+  const previewState = useStore(previewStore);
 
   const { commands } = useCommands();
   const { keymap } = useKeyMap();
@@ -45,39 +55,11 @@ const Window = () => {
     setCommandPalette(false);
   };
 
-  const [terminalSelect, setTerminalSelect] = useState<{
-    isShown: boolean;
-    onSelect: (index: number) => void;
-  }>({
-    isShown: false,
-    onSelect: noop,
-  });
-  const closeSelect = () => {
-    setTerminalSelect({
-      isShown: false,
-      onSelect: noop,
-    });
-  };
-
-  const openInTerminal = (path: string) => {
-    setTerminalSelect({
-      isShown: true,
-      onSelect: (index: number) => {
-        storeApi.changeTerminalDirectory({
-          index,
-          path,
-        });
-        // terminals[index].changeDirectory(path);
-        closeSelect();
-      },
-    });
-  };
-
   const previewHandler = (item: FileInfo) => {
-    storeApi.setPreviewItem(item);
+    setPreviewFile(item);
   };
   const togglePreview = () => {
-    storeApi.togglePreview();
+    togglePreview();
   };
 
   const hotkeys = {
@@ -95,119 +77,34 @@ const Window = () => {
   };
 
   const onResize = (value: number[]) => {
-    if (!state.explorers.hidden && !state.preview.hidden && !state.terminals.hidden) {
-      setSectionsSize({
-        explorer: {
-          width: value[0],
-        },
-        preview: {
-          width: value[1],
-        },
-        terminal: {
-          width: value[2],
-        },
-      });
-      return;
-    }
-    if (state.explorers.hidden && !state.preview.hidden && !state.terminals.hidden) {
-      setSectionsSize({
-        explorer: {
-          width: 0,
-        },
-        preview: {
-          width: value[0],
-        },
-        terminal: {
-          width: value[1],
-        },
-      });
-      return;
-    }
-    if (!state.explorers.hidden && state.preview.hidden && !state.terminals.hidden) {
-      setSectionsSize({
-        explorer: {
-          width: value[0],
-        },
-        preview: {
-          width: 0,
-        },
-        terminal: {
-          width: value[1],
-        },
-      });
-      return;
-    }
-    if (!state.explorers.hidden && !state.preview.hidden && state.terminals.hidden) {
-      setSectionsSize({
-        explorer: {
-          width: value[0],
-        },
-        preview: {
-          width: value[1],
-        },
-        terminal: {
-          width: 0,
-        },
-      });
-      return;
-    }
-    if (!state.explorers.hidden && state.preview.hidden && state.terminals.hidden) {
-      setSectionsSize({
-        explorer: {
-          width: value[0],
-        },
-        preview: {
-          width: 0,
-        },
-        terminal: {
-          width: 0,
-        },
-      });
-      return;
-    }
-    if (state.explorers.hidden && !state.preview.hidden && state.terminals.hidden) {
-      setSectionsSize({
-        explorer: {
-          width: 0,
-        },
-        preview: {
-          width: value[0],
-        },
-        terminal: {
-          width: 0,
-        },
-      });
-      return;
-    }
-    if (state.explorers.hidden && state.preview.hidden && !state.terminals.hidden) {
-      setSectionsSize({
-        explorer: {
-          width: 0,
-        },
-        preview: {
-          width: 0,
-        },
-        terminal: {
-          width: value[0],
-        },
-      });
-      return;
-    }
+    // console.log('onResize -> value', value);
+    const hiddenState = [explorersState.hidden, previewState.hidden, previewState.hidden];
 
-    console.error('WTF Resizing');
+    const valueCopy = [...value];
+
+    const isEmpty = () => {
+      return valueCopy.length === 0;
+    };
+
+    if (!hiddenState[0]) {
+      resizeExplorers(valueCopy.shift() as number);
+    }
+    if (isEmpty()) {
+      return;
+    }
+    if (!hiddenState[1]) {
+      resizePreview(valueCopy.shift() as number);
+    }
+    if (isEmpty()) {
+      return;
+    }
+    resizeTerminals(valueCopy[0]);
   };
 
-  const sizes: number[] = [];
-
-  if (state.window.sections.explorer.width !== 0) {
-    sizes.push(state.window.sections.explorer.width);
-  }
-  if (state.window.sections.preview.width !== 0) {
-    sizes.push(state.window.sections.preview.width);
-  }
-  if (state.window.sections.terminal.width !== 0) {
-    sizes.push(state.window.sections.terminal.width);
-  }
+  const sizes: number[] = useMemo(
+    () => [terminalsState.width, previewState.width, previewState.width],
+    []
+  );
 
   return (
     <HotKeysWrapper keyMap={keymap}>
@@ -220,20 +117,12 @@ const Window = () => {
               onResize={onResize}
               splitType="vertical"
             >
-              {!state.explorers.hidden && (
-                <ExplorerPanels onPreview={previewHandler} openInTerminal={openInTerminal} />
-              )}
-              {!state.preview.hidden &&
+              {!explorersState.hidden && <ExplorerPanels onPreview={previewHandler} />}
+              {!previewState.hidden &&
                 (({ width }) => {
                   return <PreviewPanel onHide={togglePreview} width={width} />;
                 })}
-              {!state.terminals.hidden && (
-                <TerminalPanels
-                  onSelect={terminalSelect.onSelect}
-                  onSelectClose={closeSelect}
-                  selectModeActivated={terminalSelect.isShown}
-                />
-              )}
+              {!terminalsState.hidden && <TerminalPanels />}
             </SplitPanels>
           </CommandsWrapper>
         </div>
@@ -259,7 +148,7 @@ const Window = () => {
           isOpened={isCommandPaletteOpen}
           onClose={closeCommandPalette}
         />
-        <ThemeSelector isOpened={isThemeSelectorOpened} onClose={closeThemeSelector} />
+        {/* <ThemeSelector isOpened={isThemeSelectorOpened} onClose={closeThemeSelector} /> */}
         <Popup />
       </HotKeysWrapper>
     </HotKeysWrapper>

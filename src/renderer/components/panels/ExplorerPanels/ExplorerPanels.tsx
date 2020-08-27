@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
-import { useDirectoryManager, usePaths, CommandsWrapper, useTheme } from '@fm/hooks';
+import { useDirectoryManager, usePaths, CommandsWrapper } from '@fm/hooks';
 import { SplitPanels, ErrorBoundary, GoToPalette, Explorer, HotKeysWrapper } from '@fm/components';
-import { store, storeApi, fileActionApi } from '@fm/store';
+import {
+  fileActionApi,
+  settingsStore,
+  explorersStore,
+  spawnExplorer,
+  explorersEventsStore,
+  destroyExplorer,
+  settingsApi,
+  toggleExplorers,
+} from '@fm/store';
 import { useStore } from 'effector-react';
+import { map } from 'lodash';
 
 interface ExplorerPanelsProps {
   onPreview?: (item: FileInfo) => void;
@@ -12,10 +22,11 @@ interface ExplorerPanelsProps {
 }
 
 const ExplorerPanels = (props: ExplorerPanelsProps) => {
-  const { explorers, settings } = useStore(store);
+  const settings = useStore(settingsStore);
+  const explorers = useStore(explorersStore);
+  const events = useStore(explorersEventsStore);
   const { directoryManager } = useDirectoryManager();
   const { paths, addPath } = usePaths();
-  const { theme } = useTheme();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
     panelIndex?: number;
@@ -41,31 +52,24 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
   };
 
   const onClose = (index: number) => () => {
-    storeApi.closeExplorer(index);
+    destroyExplorer(index);
   };
 
   const splitExplorer = () => {
-    storeApi.openExplorer({});
+    spawnExplorer({});
   };
 
   const onCopy = (panelIndex: number) => (filesToCopy: FileInfo[]) => {
     if (filesToCopy.length === 0) {
       return;
     }
+
     let destinationPath: string;
-    if (panelIndex === 0 && explorers.panel0) {
-      if (explorers.panel1) {
-        destinationPath = explorers.panel1.state.path;
-      } else {
-        destinationPath = explorers.panel0.state.path;
-      }
+
+    if (explorers.length > 1) {
+      destinationPath = explorers[panelIndex ^ 1].getState().path;
     } else {
-      if (explorers.panel0) {
-        destinationPath = explorers.panel0.state.path;
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        destinationPath = explorers.panel1!.state.path;
-      }
+      destinationPath = explorers[0].getState().path;
     }
 
     fileActionApi.activate({
@@ -79,20 +83,13 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
     if (filesToMove.length === 0) {
       return;
     }
+
     let destinationPath: string;
-    if (panelIndex === 0 && explorers.panel0) {
-      if (explorers.panel1) {
-        destinationPath = explorers.panel1.state.path;
-      } else {
-        destinationPath = explorers.panel0.state.path;
-      }
+
+    if (explorers.length > 1) {
+      destinationPath = explorers[panelIndex ^ 1].getState().path;
     } else {
-      if (explorers.panel0) {
-        destinationPath = explorers.panel0.state.path;
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        destinationPath = explorers.panel1!.state.path;
-      }
+      destinationPath = explorers[0].getState().path;
     }
 
     fileActionApi.activate({
@@ -104,104 +101,61 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
 
   const onGotoSelect = (path: string) => {
     if (isGotoPaletteOpen.panelIndex) {
-      storeApi.changeExplorerDirectory({
-        index: isGotoPaletteOpen.panelIndex,
-        path,
-      });
+      events[isGotoPaletteOpen.panelIndex].changePath(path);
     }
     closeGotoPalette();
   };
 
   const onResize = (value: number[]) => {
-    if (explorers.panel0 && explorers.panel1) {
-      storeApi.setExplorerSize({
-        height: value[0],
-        index: 0,
-      });
-      storeApi.setExplorerSize({
-        height: value[1],
-        index: 1,
-      });
-      return;
-    }
-    if (!explorers.panel0) {
-      storeApi.setExplorerSize({
-        height: value[0],
-        index: 1,
-      });
-      return;
-    }
-    if (!explorers.panel1) {
-      storeApi.setExplorerSize({
-        height: value[0],
-        index: 0,
-      });
-      return;
-    }
+    events[0].resizeExplorer(value[0]);
 
-    console.error('WTF Resizing');
+    if (value[1]) {
+      events[1].resizeExplorer(value[1]);
+    }
   };
 
-  const onDirectoryChange = (index: 0 | 1) => (path: string) => {
+  const onDirectoryChange = (index: number) => (path: string) => {
     addPath(path);
-    storeApi.changeExplorerDirectory({
-      path,
-      index,
-    });
+    events[index].changePath(path);
   };
 
   const commands = {
-    'Toggle auto preview': () => storeApi.toggleAutoPreview(),
-    'Toggle show hidden': () => storeApi.toggleShowHidden(),
+    'Toggle auto preview': () => settingsApi.toggleAutoPreview(),
+    'Toggle show hidden': () => settingsApi.toggleShowHidden(),
   };
 
   return (
     <DefaultPanel
-      onHide={() => storeApi.toggleExplorers()}
+      onHide={() => toggleExplorers()}
       onSplit={splitExplorer}
-      splitable={!explorers.panel0 || !explorers.panel1}
+      splitable={explorers.length < 2}
     >
       <CommandsWrapper commands={commands} scope="explorers">
         <HotKeysWrapper handlers={hotkeys}>
           <SplitPanels minSize={200} onResize={onResize} splitType="horizontal">
-            {explorers.panel0 && (
-              <ErrorBoundary>
-                <Explorer
-                  autoPreview={settings.autoPreview}
-                  closable={explorers.panel1 !== undefined}
-                  directoryManager={directoryManager}
-                  explorerState={explorers.panel0.state}
-                  index={1}
-                  onClose={onClose(0)}
-                  onCopy={onCopy(0)}
-                  onDirectoryChange={onDirectoryChange(0)}
-                  onMove={onMove(0)}
-                  onPreview={props.onPreview}
-                  openInTerminal={props.openInTerminal}
-                  showHidden={settings.showHidden}
-                  theme={theme}
-                />
-              </ErrorBoundary>
-            )}
-            {explorers.panel1 && (
-              <ErrorBoundary>
-                <Explorer
-                  autoPreview={settings.autoPreview}
-                  closable={explorers.panel0 !== undefined}
-                  directoryManager={directoryManager}
-                  explorerState={explorers.panel1.state}
-                  index={2}
-                  onClose={onClose(1)}
-                  onCopy={onCopy(1)}
-                  onDirectoryChange={onDirectoryChange(1)}
-                  onMove={onMove(1)}
-                  onPreview={props.onPreview}
-                  openInTerminal={props.openInTerminal}
-                  showHidden={settings.showHidden}
-                  theme={theme}
-                />
-              </ErrorBoundary>
-            )}
+            {map(explorers, (item, i) => {
+              const explorer = item.getState();
+
+              return (
+                <ErrorBoundary key={item.sid ?? i}>
+                  <Explorer
+                    autoPreview={settings.autoPreview}
+                    closable={explorers.length > 1}
+                    directoryManager={directoryManager}
+                    explorerState={explorer}
+                    index={i}
+                    onClose={onClose(i)}
+                    onCopy={onCopy(i)}
+                    onDirectoryChange={onDirectoryChange(i)}
+                    onMove={onMove(i)}
+                    onPreview={props.onPreview}
+                    openInTerminal={props.openInTerminal}
+                    showHidden={settings.showHidden}
+                    theme={settings.theme}
+                  />
+                </ErrorBoundary>
+              );
+            })}
           </SplitPanels>
         </HotKeysWrapper>
       </CommandsWrapper>

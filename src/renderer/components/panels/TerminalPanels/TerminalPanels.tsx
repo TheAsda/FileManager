@@ -4,18 +4,23 @@ import { DefaultPanel } from '../DefaultPanel';
 import { useTheme, usePaths } from '@fm/hooks';
 import { SelectPanel } from '../SelectPanel';
 import { ErrorBoundary, SplitPanels, GoToPalette, Terminal, HotKeysWrapper } from '@fm/components';
-import { store, storeApi } from '@fm/store';
+import {
+  destroyTerminal,
+  terminalsEventsStore,
+  explorersStore,
+  settingsStore,
+  spawnTerminal,
+  terminalsStore,
+} from '@fm/store';
 import { useStore } from 'effector-react';
+import { map, noop } from 'lodash';
 
-interface TerminalPanelsProps {
-  selectModeActivated?: boolean;
-  onSelect: (index: number) => void;
-  onSelectClose: () => void;
-}
+interface TerminalPanelsProps {}
 
 const TerminalPanels = (props: TerminalPanelsProps) => {
-  const { terminals } = useStore(store);
-  const { theme } = useTheme();
+  const settings = useStore(settingsStore);
+  const terminals = useStore(terminalsStore);
+  const events = useStore(terminalsEventsStore);
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
     panelIndex?: number;
@@ -38,13 +43,11 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   };
 
   const onClose = (index: number) => () => {
-    storeApi.closeTerminal(index);
-    // closeTerminal(terminals[index].getId());
+    destroyTerminal(index);
   };
 
   const splitTerminal = () => {
-    storeApi.openTerminal({});
-    // openTerminal();
+    spawnTerminal({});
   };
 
   const hotkeys = {
@@ -56,105 +59,42 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   };
 
   const onResize = (value: number[]) => {
-    if (terminals.panel0 && terminals.panel1) {
-      storeApi.setTerminalSize({
-        height: value[0],
-        index: 0,
-      });
-      storeApi.setTerminalSize({
-        height: value[1],
-        index: 1,
-      });
-      return;
-    }
-    if (!terminals.panel0) {
-      storeApi.setTerminalSize({
-        height: value[0],
-        index: 1,
-      });
-      return;
-    }
-    if (!terminals.panel1) {
-      storeApi.setTerminalSize({
-        height: value[0],
-        index: 0,
-      });
-      return;
-    }
+    events[0].resizeTerminal(value[0]);
 
-    console.error('WTF Resizing', terminals);
+    if (value[1]) {
+      events[1].resizeTerminal(value[1]);
+    }
   };
 
   return (
-    <DefaultPanel
-      // onFocus={() => focusPanel('terminal')}
-      onSplit={splitTerminal}
-      splitable={!terminals.panel0 || !terminals.panel1}
-    >
-      {theme && (
+    <DefaultPanel onSplit={splitTerminal} splitable={terminals.length < 2}>
+      {
         <HotKeysWrapper handlers={hotkeys}>
           <SplitPanels className="terminal-panels" onResize={onResize} splitType="horizontal">
-            {terminals.panel0 && (
-              <ErrorBoundary>
-                <Terminal
-                  closable={terminals.panel1 !== undefined}
-                  index={1}
-                  onClose={onClose(0)}
-                  onExit={onClose(0)}
-                  terminalManager={terminals.panel0.manager}
-                  theme={theme}
-                />
-                {props.selectModeActivated && (
-                  <SelectPanel
-                    hotkey={(1).toString()}
-                    onSelect={() => props.onSelect(0)}
-                    text={1}
-                  />
-                )}
-              </ErrorBoundary>
-            )}
-            {terminals.panel1 && (
-              <ErrorBoundary>
-                <Terminal
-                  closable={terminals.panel0 !== undefined}
-                  index={2}
-                  onClose={onClose(1)}
-                  onExit={onClose(1)}
-                  terminalManager={terminals.panel1.manager}
-                  theme={theme}
-                />
-                {props.selectModeActivated && (
-                  <SelectPanel
-                    hotkey={(2).toString()}
-                    onSelect={() => props.onSelect(0)}
-                    text={2}
-                  />
-                )}
-              </ErrorBoundary>
-            )}
-            {/* {map(terminals, (item, i) => {
+            {map(terminals, (item, i) => {
+              const terminal = item.getState();
+
               return (
-                <ErrorBoundary key={item.getId()}>
+                <ErrorBoundary key={item.sid ?? i}>
                   <Terminal
                     closable={terminals.length > 1}
-                    onClose={onClose(i)}
-                    onExit={onClose(i)}
-                    terminalManager={item}
-                    theme={theme}
+                    index={i}
+                    onClose={onClose(1)}
+                    onExit={onClose(1)}
+                    terminalManager={terminal.manager}
+                    theme={settings.theme}
                   />
-                  {props.selectModeActivated && (
-                    <SelectPanel
-                      hotkey={(i + 1).toString()}
-                      onSelect={() => props.onSelect(i)}
-                      text={i + 1}
-                    />
-                  )}
                 </ErrorBoundary>
               );
-            })} */}
+            })}
+            {/*  <SelectPanel
+                     hotkey={(2).toString()}
+                     onSelect={() => props.onSelect(0)}
+                     text={2}
+                   /> */}
           </SplitPanels>
         </HotKeysWrapper>
-      )}
+      }
       <GoToPalette
         isOpened={isGotoPaletteOpen.isShown}
         onClose={closeGotoPalette}

@@ -2,7 +2,7 @@ import React from 'react';
 import { includes } from 'lodash';
 import { ignoredExtensions, imageExtensions } from './fileExtensions';
 import { extname } from 'path';
-import { store } from '@fm/store';
+import { previewStore } from '@fm/store';
 import { useStore } from 'effector-react';
 import styled from 'styled-components';
 import { ImagePreview } from './ImagePreview';
@@ -21,24 +21,22 @@ interface PreviewProps {
 }
 
 const Preview = (props: PreviewProps) => {
-  const {
-    preview: { item },
-  } = useStore(store);
+  const store = useStore(previewStore);
 
-  if (item) {
-    const extension = extname(item.name);
+  if (store.file) {
+    const extension = extname(store.file.name);
 
     if (!includes(ignoredExtensions, extension)) {
       if (includes(imageExtensions, extension)) {
         return (
           <Container>
-            <ImagePreview item={item} />
+            <ImagePreview item={store.file} />
           </Container>
         );
       } else {
         return (
           <Container>
-            <TextPreview item={item} />
+            <TextPreview item={store.file} />
           </Container>
         );
       }

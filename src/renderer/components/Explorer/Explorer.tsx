@@ -13,7 +13,7 @@ import { HotKeysWrapper } from '..';
 import { CommandsWrapper } from '@fm/hooks';
 import {} from 'module';
 import styled from 'styled-components';
-import { ExplorerState as StoreExplorerState } from 'renderer/store';
+import { ExplorerStore } from '@fm/store';
 
 const Container = styled.div<Theme>`
   height: 100%;
@@ -37,7 +37,7 @@ interface ExplorerState {
 
 interface ExplorerProps {
   directoryManager: IDirectoryManager;
-  explorerState: StoreExplorerState;
+  explorerState: ExplorerStore;
   onPreview?: (item: FileInfo) => void;
   onClose?: () => void;
   closable: boolean;
