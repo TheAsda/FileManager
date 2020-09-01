@@ -2,6 +2,7 @@ import React, { useState, createContext, PropsWithChildren, useContext, useEffec
 import { noop, merge } from 'lodash';
 import { Theme, Channels, DEFAULT_THEME } from '@fm/common';
 import { ipcRenderer } from 'electron';
+import { warn } from 'electron-log';
 
 interface ThemeContextContent {
   theme: Theme;
@@ -17,6 +18,7 @@ const ThemeContext = createContext<ThemeContextContent>({
 
 const ThemeProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [state, setState] = useState<Theme>(DEFAULT_THEME);
+  warn('DEPRECATED THEME')
 
   useEffect(() => {
     ipcRenderer.send(Channels.GET_THEME);
