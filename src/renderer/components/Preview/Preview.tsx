@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { ImagePreview } from './ImagePreview';
 import { TextPreview } from './TextPreview';
 import { EmptyPreview } from './EmptyPreview';
+import { PathWrapper } from '../PathWrapper';
 
 const Container = styled.div`
   width: 100%;
@@ -16,11 +17,7 @@ const Container = styled.div`
   flex-flow: column nowrap;
 `;
 
-interface PreviewProps {
-  width?: number;
-}
-
-const Preview = (props: PreviewProps) => {
+const Preview = () => {
   const store = useStore(previewStore);
 
   if (store.file) {
@@ -30,13 +27,17 @@ const Preview = (props: PreviewProps) => {
       if (includes(imageExtensions, extension)) {
         return (
           <Container>
-            <ImagePreview item={store.file} />
+            <PathWrapper path={store.file.path + store.file.name}>
+              <ImagePreview item={store.file} />
+            </PathWrapper>
           </Container>
         );
       } else {
         return (
           <Container>
-            <TextPreview item={store.file} />
+            <PathWrapper path={store.file.path + store.file.name}>
+              <TextPreview item={store.file} />
+            </PathWrapper>
           </Container>
         );
       }
