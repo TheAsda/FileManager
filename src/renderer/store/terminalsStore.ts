@@ -17,7 +17,7 @@ interface EventStore {
 
 const terminalsEventsStore = domain.createStore<EventStore[]>([]);
 
-const explorersEventsStoreApi = createApi(terminalsEventsStore, {
+const terminalsEventsStoreApi = createApi(terminalsEventsStore, {
   add: (state, value: EventStore) => {
     if (state.length > 1) {
       error('Too many events in the store');
@@ -60,7 +60,7 @@ terminalsStore.on(spawnTerminal, (state, value) => {
   });
 
   const events = mountTerminalEvents(store);
-  explorersEventsStoreApi.add(events);
+  terminalsEventsStoreApi.add(events);
 
   return [...state, store];
 });
@@ -76,6 +76,7 @@ terminalsStore.on(destroyTerminal, (state, value) => {
 
   storeToDestroy.getState().manager.destroy();
 
+  terminalsEventsStoreApi.remove(value);
   clearNode(storeToDestroy, { deep: true });
 
   return [...state];

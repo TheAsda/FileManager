@@ -4,6 +4,7 @@ import {
   mountTerminalEvents,
   resizeTerminals,
   spawnTerminal,
+  terminalsEventsStore,
   terminalsStateStore,
   terminalsStore,
   TerminalStore,
@@ -24,8 +25,12 @@ jest.mock('node-pty', () => ({
 describe('Terminals store', () => {
   const reset = createEvent();
   terminalsStore.reset(reset);
+  const resetEvents = createEvent();
+  terminalsEventsStore.reset(resetEvents);
+
   beforeEach(() => {
     reset();
+    resetEvents();
   });
 
   it('should be empty on init', () => {

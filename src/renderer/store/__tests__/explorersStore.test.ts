@@ -1,6 +1,7 @@
 import { createEvent, createStore, Store } from 'effector';
 import {
   destroyExplorer,
+  explorersEventsStore,
   explorersStateStore,
   explorersStore,
   ExplorerStore,
@@ -17,8 +18,11 @@ transports.console.level = 'error';
 describe('Explorers store', () => {
   const reset = createEvent();
   explorersStore.reset(reset);
+  const resetEvents = createEvent();
+  explorersEventsStore.reset(resetEvents);
   beforeEach(() => {
     reset();
+    resetEvents();
   });
 
   it('should be empty on init', () => {
