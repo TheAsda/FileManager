@@ -10,7 +10,7 @@ import { noop } from 'lodash';
 import { TerminalCommands } from './terminalCommands';
 import ResizeObserver from 'rc-resize-observer';
 import { HotKeysWrapper } from '..';
-import { CommandsWrapper } from '@fm/hooks';
+import { CommandsWrapper } from '@fm/store';
 
 interface TerminalProps {
   terminalManager: ITerminalManager;

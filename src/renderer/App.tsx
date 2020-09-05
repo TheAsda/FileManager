@@ -1,6 +1,6 @@
 import React from 'react';
 import { Window } from './components';
-import { CommandsProvider, ThemeProvider, KeyMapProvider } from '@fm/hooks';
+import { ThemeProvider, KeyMapProvider } from '@fm/hooks';
 import { Titlebar } from './components/Titlebar';
 import './style.css';
 
@@ -10,9 +10,7 @@ const App = () => {
       <Titlebar />
       <ThemeProvider>
         <KeyMapProvider>
-          <CommandsProvider>
-            <Window />
-          </CommandsProvider>
+          <Window />
         </KeyMapProvider>
       </ThemeProvider>
     </>

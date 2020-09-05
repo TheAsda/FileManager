@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
-import { useDirectoryManager, usePaths, CommandsWrapper } from '@fm/hooks';
+import { useDirectoryManager, usePaths } from '@fm/hooks';
 import { SplitPanels, ErrorBoundary, GoToPalette, Explorer, HotKeysWrapper } from '@fm/components';
 import {
   fileActionApi,
@@ -12,6 +12,7 @@ import {
   destroyExplorer,
   settingsApi,
   toggleExplorers,
+  CommandsWrapper,
 } from '@fm/store';
 import { useStore } from 'effector-react';
 import { map } from 'lodash';

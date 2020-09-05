@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useCommands, useTheme, CommandsWrapper, useKeyMap } from '@fm/hooks';
+import { useTheme, useKeyMap } from '@fm/hooks';
 import { map, toPairs, reduce, merge } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
@@ -21,6 +21,8 @@ import {
   resizeExplorers,
   resizeTerminals,
   resizePreview,
+  commandsStore,
+  CommandsWrapper,
 } from '@fm/store';
 import { ThemeSelector } from '../modals/ThemeSelector';
 import { FileModal } from '../modals';
@@ -31,7 +33,7 @@ const Window = () => {
   const explorersState = useStore(explorersStateStore);
   const previewState = useStore(previewStore);
 
-  const { commands } = useCommands();
+  const commands = useStore(commandsStore);
   const { keymap } = useKeyMap();
 
   const { resetTheme } = useTheme();

@@ -9,11 +9,9 @@ import { Commands } from '../modals';
 import { ExplorerCommands } from './explorerCommands';
 import { normalizePath, openWithDefaultApp } from 'filemancore';
 import { join } from 'path';
-import { HotKeysWrapper } from '..';
-import { CommandsWrapper } from '@fm/hooks';
-import {} from 'module';
 import styled from 'styled-components';
-import { ExplorerStore } from '@fm/store';
+import { CommandsWrapper, ExplorerStore } from '@fm/store';
+import { HotKeysWrapper } from '@fm/components';
 
 const Container = styled.div<Theme>`
   height: 100%;

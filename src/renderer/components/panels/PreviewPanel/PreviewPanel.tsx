@@ -11,7 +11,7 @@ interface PreviewPanelProps {
 const PreviewPanel = (props: PreviewPanelProps) => {
   return (
     <DefaultPanel onHide={props.onHide} splitable={false}>
-      <Preview width={props.width} />
+      <Preview />
     </DefaultPanel>
   );
 };

@@ -18,7 +18,7 @@ const ThemeContext = createContext<ThemeContextContent>({
 
 const ThemeProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [state, setState] = useState<Theme>(DEFAULT_THEME);
-  warn('DEPRECATED THEME')
+  warn('DEPRECATED THEME');
 
   useEffect(() => {
     ipcRenderer.send(Channels.GET_THEME);

@@ -3,3 +3,4 @@ export * from './fileActionStore';
 export * from './previewStore';
 export * from './settingsStore';
 export * from './terminalsStore';
+export * from './commandsStore';
