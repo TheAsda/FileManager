@@ -37,6 +37,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/preset-react": "^7.10.4",
+    "@testing-library/react": "^11.0.2",
     "@testing-library/react-hooks": "^3.4.1",
     "@types/bunyan": "^1.8.6",
     "@types/jest": "^26.0.12",
