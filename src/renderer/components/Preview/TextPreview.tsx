@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { useDirectoryManager, useTheme } from '@fm/hooks';
+import { useDirectoryManager } from '@fm/hooks';
 import { clamp } from 'lodash';
 import { FileInfo, Theme } from '@fm/common';
 import styled from 'styled-components';
 import { HotKeysWrapper } from '../common';
+import { settingsStore } from '@fm/store';
+import { useStore } from 'effector-react';
 
 const Text = styled.pre<Theme & { fontSize: number }>`
   background-color: ${(props) => props['preview.backgroundColor']};
@@ -21,7 +23,7 @@ interface TextPreviewProps {
 
 const TextPreview = (props: TextPreviewProps) => {
   const { directoryManager } = useDirectoryManager();
-  const { theme } = useTheme();
+  const { theme } = useStore(settingsStore);
   const [fontSize, setFontSize] = useState<number>(theme['preview.fontSize']);
 
   const increaseFontSize = () => {

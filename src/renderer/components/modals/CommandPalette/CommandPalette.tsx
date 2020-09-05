@@ -1,7 +1,8 @@
 import React from 'react';
 import { keys } from 'lodash';
 import { Commands, SelectPalette } from '../SelectPalette';
-import { useTheme } from '@fm/hooks';
+import { settingsStore } from '@fm/store';
+import { useStore } from 'effector-react';
 
 interface CommandPaletteProps {
   isOpened: boolean;
@@ -10,7 +11,7 @@ interface CommandPaletteProps {
 }
 
 const CommandPalette = (props: CommandPaletteProps) => {
-  const { theme } = useTheme();
+  const { theme } = useStore(settingsStore);
 
   const onSelect = (selectedItem: string) => {
     console.log(selectedItem);

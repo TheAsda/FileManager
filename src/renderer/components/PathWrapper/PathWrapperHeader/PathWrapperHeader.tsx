@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Theme } from '@fm/common';
-import { useTheme } from '@fm/hooks';
+import { useStore } from 'effector-react';
+import { settingsStore } from '@fm/store';
 
 const Header = styled.div`
   display: flex;
@@ -41,7 +42,8 @@ interface DefaultPanelHeaderProps {
 }
 
 const PathWrapperHeader = (props: DefaultPanelHeaderProps) => {
-  const { theme } = useTheme();
+  const { theme } = useStore(settingsStore);
+
   return (
     <Header>
       <Path>{props.path}</Path>

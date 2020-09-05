@@ -10,7 +10,6 @@ import {
   isEqual,
   isFunction,
   every,
-  isEmpty,
 } from 'lodash';
 import { Resizer } from './Resizer';
 import { SplitPanel } from './SplitPanel';

@@ -2,8 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import { Modal } from 'react-responsive-modal';
 import styled from 'styled-components';
 import { Theme } from '@fm/common';
-import { useTheme } from '@fm/hooks';
 import 'react-responsive-modal/styles.css';
+import { useStore } from 'effector-react';
+import { settingsStore } from '@fm/store';
 
 const Title = styled.h1<Theme>`
   font-size: ${(props) => props['palette.fontSize'] * 1.5}px;
@@ -43,7 +44,7 @@ interface InputModalProps {
 }
 
 const InputModal = (props: InputModalProps) => {
-  const { theme } = useTheme();
+  const { theme } = useStore(settingsStore);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const accept = () => {

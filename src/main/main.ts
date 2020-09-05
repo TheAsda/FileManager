@@ -1,14 +1,12 @@
 import { app, ipcMain, BrowserWindow } from 'electron';
 import { resolve } from 'path';
 import { hotReload } from './hotReload';
-import { SettingsManager } from './managers/SettingsManager';
 import { ThemesManager } from './managers/ThemesManager';
 import { PathManager } from './managers/PathManager';
 import { KeyMapManager } from './managers/KeyMapManager';
 import { values, isEqual } from 'lodash';
 import { Channels } from '../common/Channels';
 import { ConfirmTypes } from '../common/ConfirmTypes';
-import { LayoutManager } from './managers/LayoutManager';
 import { setDevAppData } from './setDevAppData';
 import { initLogger } from './initLogger';
 import { setWindow, getWindow } from './window';

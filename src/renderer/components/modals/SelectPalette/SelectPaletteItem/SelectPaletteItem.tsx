@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Theme } from '@fm/common';
-import { useTheme } from '@fm/hooks';
+import { useStore } from 'effector-react';
+import { settingsStore } from '@fm/store';
 
 const Item = styled.div<Theme & { selected?: boolean }>`
   cursor: pointer;
@@ -20,7 +21,7 @@ interface SelectPaletteItemProps {
 }
 
 const SelectPaletteItem = (props: SelectPaletteItemProps) => {
-  const { theme } = useTheme();
+  const { theme } = useStore(settingsStore);
 
   return (
     <Item {...theme} onClick={props.onSelect} selected={props.selected}>

@@ -2,7 +2,8 @@ import React, { PropsWithChildren } from 'react';
 import { PathWrapperHeader } from './PathWrapperHeader';
 import styled from 'styled-components';
 import { Theme } from '@fm/common';
-import { useTheme } from '@fm/hooks';
+import { useStore } from 'effector-react';
+import { settingsStore } from '@fm/store';
 
 const Container = styled.div<Theme>`
   height: 100%;
@@ -23,7 +24,7 @@ interface PathWrapperProps {
 }
 
 const PathWrapper = (props: PropsWithChildren<PathWrapperProps>) => {
-  const { theme } = useTheme();
+  const { theme } = useStore(settingsStore);
 
   return (
     <Container {...theme}>

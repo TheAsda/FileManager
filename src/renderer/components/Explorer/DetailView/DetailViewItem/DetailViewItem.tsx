@@ -4,7 +4,8 @@ import { FileIcon, defaultStyles, DefaultExtensionType } from 'react-file-icon';
 import { FolderIcon } from '@fm/components';
 import styled from 'styled-components';
 import { Theme } from '@fm/common';
-import { useTheme } from '@fm/hooks';
+import { settingsStore } from '@fm/store';
+import { useStore } from 'effector-react';
 
 const Row = styled.div<Theme & { selected?: boolean; noninteractive?: boolean }>`
   width: 100%;
@@ -79,7 +80,7 @@ const getIcon = (isFolder: boolean, file: string) => {
 };
 
 const DetailViewItem = (props: DetailViewItemProps) => {
-  const { theme } = useTheme();
+  const { theme } = useStore(settingsStore);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyboard = (event: KeyboardEvent) => {

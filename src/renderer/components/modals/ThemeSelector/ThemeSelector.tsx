@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { SelectPalette } from '../SelectPalette';
 import { remote, app } from 'electron';
-import { useDirectoryManager, useTheme } from '@fm/hooks';
+import { useDirectoryManager } from '@fm/hooks';
 import { reject, filter, endsWith, map, noop } from 'lodash';
+import { useStore } from 'effector-react';
+import { settingsStore } from '@fm/store';
 
 const themesFolderPath = (app || remote.app).getPath('userData') + '/themes';
 
@@ -13,7 +15,7 @@ interface ThemeSelectorProps {
 
 const ThemeSelector = (props: ThemeSelectorProps) => {
   const [state, setState] = useState<string[]>([]);
-  const { theme } = useTheme();
+  const { theme } = useStore(settingsStore);
   const { directoryManager } = useDirectoryManager();
 
   useEffect(() => {

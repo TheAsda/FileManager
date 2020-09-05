@@ -1,7 +1,8 @@
 import React, { PropsWithChildren, forwardRef } from 'react';
 import styled from 'styled-components';
 import { Theme } from '@fm/common';
-import { useTheme } from '@fm/hooks';
+import { useStore } from 'effector-react';
+import { settingsStore } from '@fm/store';
 
 const Container = styled.div<Theme>`
   height: 100%;
@@ -36,7 +37,7 @@ interface DefaultPanelProps {
 
 const DefaultPanel = forwardRef<HTMLDivElement, PropsWithChildren<DefaultPanelProps>>(
   (props, ref) => {
-    const { theme } = useTheme();
+    const { theme } = useStore(settingsStore);
 
     return (
       <Container {...theme} ref={ref}>

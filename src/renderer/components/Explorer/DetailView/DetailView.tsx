@@ -3,7 +3,8 @@ import { FileInfo, Theme } from '@fm/common';
 import { DetailViewItem, Row, Item } from './DetailViewItem';
 import { map } from 'lodash';
 import styled from 'styled-components';
-import { useTheme } from '@fm/hooks';
+import { settingsStore } from '@fm/store';
+import { useStore } from 'effector-react';
 
 const Container = styled.div<Theme>`
   width: 100%;
@@ -40,7 +41,7 @@ interface DetailViewProps {
 }
 
 const DetailView = (props: DetailViewProps) => {
-  const { theme } = useTheme();
+  const { theme } = useStore(settingsStore);
 
   return (
     <Container {...theme}>

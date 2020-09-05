@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useTheme, useKeyMap } from '@fm/hooks';
+import { useKeyMap } from '@fm/hooks';
 import { map, toPairs, reduce, merge } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
@@ -24,7 +24,6 @@ import {
   commandsStore,
   CommandsWrapper,
 } from '@fm/store';
-import { ThemeSelector } from '../modals/ThemeSelector';
 import { FileModal } from '../modals';
 import { useStore } from 'effector-react';
 
@@ -36,7 +35,6 @@ const Window = () => {
   const commands = useStore(commandsStore);
   const { keymap } = useKeyMap();
 
-  const { resetTheme } = useTheme();
   const [isThemeSelectorOpened, setThemeSelectorState] = useState<boolean>(false);
 
   const openThemeSelector = () => {
@@ -74,7 +72,7 @@ const Window = () => {
     'Reload window': () => {
       remote.getCurrentWindow().reload();
     },
-    'Reset theme': resetTheme,
+    // 'Reset theme': resetTheme,
     'Select theme': openThemeSelector,
   };
 

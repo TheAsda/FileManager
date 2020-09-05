@@ -1,7 +1,8 @@
 import React from 'react';
 import './style.css';
 import { SelectPalette } from '../SelectPalette';
-import { useTheme } from '@fm/hooks';
+import { useStore } from 'effector-react';
+import { settingsStore } from '@fm/store';
 
 interface GoToPaletteProps {
   isOpened: boolean;
@@ -11,7 +12,7 @@ interface GoToPaletteProps {
 }
 
 const GoToPalette = (props: GoToPaletteProps) => {
-  const { theme } = useTheme();
+  const { theme } = useStore(settingsStore);
 
   return (
     <SelectPalette

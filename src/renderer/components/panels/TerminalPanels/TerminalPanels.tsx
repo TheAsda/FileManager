@@ -1,23 +1,19 @@
 import React, { useState } from 'react';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { useTheme, usePaths } from '@fm/hooks';
-import { SelectPanel } from '../SelectPanel';
+import { usePaths } from '@fm/hooks';
 import { ErrorBoundary, SplitPanels, GoToPalette, Terminal, HotKeysWrapper } from '@fm/components';
 import {
   destroyTerminal,
   terminalsEventsStore,
-  explorersStore,
   settingsStore,
   spawnTerminal,
   terminalsStore,
 } from '@fm/store';
 import { useStore } from 'effector-react';
-import { map, noop } from 'lodash';
+import { map } from 'lodash';
 
-interface TerminalPanelsProps {}
-
-const TerminalPanels = (props: TerminalPanelsProps) => {
+const TerminalPanels = () => {
   const settings = useStore(settingsStore);
   const terminals = useStore(terminalsStore);
   const events = useStore(terminalsEventsStore);
@@ -105,4 +101,4 @@ const TerminalPanels = (props: TerminalPanelsProps) => {
   );
 };
 
-export { TerminalPanels, TerminalPanelsProps };
+export { TerminalPanels };
