@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
 import { useDirectoryManager } from '@fm/hooks';
@@ -122,10 +122,13 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
     events[index].changePath(path);
   };
 
-  const commands = {
-    'Toggle auto preview': () => settingsApi.toggleAutoPreview(),
-    'Toggle show hidden': () => settingsApi.toggleShowHidden(),
-  };
+  const commands = useMemo(
+    () => ({
+      'Toggle auto preview': () => settingsApi.toggleAutoPreview(),
+      'Toggle show hidden': () => settingsApi.toggleShowHidden(),
+    }),
+    []
+  );
 
   return (
     <DefaultPanel

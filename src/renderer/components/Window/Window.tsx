@@ -67,14 +67,17 @@ const Window = () => {
     openCommandPalette,
   };
 
-  const localCommands: Commands = {
-    'Toggle preview': togglePreview,
-    'Reload window': () => {
-      remote.getCurrentWindow().reload();
-    },
-    // 'Reset theme': resetTheme,
-    'Select theme': openThemeSelector,
-  };
+  const localCommands: Commands = useMemo(
+    () => ({
+      'Toggle preview': togglePreview,
+      'Reload window': () => {
+        remote.getCurrentWindow().reload();
+      },
+      // 'Reset theme': resetTheme,
+      'Select theme': openThemeSelector,
+    }),
+    []
+  );
 
   const onResize = (value: number[]) => {
     // console.log('onResize -> value', value);

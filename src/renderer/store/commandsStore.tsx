@@ -2,7 +2,8 @@ import React, { PropsWithChildren, useEffect } from 'react';
 import { Commands } from '@fm/common';
 import { createApi, createStore } from 'effector';
 import { warn } from 'electron-log';
-import { omit } from 'lodash';
+import { includes, isEqual, keys, omit } from 'lodash';
+import { useStore } from 'effector-react';
 
 interface CommandsStore {
   [scope: string]: Commands;
@@ -39,7 +40,13 @@ interface CommandsWrapperProps {
 }
 
 const CommandsWrapper = (props: PropsWithChildren<CommandsWrapperProps>) => {
+  const store = useStore(commandsStore);
+
   useEffect(() => {
+    if (includes(keys(store), props.scope) && isEqual(store[props.scope], props.commands)) {
+      return;
+    }
+
     commandsApi.set({
       scope: props.scope,
       commands: props.commands,
@@ -48,7 +55,7 @@ const CommandsWrapper = (props: PropsWithChildren<CommandsWrapperProps>) => {
     return () => {
       commandsApi.unset(props.scope);
     };
-  }, [props]);
+  }, [props.scope, props.commands]);
 
   return <>{props.children}</>;
 };
