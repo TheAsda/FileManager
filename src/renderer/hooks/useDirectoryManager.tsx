@@ -4,9 +4,7 @@ import { useMemo } from 'react';
 const useDirectoryManager = () => {
   const directoryManager = useMemo(() => new DirectoryManager(), []);
 
-  return {
-    directoryManager,
-  };
+  return { directoryManager };
 };
 
 export { useDirectoryManager };
