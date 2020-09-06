@@ -1,6 +1,6 @@
+import React, { createContext, PropsWithChildren } from 'react';
 import { useValidatedContext } from '../useValidatedContext';
 import { renderHook } from '@testing-library/react-hooks';
-import React, { createContext, PropsWithChildren } from 'react';
 
 const Context = createContext<string | undefined>(undefined);
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
-import { useDirectoryManager, usePaths } from '@fm/hooks';
+import { useDirectoryManager } from '@fm/hooks';
 import { SplitPanels, ErrorBoundary, GoToPalette, Explorer, HotKeysWrapper } from '@fm/components';
 import {
   fileActionApi,
@@ -13,6 +13,8 @@ import {
   settingsApi,
   toggleExplorers,
   CommandsWrapper,
+  pathsStore,
+  addPath,
 } from '@fm/store';
 import { useStore } from 'effector-react';
 import { map } from 'lodash';
@@ -27,7 +29,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
   const explorers = useStore(explorersStore);
   const events = useStore(explorersEventsStore);
   const { directoryManager } = useDirectoryManager();
-  const { paths, addPath } = usePaths();
+  const { list: paths } = useStore(pathsStore);
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
     panelIndex?: number;

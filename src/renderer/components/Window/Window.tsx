@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { useKeyMap } from '@fm/hooks';
 import { map, toPairs, reduce, merge } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
@@ -23,6 +22,7 @@ import {
   resizePreview,
   commandsStore,
   CommandsWrapper,
+  keymapStore,
 } from '@fm/store';
 import { FileModal } from '../modals';
 import { useStore } from 'effector-react';
@@ -33,7 +33,7 @@ const Window = () => {
   const previewState = useStore(previewStore);
 
   const commands = useStore(commandsStore);
-  const { keymap } = useKeyMap();
+  const keymap = useStore(keymapStore);
 
   const [isThemeSelectorOpened, setThemeSelectorState] = useState<boolean>(false);
 

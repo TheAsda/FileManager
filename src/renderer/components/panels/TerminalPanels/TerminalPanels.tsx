@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { usePaths } from '@fm/hooks';
 import { ErrorBoundary, SplitPanels, GoToPalette, Terminal, HotKeysWrapper } from '@fm/components';
 import {
   destroyTerminal,
@@ -9,6 +8,7 @@ import {
   settingsStore,
   spawnTerminal,
   terminalsStore,
+  pathsStore,
 } from '@fm/store';
 import { useStore } from 'effector-react';
 import { map } from 'lodash';
@@ -23,7 +23,7 @@ const TerminalPanels = () => {
   }>({
     isShown: false,
   });
-  const { paths } = usePaths();
+  const { list: paths } = useStore(pathsStore);
 
   const closeGotoPalette = () => {
     setGotoPalette({
