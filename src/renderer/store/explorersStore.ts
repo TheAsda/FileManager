@@ -2,9 +2,12 @@ import { clearNode, createDomain, createEvent, Store, Event, createApi } from 'e
 import { warn, info, error } from 'electron-log';
 import { normalize } from 'path';
 
+type ExplorerViewType = 'folder' | 'detail';
+
 interface ExplorerStore {
   height: number;
   path: string;
+  type: ExplorerViewType;
 }
 
 const domain = createDomain('explorers');
@@ -57,6 +60,7 @@ explorersStore.on(spawnExplorer, (state, value) => {
   const store = domain.createStore<ExplorerStore>({
     height: 0,
     path: value.path ?? process.cwd(),
+    type: 'detail',
   });
 
   const events = mountExplorerEvents(store);
@@ -98,7 +102,15 @@ const mountExplorerEvents = (store: Store<ExplorerStore>) => {
     };
   });
 
-  return { resizeExplorer, changePath };
+  const toggleExplorerViewType = createEvent();
+  store.on(toggleExplorerViewType, (state) => {
+    return {
+      ...state,
+      type: state.type === 'detail' ? 'folder' : 'detail',
+    };
+  });
+
+  return { resizeExplorer, changePath, toggleExplorerViewType };
 };
 
 interface ExplorersStateStore {
@@ -138,4 +150,5 @@ export {
   spawnExplorer,
   toggleExplorers,
   explorersEventsStore,
+  ExplorerViewType,
 };

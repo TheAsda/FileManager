@@ -12,6 +12,7 @@ import {
 } from '../explorersStore';
 import { transports } from 'electron-log';
 import { platform } from 'os';
+import { keys } from 'lodash';
 
 transports.console.level = 'error';
 
@@ -77,6 +78,7 @@ describe('Explorers store', () => {
       store = createStore<ExplorerStore>({
         height: 0,
         path: '',
+        type: 'detail',
       });
     });
 
@@ -84,9 +86,9 @@ describe('Explorers store', () => {
       const mockedOn = jest.fn();
       store.on = mockedOn;
 
-      mountExplorerEvents(store);
+      const events = mountExplorerEvents(store);
 
-      expect(mockedOn.mock.calls.length).toBe(2);
+      expect(mockedOn.mock.calls.length).toBe(keys(events).length);
     });
 
     it('should should resize', () => {
@@ -122,6 +124,19 @@ describe('Explorers store', () => {
       } else {
         throw new Error('OS not supported');
       }
+    });
+
+    it('should toggle view type', () => {
+      const events = mountExplorerEvents(store);
+      const initialType = store.getState().type;
+
+      events.toggleExplorerViewType();
+
+      expect(store.getState().type).not.toEqual(initialType);
+
+      events.toggleExplorerViewType();
+
+      expect(store.getState().type).toEqual(initialType);
     });
   });
 
