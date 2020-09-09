@@ -9,7 +9,12 @@ const registerIpc = <T>(
   ipcRenderer.on(channel, handler);
 };
 
-const sendIpc = <T, U>(channel: string, message?: U): T => {
+interface ISendIpc {
+  <T>(channel: string): T;
+  <T>(channel: string, message: unknown): T;
+}
+
+const sendIpc: ISendIpc = <T>(channel: string, message?: unknown): T => {
   info(`Sending sync message to ${channel} channel`);
   return ipcRenderer.sendSync(channel, message) as T;
 };
