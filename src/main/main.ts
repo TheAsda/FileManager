@@ -1,9 +1,6 @@
 import { app, ipcMain, BrowserWindow } from 'electron';
 import { resolve } from 'path';
 import { hotReload } from './hotReload';
-import { ThemesManager } from './managers/ThemesManager';
-import { PathManager } from './managers/PathManager';
-import { KeyMapManager } from './managers/KeyMapManager';
 import { values, isEqual } from 'lodash';
 import { Channels } from '../common/Channels';
 import { ConfirmTypes } from '../common/ConfirmTypes';
@@ -14,6 +11,9 @@ import isDev from 'electron-is-dev';
 import { openDevTools } from './openDevTools';
 import { initLayoutIpc, layoutStore } from './managers/initLayoutIpc';
 import { initSettingsIpc } from './managers/initSettingsIpc';
+import { initKeyMapIpc } from './managers/initKeyMapIpc';
+import { initPathIpc } from './managers/initPathIpc';
+import { initThemesIpc } from './managers/initThemesIpc';
 // import { log } from 'electron-log';
 
 initLogger();
@@ -26,13 +26,11 @@ if (isDev) {
 
 app.allowRendererProcessReuse = false;
 
-// const settingsManager = new SettingsManager();
-const themesManager = new ThemesManager();
-const pathManager = new PathManager();
-const keymapManager = new KeyMapManager();
-// const layoutManager = new LayoutManager();
+initKeyMapIpc();
 initLayoutIpc();
+initPathIpc();
 initSettingsIpc();
+initThemesIpc();
 
 const createWindow = async (): Promise<BrowserWindow> => {
   const window = new BrowserWindow({
