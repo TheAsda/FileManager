@@ -21,6 +21,7 @@
     "pack:linux": "yarn build && electron-builder --linux",
     "postinstall": "electron-builder install-app-deps",
     "test": "jest",
+    "test:coverage": "yarn test --coverage",
     "commit": "cz"
   },
   "build": {
@@ -70,6 +71,7 @@
     "eslint-plugin-testing-library": "^3.8.0",
     "html-webpack-plugin": "^4.4.1",
     "hygen-templates": "https://github.com/TheAsda/hygen-templates",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^26.4.2",
     "node-loader": "1.0.1",
     "npm-run-all": "^4.1.5",

@@ -15,7 +15,7 @@ module.exports = {
   // clearMocks: false,
 
   // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: true,
+  // collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
@@ -77,10 +77,11 @@ module.exports = {
     '^@fm/hooks$': '<rootDir>/renderer/hooks',
     '^@fm/components$': '<rootDir>/renderer/components',
     '^@fm/store$': '<rootDir>/renderer/store',
+    '\\.(css|less)$': 'identity-obj-proxy',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
-  // modulePathIgnorePatterns: [],
+  // modulePathIgnorePatterns: [".*\\.s?css$"],
 
   // Activates notifications for test results
   // notify: false,
