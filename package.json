@@ -4,10 +4,10 @@
   "description": "File manager using electron, react, typescript",
   "main": "./dist/main.js",
   "scripts": {
-    "start": "npm-run-all build:ts --parallel start:*",
+    "start": "npm-run-all start:ts --parallel \"start:* -- -- --watch\"",
     "start:ts": "run-p start:ts:*",
-    "start:ts:main": "webpack --config ./webpack.main.ts --mode development --watch",
-    "start:ts:renderer": "webpack --config ./webpack.renderer.ts --mode development --watch",
+    "start:ts:main": "webpack --config ./webpack.main.ts --mode development",
+    "start:ts:renderer": "webpack --config ./webpack.renderer.ts --mode development",
     "start:app": "electron ./dist/main.js",
     "build": "run-s build:*",
     "build:clean": "cf dist",
