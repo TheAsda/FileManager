@@ -1,6 +1,7 @@
 import React from 'react';
 import { SelectPalette } from '../SelectPalette';
 import { render, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { DEFAULT_THEME } from '@fm/common';
 import { map } from 'lodash';
 
@@ -9,7 +10,7 @@ describe('Select palette', () => {
 
   const props = {
     onClose: jest.fn(),
-    onSelect: jest.fn(),
+    onSelect: jest.fn<void, [string]>(),
     theme: DEFAULT_THEME,
   };
 
@@ -61,5 +62,28 @@ describe('Select palette', () => {
 
     const renderedOptions = map(container.getAllByRole('listitem'), 'textContent');
     expect(renderedOptions).toEqual([...options, 'another option']);
+  });
+
+  it('should update options on input', () => {
+    const container = render(
+      <SelectPalette {...props} isOpened={true} options={[...options, 'different value']} />
+    );
+
+    const input = container.getByRole('search');
+    userEvent.type(input, 'different value');
+
+    expect(container.getAllByRole('listitem')).toHaveLength(1);
+    expect(container.getAllByRole('listitem')[0].textContent).toEqual('different value');
+  });
+
+  it('should call onSelect on click with option', () => {
+    const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
+
+    const option = container.getByText(/option1/);
+
+    userEvent.click(option);
+
+    expect(props.onSelect).toHaveBeenCalledTimes(1);
+    expect(props.onSelect.mock.calls[0][0]).toEqual('option1');
   });
 });

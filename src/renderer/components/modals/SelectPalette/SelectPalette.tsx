@@ -156,6 +156,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
                     }
                   });
               }}
+              role="search"
               type="text"
             />
           </Header>
