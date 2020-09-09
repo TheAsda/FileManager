@@ -176,4 +176,4 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
   }
 }
 
-export { SelectPalette };
+export { SelectPalette, SelectPaletteProps };

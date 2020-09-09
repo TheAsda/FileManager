@@ -1,25 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { SelectPalette } from '../SelectPalette';
+import { Commands, SelectPalette } from '../SelectPalette';
 import { remote, app } from 'electron';
 import { useDirectoryManager } from '@fm/hooks';
-import { reject, filter, endsWith, map, noop } from 'lodash';
+import { reject, filter, endsWith, map } from 'lodash';
 import { useStore } from 'effector-react';
-import { settingsStore } from '@fm/store';
+import { CommandsWrapper, settingsStore, settingsApi } from '@fm/store';
+import { silly } from 'electron-log';
 
 const themesFolderPath = (app || remote.app).getPath('userData') + '/themes';
 
-interface ThemeSelectorProps {
-  isOpened: boolean;
-  onClose: () => void;
-}
+const ThemeSelector = () => {
+  const [isThemeSelectorOpened, setThemeSelectorState] = useState<boolean>(false);
 
-const ThemeSelector = (props: ThemeSelectorProps) => {
+  const openThemeSelector = () => {
+    silly('Open theme selector');
+    setThemeSelectorState(true);
+  };
+  const closeThemeSelector = () => {
+    silly('Close theme selector');
+    setThemeSelectorState(false);
+  };
+
   const [state, setState] = useState<string[]>([]);
   const { theme } = useStore(settingsStore);
   const { directoryManager } = useDirectoryManager();
 
   useEffect(() => {
-    if (props.isOpened) {
+    if (isThemeSelectorOpened) {
       directoryManager.listDirectory(themesFolderPath).then((items) => {
         const options = filter(reject(items, ['name', '..']), (item) =>
           endsWith(item.name, 'json')
@@ -28,19 +35,27 @@ const ThemeSelector = (props: ThemeSelectorProps) => {
         setState(map(options, (item) => item.name.substr(0, item.name.lastIndexOf('.'))));
       });
     }
-  }, [props.isOpened]);
+  }, [isThemeSelectorOpened]);
 
-  const onSelect = noop;
+  const onSelect = (theme: string) => {
+    settingsApi.setTheme(theme);
+  };
+
+  const commands: Commands = {
+    'Open theme selector': openThemeSelector,
+  };
 
   return (
-    <SelectPalette
-      isOpened={props.isOpened}
-      onClose={props.onClose}
-      onSelect={onSelect}
-      options={state}
-      theme={theme}
-    />
+    <CommandsWrapper commands={commands} scope="theme">
+      <SelectPalette
+        isOpened={isThemeSelectorOpened}
+        onClose={closeThemeSelector}
+        onSelect={onSelect}
+        options={state}
+        theme={theme}
+      />
+    </CommandsWrapper>
   );
 };
 
-export { ThemeSelector, ThemeSelectorProps };
+export { ThemeSelector };

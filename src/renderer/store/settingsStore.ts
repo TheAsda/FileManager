@@ -19,7 +19,7 @@ const settingsStore = createStore<SettingsStore>({
 
 const requestTheme = createEffect({
   handler: (name: string) => {
-    return Promise.resolve(sendIpc<Theme, string>(Channels.GET_THEME, name));
+    return Promise.resolve(sendIpc<Theme>(Channels.GET_THEME, name));
   },
 });
 

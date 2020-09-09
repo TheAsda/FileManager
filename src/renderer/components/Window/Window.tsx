@@ -35,17 +35,6 @@ const Window = () => {
   const commands = useStore(commandsStore);
   const keymap = useStore(keymapStore);
 
-  const [isThemeSelectorOpened, setThemeSelectorState] = useState<boolean>(false);
-
-  const openThemeSelector = () => {
-    console.log('openThemeSelector -> openThemeSelector');
-    setThemeSelectorState(true);
-  };
-  const closeThemeSelector = () => {
-    console.log('closeThemeSelector -> setThemeSelectorState');
-    setThemeSelectorState(false);
-  };
-
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
   const openCommandPalette = () => {
     setCommandPalette(true);
@@ -74,7 +63,6 @@ const Window = () => {
         remote.getCurrentWindow().reload();
       },
       // 'Reset theme': resetTheme,
-      'Select theme': openThemeSelector,
     }),
     []
   );
