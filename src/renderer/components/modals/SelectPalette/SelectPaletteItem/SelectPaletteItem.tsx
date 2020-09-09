@@ -4,8 +4,11 @@ import { Theme } from '@fm/common';
 import { useStore } from 'effector-react';
 import { settingsStore } from '@fm/store';
 
-const Item = styled.div<Theme & { selected?: boolean }>`
+const Item = styled.ul<Theme & { selected?: boolean }>`
   cursor: pointer;
+  margin: 0;
+  padding: 0;
+
   &:hover {
     background-color: ${(props) => props['palette.hoverColor']};
   }
@@ -24,7 +27,7 @@ const SelectPaletteItem = (props: SelectPaletteItemProps) => {
   const { theme } = useStore(settingsStore);
 
   return (
-    <Item {...theme} onClick={props.onSelect} selected={props.selected}>
+    <Item {...theme} onClick={props.onSelect} role="listitem" selected={props.selected}>
       {props.command}
     </Item>
   );

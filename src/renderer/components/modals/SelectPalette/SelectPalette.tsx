@@ -19,6 +19,11 @@ const Search = styled.input`
   outline: none;
 `;
 
+const ListBox = styled.ul`
+  margin: 0;
+  padding: 0;
+`;
+
 interface SelectPaletteProps {
   options: string[];
   inputValue?: string;
@@ -154,22 +159,24 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
               type="text"
             />
           </Header>
-          {map(this.state.options, (option, i) => (
-            <SelectPaletteItem
-              command={option}
-              key={option}
-              onSelect={() => {
-                this.setState(
-                  (state) => ({
-                    ...state,
-                    selectedIndex: i,
-                  }),
-                  this.selectItem
-                );
-              }}
-              selected={i === this.state.selectedIndex}
-            />
-          ))}
+          <ListBox role="listbox">
+            {map(this.state.options, (option, i) => (
+              <SelectPaletteItem
+                command={option}
+                key={option}
+                onSelect={() => {
+                  this.setState(
+                    (state) => ({
+                      ...state,
+                      selectedIndex: i,
+                    }),
+                    this.selectItem
+                  );
+                }}
+                selected={i === this.state.selectedIndex}
+              />
+            ))}
+          </ListBox>
         </HotKeysWrapper>
       </Modal>
     );
