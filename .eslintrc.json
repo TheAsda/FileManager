@@ -15,7 +15,9 @@
     "plugin:import/typescript",
     "plugin:import/electron",
     "plugin:lodash/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:testing-library/recommended",
+    "plugin:testing-library/react"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -31,7 +33,7 @@
     "project": "./tsconfig.json",
     "tsconfigRootDir": "./"
   },
-  "plugins": ["react", "@typescript-eslint", "lodash", "import"],
+  "plugins": ["react", "@typescript-eslint", "lodash", "import", "testing-library"],
   "rules": {
     "lodash/import-scope": ["error", "member"],
     "@typescript-eslint/explicit-module-boundary-types": ["off"],

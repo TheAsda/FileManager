@@ -37,6 +37,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/preset-react": "^7.10.4",
+    "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.2",
     "@testing-library/react-hooks": "^3.4.1",
     "@types/bunyan": "^1.8.6",
@@ -66,6 +67,7 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-lodash": "^7.1.0",
     "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-testing-library": "^3.8.0",
     "html-webpack-plugin": "^4.4.1",
     "hygen-templates": "https://github.com/TheAsda/hygen-templates",
     "jest": "^26.4.2",
