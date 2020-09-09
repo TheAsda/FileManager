@@ -2,10 +2,12 @@ import { registerIpc } from '../ipc';
 import { IThemesStore } from '../interfaces/IThemesStore';
 import { ThemesStore } from '../stores/ThemesStore';
 import { Channels } from '../../common/Channels';
+import { info } from 'electron-log';
 
 let themesStore: IThemesStore;
 
 const initThemesIpc = () => {
+  info('Initialize themes ipc');
   themesStore = new ThemesStore();
 
   registerIpc(Channels.GET_THEME, (event, arg: string) => {

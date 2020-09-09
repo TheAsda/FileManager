@@ -3,10 +3,12 @@ import { SettingsStore } from '../stores/SettingsStore';
 import { Channels } from '../../common/Channels';
 import { Settings } from '../../common/interfaces/Settings';
 import { registerIpc } from '../ipc';
+import { info } from 'electron-log';
 
 let settingsStore: ISettingsStore;
 
 const initSettingsIpc = () => {
+  info('Initialize settings ipc');
   settingsStore = new SettingsStore();
 
   registerIpc(Channels.GET_SETTINGS, (event) => {
