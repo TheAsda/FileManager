@@ -4,6 +4,10 @@ import { transports } from 'electron-log';
 
 transports.console.level = 'error';
 
+jest.mock('../ipc', () => ({
+  sendIpc: jest.fn().mockImplementation(() => []),
+}));
+
 describe('Paths store', () => {
   const reset = createEvent();
   pathsStore.reset(reset);
