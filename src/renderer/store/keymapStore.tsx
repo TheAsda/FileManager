@@ -2,7 +2,6 @@ import React, { PropsWithChildren, useEffect } from 'react';
 import { Channels, Commands, DEFAULT_KEYMAP, KeyMap } from '@fm/common';
 import { createEffect, createEvent, createStore } from 'effector';
 import {
-  create,
   find,
   get,
   includes,
@@ -112,7 +111,7 @@ const getHandlersFromScope = (state: Scope, scopePath: string): Commands => {
 registerIpc(Channels.KEYPRESS, (event, shortcut: string) => {
   const state = keymapStore.getState();
 
-  const hanlders = getHandlersFromScope(state.handlers, state.activeScope);
+  const handlers = getHandlersFromScope(state.handlers, state.activeScope);
 
   const key = find(toPairs(state.keymap), (item) => includes(item[1], shortcut));
 
@@ -120,7 +119,7 @@ registerIpc(Channels.KEYPRESS, (event, shortcut: string) => {
     return;
   }
 
-  hanlders[key[0]]();
+  handlers[key[0]]();
 });
 
 export { keymapStore, KeymapWrapper, KeymapWrapperProps, activateScope };

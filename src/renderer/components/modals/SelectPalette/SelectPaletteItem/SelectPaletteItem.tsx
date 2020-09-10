@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Theme } from '@fm/common';
-import { useStore } from 'effector-react';
-import { settingsStore } from '@fm/store';
+import { Theme } from '@fm/common/interfaces/Theme';
+import { ThemeProp, withTheme } from '@fm/components/common/withTheme';
 
 const Item = styled.ul<Theme & { selected?: boolean }>`
   cursor: pointer;
@@ -17,20 +16,20 @@ const Item = styled.ul<Theme & { selected?: boolean }>`
     props.selected ? props['palette.selectedColor'] : props['palette.backgroundColor']};
 `;
 
-interface SelectPaletteItemProps {
+interface SelectPaletteItemProps extends ThemeProp {
   selected?: boolean;
   command: string;
   onSelect: () => void;
 }
 
 const SelectPaletteItem = (props: SelectPaletteItemProps) => {
-  const { theme } = useStore(settingsStore);
-
   return (
-    <Item {...theme} onClick={props.onSelect} role="listitem" selected={props.selected}>
+    <Item {...props.theme} onClick={props.onSelect} role="listitem" selected={props.selected}>
       {props.command}
     </Item>
   );
 };
 
-export { SelectPaletteItem };
+const ThemedSelectPaletteItem = withTheme(SelectPaletteItem);
+
+export { ThemedSelectPaletteItem as SelectPaletteItem, SelectPaletteItemProps };

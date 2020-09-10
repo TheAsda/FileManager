@@ -2,7 +2,6 @@ import React from 'react';
 import { SelectPalette } from '../SelectPalette';
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { DEFAULT_THEME } from '@fm/common';
 import { map } from 'lodash';
 
 describe('Select palette', () => {
@@ -11,7 +10,6 @@ describe('Select palette', () => {
   const props = {
     onClose: jest.fn(),
     onSelect: jest.fn<void, [string]>(),
-    theme: DEFAULT_THEME,
   };
 
   const options = ['option1', 'option2', 'option3'];

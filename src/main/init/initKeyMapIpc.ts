@@ -1,6 +1,6 @@
 import { Channels } from '../../common/Channels';
 import { IUserKeymapStore } from '../interfaces/IKeyMapStore';
-import { UserKeymapStore } from '../stores/KeymapStore';
+import { UserKeymapStore } from '../stores/UserKeyMapStore';
 import { registerIpc } from '../ipc';
 import { info } from 'electron-log';
 

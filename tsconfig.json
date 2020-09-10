@@ -17,9 +17,12 @@
     "baseUrl": "src",
     "paths": {
       "@fm/common": ["common"],
+      "@fm/common/*": ["common/*"],
       "@fm/hooks": ["renderer/hooks"],
       "@fm/components": ["renderer/components"],
-      "@fm/store": ["renderer/store"]
+      "@fm/components/*": ["renderer/components/*"],
+      "@fm/store": ["renderer/store"],
+      "@fm/store/*": ["renderer/store/*"]
     },
     "sourceMap": true
   },

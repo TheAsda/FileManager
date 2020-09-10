@@ -74,9 +74,12 @@ module.exports = {
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
     '^@fm/common$': '<rootDir>/common',
+    '^@fm/common/(.*)$': '<rootDir>/common/$1',
     '^@fm/hooks$': '<rootDir>/renderer/hooks',
     '^@fm/components$': '<rootDir>/renderer/components',
+    '^@fm/components/(.*)$': '<rootDir>/renderer/components/$1',
     '^@fm/store$': '<rootDir>/renderer/store',
+    '^@fm/store/(.*)$': '<rootDir>/renderer/store/$1',
     '\\.(css|less)$': 'identity-obj-proxy',
   },
 

@@ -3,10 +3,9 @@ import autobind from 'autobind-decorator';
 import { clamp, map, includes, isEqual, indexOf } from 'lodash';
 import { SelectPaletteItem } from './SelectPaletteItem';
 import { Modal } from 'react-responsive-modal';
-import { HotKeysWrapper } from '@fm/components';
+import { HotKeysWrapper, withTheme, ThemeProp } from '@fm/components/common';
 import Fuse from 'fuse.js';
 import styled from 'styled-components';
-import { Theme } from '@fm/common';
 
 const Header = styled.div`
   border-bottom: 2px solid 5px;
@@ -24,13 +23,12 @@ const ListBox = styled.ul`
   padding: 0;
 `;
 
-interface SelectPaletteProps {
+interface SelectPaletteProps extends ThemeProp {
   options: string[];
   inputValue?: string;
   onSelect: (selectedItem: string) => void;
   onClose: () => void;
   isOpened: boolean;
-  theme: Theme;
 }
 
 interface SelectPaletteState {
@@ -184,4 +182,6 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
   }
 }
 
-export { SelectPalette, SelectPaletteProps };
+const ThemedSelectPalette = withTheme(SelectPalette);
+
+export { ThemedSelectPalette as SelectPalette, SelectPaletteProps };
