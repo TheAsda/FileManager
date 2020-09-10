@@ -1,22 +1,22 @@
 import { Channels } from '../../common/Channels';
-import { IKeyMapStore } from '../interfaces/IKeyMapStore';
-import { KeyMapStore } from '../stores/KeyMapStore';
+import { IUserKeymapStore } from '../interfaces/IKeyMapStore';
+import { UserKeymapStore } from '../stores/KeymapStore';
 import { registerIpc } from '../ipc';
 import { info } from 'electron-log';
 
-let keyMapStore: IKeyMapStore;
+let keymapStore: IUserKeymapStore;
 
 const initKeyMapIpc = () => {
   info('Initialize keymap ipc');
-  keyMapStore = new KeyMapStore();
+  keymapStore = new UserKeymapStore();
 
   registerIpc(Channels.GET_KEYMAP, (event) => {
-    event.returnValue = keyMapStore.getAll();
+    event.returnValue = keymapStore.getAll();
   });
 
   registerIpc(Channels.RESET_KEYMAP, () => {
-    keyMapStore.resetKeyMap();
+    keymapStore.resetKeyMap();
   });
 };
 
-export { initKeyMapIpc };
+export { keymapStore, initKeyMapIpc };

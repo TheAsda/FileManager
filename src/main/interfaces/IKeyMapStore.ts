@@ -1,6 +1,6 @@
 import { KeyMap } from '@fm/common';
 
-interface IKeyMapStore {
+interface IUserKeymapStore {
   getAll(): KeyMap;
 
   resetKeyMap(): void;
@@ -8,4 +8,4 @@ interface IKeyMapStore {
   openInEditor(): void;
 }
 
-export { IKeyMapStore };
+export { IUserKeymapStore };

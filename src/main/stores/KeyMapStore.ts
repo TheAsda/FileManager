@@ -1,9 +1,9 @@
-import { IKeyMapStore } from '../interfaces/IKeyMapStore';
+import { IUserKeymapStore } from '../interfaces/IKeyMapStore';
 import Store from 'electron-store';
 import { KeyMap } from 'common/interfaces/KeyMap';
 import { DEFAULT_KEYMAP } from '../../common/settings/keyMap';
 
-class KeyMapStore implements IKeyMapStore {
+class UserKeymapStore implements IUserKeymapStore {
   store: Store<KeyMap>;
 
   constructor() {
@@ -26,4 +26,4 @@ class KeyMapStore implements IKeyMapStore {
   }
 }
 
-export { KeyMapStore };
+export { UserKeymapStore };

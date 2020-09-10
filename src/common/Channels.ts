@@ -21,6 +21,7 @@ const Channels = {
   SAVE_LAYOUT: 'save-layout',
   LAYOUT: 'layout',
   QUITTER: 'quitter',
+  KEYPRESS: 'keypress',
 };
 
 export { Channels };

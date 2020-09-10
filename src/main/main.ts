@@ -14,6 +14,7 @@ import { initSettingsIpc } from './init/initSettingsIpc';
 import { initKeyMapIpc } from './init/initKeyMapIpc';
 import { initPathIpc } from './init/initPathIpc';
 import { initThemesIpc } from './init/initThemesIpc';
+import { initKeyboardIpc } from './init/initKeyboardIpc';
 // import { log } from 'electron-log';
 
 initLogger();
@@ -75,6 +76,8 @@ app.on('activate', async () => {
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.on('ready', async () => {
   setWindow(await createWindow());
+
+  initKeyboardIpc()
 
   getWindow().once('ready-to-show', () => {
     getWindow().show();
