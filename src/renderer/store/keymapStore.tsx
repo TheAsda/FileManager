@@ -8,7 +8,7 @@ import {
   isEmpty,
   isFunction,
   merge,
-  omitBy,
+  pickBy,
   reduce,
   set,
   split,
@@ -44,7 +44,7 @@ const fetchKeymap = createEffect({
 });
 
 keymapStore.on(fetchKeymap.doneData, (state, value) => {
-  if (!isEmpty(value)) {
+  if (isEmpty(value)) {
     return state;
   }
 
@@ -64,6 +64,7 @@ keymapStore.on(setScope, (state, value) => {
 
   return {
     ...state,
+    activeScope: state.activeScope.length === 0 ? value.scopePath : state.activeScope,
     handlers: merge(state.handlers, newHandlers),
   };
 });
@@ -96,14 +97,16 @@ const getHandlersFromScope = (state: Scope, scopePath: string): Commands => {
   let result: Commands = {};
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _ = reduce(split(scopePath, '.'), (acc, cur) => {
-    acc += cur;
-    result = merge(
-      result,
-      omitBy(get(state.handlers, acc), (item) => !isFunction(item))
-    );
-    return acc;
-  });
+  const _ = reduce(
+    split(scopePath, '.'),
+    (acc, cur) => {
+      acc += cur;
+      const scopeHandlers = get(state, acc);
+      result = merge(result, pickBy(scopeHandlers, isFunction));
+      return acc;
+    },
+    ''
+  );
 
   return result;
 };
