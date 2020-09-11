@@ -1,8 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { SelectPalette } from '../SelectPalette';
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { map } from 'lodash';
+import { map, times } from 'lodash';
+import { mocked } from 'ts-jest/utils';
+import { ipcRenderer } from 'electron';
+import { DEFAULT_THEME } from '@fm/common';
+
+jest.mock('electron', () => ({
+  ipcRenderer: {
+    on: jest.fn(),
+    sendSync: jest.fn().mockImplementation(() => {
+      return {
+        close: ['key1'],
+        moveDown: ['key2'],
+        moveUp: ['key3'],
+        activate: ['key4'],
+        complete: ['key5'],
+      };
+    }),
+  },
+}));
 
 describe('Select palette', () => {
   window.scroll = jest.fn();
@@ -14,74 +33,220 @@ describe('Select palette', () => {
 
   const options = ['option1', 'option2', 'option3'];
 
-  it('should be hidden when prop isOpened is false', () => {
-    const container = render(<SelectPalette {...props} isOpened={false} options={[]} />);
-
-    expect(container.queryByRole('dialog')).not.toBeInTheDocument();
+  beforeEach(() => {
+    props.onClose.mockClear();
+    props.onSelect.mockClear();
   });
 
-  it('should be visible when prop isOpened is true', async () => {
-    const container = render(<SelectPalette {...props} isOpened={true} options={[]} />);
+  describe('rendering', () => {
+    it('should be hidden when prop isOpened is false', () => {
+      const container = render(<SelectPalette {...props} isOpened={false} options={[]} />);
 
-    expect(await container.findByRole('dialog')).toBeVisible();
+      expect(container.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it('should be visible when prop isOpened is true', async () => {
+      const container = render(<SelectPalette {...props} isOpened={true} options={[]} />);
+
+      expect(await container.findByRole('dialog')).toBeVisible();
+    });
+
+    it('should toggle visibility on isOpened change', async () => {
+      const container = render(<SelectPalette {...props} isOpened={false} options={[]} />);
+      expect(container.queryByRole('dialog')).not.toBeInTheDocument();
+
+      container.rerender(<SelectPalette {...props} isOpened={true} options={[]} />);
+      expect(await container.findByRole('dialog')).toBeVisible();
+
+      container.rerender(<SelectPalette {...props} isOpened={false} options={[]} />);
+      fireEvent.animationEnd(await container.findByRole('dialog'));
+
+      expect(container.queryByRole('dialog')).not.toBeInTheDocument();
+    });
   });
 
-  it('should toggle visibility on isOpened change', async () => {
-    const container = render(<SelectPalette {...props} isOpened={false} options={[]} />);
-    expect(container.queryByRole('dialog')).not.toBeInTheDocument();
+  describe('options', () => {
+    it('should render items with options and first item selected', () => {
+      const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
 
-    container.rerender(<SelectPalette {...props} isOpened={true} options={[]} />);
-    expect(await container.findByRole('dialog')).toBeVisible();
+      expect(container.getAllByRole('listitem')).toHaveLength(options.length);
 
-    container.rerender(<SelectPalette {...props} isOpened={false} options={[]} />);
-    fireEvent.animationEnd(await container.findByRole('dialog'));
+      const renderedOptions = container.getAllByRole('listitem');
+      const renderedOptionsContext = map(renderedOptions, 'textContent');
+      expect(renderedOptionsContext).toEqual(options);
+      expect(renderedOptions[0]).toHaveStyleRule(
+        'background-color',
+        DEFAULT_THEME['palette.selectedColor']
+      );
+    });
 
-    expect(container.queryByRole('dialog')).not.toBeInTheDocument();
+    it('should update rendered options on options change', () => {
+      const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
+
+      container.rerender(
+        <SelectPalette {...props} isOpened={true} options={[...options, 'another option']} />
+      );
+
+      expect(container.getAllByRole('listitem')).toHaveLength(options.length + 1);
+
+      const renderedOptions = map(container.getAllByRole('listitem'), 'textContent');
+      expect(renderedOptions).toEqual([...options, 'another option']);
+    });
+
+    it('should update options on input', () => {
+      const container = render(
+        <SelectPalette {...props} isOpened={true} options={[...options, 'different value']} />
+      );
+
+      const input = container.getByRole('search');
+      userEvent.type(input, 'different value');
+
+      expect(container.getAllByRole('listitem')).toHaveLength(1);
+      expect(container.getAllByRole('listitem')[0].textContent).toEqual('different value');
+    });
+
+    it('should show all options if none of them matches input', () => {
+      const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
+
+      const input = container.getByRole('search');
+      userEvent.type(input, 'absolutely random input');
+
+      expect(container.getAllByRole('listitem')).toHaveLength(options.length);
+    });
+
+    it('should call onSelect on click with option', () => {
+      const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
+
+      const option = container.getByText(/option1/);
+
+      userEvent.click(option);
+
+      expect(props.onSelect).toHaveBeenCalledTimes(1);
+      expect(props.onSelect.mock.calls[0][0]).toEqual('option1');
+    });
   });
 
-  it('should render items with options', () => {
-    const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
+  describe('keys', () => {
+    it('should select next option on moveDown', () => {
+      const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
 
-    expect(container.getAllByRole('listitem')).toHaveLength(options.length);
+      const mockedOn = mocked(ipcRenderer.on);
 
-    const renderedOptions = map(container.getAllByRole('listitem'), 'textContent');
+      expect(mockedOn).toHaveBeenCalledTimes(1);
 
-    expect(renderedOptions).toEqual(options);
-  });
+      const keypressHandler = mockedOn.mock.calls[0][1];
+      const fakeEvent: any = undefined;
 
-  it('should update rendered options on options change', () => {
-    const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
+      const renderedOptions = container.getAllByRole('listitem');
+      times(options.length, (i) => {
+        expect(renderedOptions[i]).toHaveStyleRule(
+          'background-color',
+          DEFAULT_THEME['palette.selectedColor']
+        );
+        keypressHandler(fakeEvent, 'key2');
+      });
 
-    container.rerender(
-      <SelectPalette {...props} isOpened={true} options={[...options, 'another option']} />
-    );
+      expect(renderedOptions[options.length - 1]).toHaveStyleRule(
+        'background-color',
+        DEFAULT_THEME['palette.selectedColor']
+      );
+    });
 
-    expect(container.getAllByRole('listitem')).toHaveLength(options.length + 1);
+    it('should select previous option on moveUp', () => {
+      const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
 
-    const renderedOptions = map(container.getAllByRole('listitem'), 'textContent');
-    expect(renderedOptions).toEqual([...options, 'another option']);
-  });
+      const mockedOn = mocked(ipcRenderer.on);
 
-  it('should update options on input', () => {
-    const container = render(
-      <SelectPalette {...props} isOpened={true} options={[...options, 'different value']} />
-    );
+      expect(mockedOn).toHaveBeenCalledTimes(1);
 
-    const input = container.getByRole('search');
-    userEvent.type(input, 'different value');
+      const keypressHandler = mockedOn.mock.calls[0][1];
+      const fakeEvent: any = undefined;
 
-    expect(container.getAllByRole('listitem')).toHaveLength(1);
-    expect(container.getAllByRole('listitem')[0].textContent).toEqual('different value');
-  });
+      times(options.length, () => {
+        keypressHandler(fakeEvent, 'key2');
+      });
 
-  it('should call onSelect on click with option', () => {
-    const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
+      const renderedOptions = container.getAllByRole('listitem');
+      times(options.length, (i) => {
+        expect(renderedOptions[options.length - i - 1]).toHaveStyleRule(
+          'background-color',
+          DEFAULT_THEME['palette.selectedColor']
+        );
+        keypressHandler(fakeEvent, 'key3');
+      });
 
-    const option = container.getByText(/option1/);
+      expect(renderedOptions[0]).toHaveStyleRule(
+        'background-color',
+        DEFAULT_THEME['palette.selectedColor']
+      );
+    });
 
-    userEvent.click(option);
+    it('should close on close key', () => {
+      render(<SelectPalette {...props} isOpened={true} options={options} />);
 
-    expect(props.onSelect).toHaveBeenCalledTimes(1);
-    expect(props.onSelect.mock.calls[0][0]).toEqual('option1');
+      const mockedOn = mocked(ipcRenderer.on);
+
+      expect(mockedOn).toHaveBeenCalledTimes(1);
+
+      const keypressHandler = mockedOn.mock.calls[0][1];
+      const fakeEvent: any = undefined;
+
+      keypressHandler(fakeEvent, 'key1');
+
+      expect(props.onClose).toBeCalledTimes(1);
+    });
+
+    it('should call onSelect item on activate key', () => {
+      render(<SelectPalette {...props} isOpened={true} options={options} />);
+
+      const mockedOn = mocked(ipcRenderer.on);
+
+      expect(mockedOn).toHaveBeenCalledTimes(1);
+
+      const keypressHandler = mockedOn.mock.calls[0][1];
+      const fakeEvent: any = undefined;
+
+      keypressHandler(fakeEvent, 'key4');
+
+      expect(props.onSelect).toHaveBeenCalledTimes(1);
+      expect(props.onSelect.mock.calls[0][0]).toEqual(options[0]);
+    });
+
+    it('should call onSelect item on activate key after moveDown', () => {
+      render(<SelectPalette {...props} isOpened={true} options={options} />);
+
+      const mockedOn = mocked(ipcRenderer.on);
+
+      expect(mockedOn).toHaveBeenCalledTimes(1);
+
+      const keypressHandler = mockedOn.mock.calls[0][1];
+      const fakeEvent: any = undefined;
+
+      keypressHandler(fakeEvent, 'key2');
+      keypressHandler(fakeEvent, 'key4');
+
+      expect(props.onSelect).toHaveBeenCalledTimes(1);
+      expect(props.onSelect.mock.calls[0][0]).toEqual(options[1]);
+    });
+
+    it('should update options on input', () => {
+      const container = render(
+        <SelectPalette {...props} isOpened={true} options={[...options, 'different value']} />
+      );
+
+      const input = container.getByRole('search') as HTMLInputElement;
+      userEvent.type(input, 'different');
+
+      const mockedOn = mocked(ipcRenderer.on);
+
+      expect(mockedOn).toHaveBeenCalledTimes(1);
+
+      const keypressHandler = mockedOn.mock.calls[0][1];
+      const fakeEvent: any = undefined;
+
+      keypressHandler(fakeEvent, 'key5');
+
+      expect(input.value).toEqual('different value');
+    });
   });
 });

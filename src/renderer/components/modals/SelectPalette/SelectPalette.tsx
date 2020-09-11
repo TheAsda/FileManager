@@ -3,9 +3,10 @@ import autobind from 'autobind-decorator';
 import { clamp, map, includes, isEqual, indexOf } from 'lodash';
 import { SelectPaletteItem } from './SelectPaletteItem';
 import { Modal } from 'react-responsive-modal';
-import { HotKeysWrapper, withTheme, ThemeProp } from '@fm/components/common';
+import { withTheme, ThemeProp } from '@fm/components/common';
 import Fuse from 'fuse.js';
 import styled from 'styled-components';
+import { KeymapWrapper } from '@fm/store/keymapStore';
 
 const Header = styled.div`
   border-bottom: 2px solid 5px;
@@ -99,7 +100,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
       return;
     }
 
-    this.inputRef.value = this.props.options[this.state.selectedIndex];
+    this.inputRef.value = this.state.options[this.state.selectedIndex];
   }
 
   @autobind
@@ -137,10 +138,9 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
             width: '80%',
           },
         }}
-        closeOnEsc
         closeOnOverlayClick
       >
-        <HotKeysWrapper handlers={this.handlers}>
+        <KeymapWrapper handlers={this.handlers} scopePath="selectPalette">
           <Header>
             <Search
               onChange={this.handleInput}
@@ -176,7 +176,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
               />
             ))}
           </ListBox>
-        </HotKeysWrapper>
+        </KeymapWrapper>
       </Modal>
     );
   }
