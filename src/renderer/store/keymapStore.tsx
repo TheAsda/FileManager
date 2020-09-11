@@ -1,5 +1,5 @@
-import React, { PropsWithChildren, useEffect } from 'react';
-import { Channels, Commands, DEFAULT_KEYMAP, KeyMap } from '@fm/common';
+import React, { createContext, PropsWithChildren, useContext, useEffect } from 'react';
+import { Commands, KeyMap } from '@fm/common/interfaces';
 import { createEffect, createEvent, createStore } from 'effector';
 import {
   find,
@@ -16,6 +16,8 @@ import {
 } from 'lodash';
 import { registerIpc, sendIpc } from './ipc';
 import { debug } from 'electron-log';
+import { DEFAULT_KEYMAP } from '@fm/common/settings/keyMap';
+import { Channels } from '@fm/common/Channels';
 
 interface RecursiveScope {
   [name: string]: RecursiveScope | (() => void);
@@ -56,7 +58,7 @@ keymapStore.on(fetchKeymap.doneData, (state, value) => {
 
 fetchKeymap();
 
-const setScope = createEvent<{ scopePath: string; handlers: Commands }>();
+const setScope = createEvent<{ scopePath: string; handlers?: Commands }>();
 keymapStore.on(setScope, (state, value) => {
   const newHandlers = set({}, value.scopePath, value.handlers);
 
@@ -77,20 +79,26 @@ keymapStore.on(activateScope, (state, value) => {
   };
 });
 
+const ScopeContext = createContext<string | null>(null);
+
 interface KeymapWrapperProps {
-  scopePath: string;
-  handlers: Commands;
+  scope: string;
+  handlers?: Commands;
 }
 
 const KeymapWrapper = (props: PropsWithChildren<KeymapWrapperProps>) => {
+  const scope = useContext(ScopeContext);
+
+  const newScope = scope ? scope + '.' + props.scope : props.scope;
+
   useEffect(() => {
     setScope({
-      scopePath: props.scopePath,
+      scopePath: newScope,
       handlers: props.handlers,
     });
-  }, [props.scopePath, props.handlers]);
+  }, [newScope, props.handlers]);
 
-  return <>{props.children}</>;
+  return <ScopeContext.Provider value={newScope}>{props.children}</ScopeContext.Provider>;
 };
 
 const getHandlersFromScope = (state: Scope, scopePath: string): Commands => {

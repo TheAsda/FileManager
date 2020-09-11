@@ -30,10 +30,12 @@ describe('keymapStore', () => {
           handlers={{
             globalAction,
           }}
-          scopePath="global"
+          scope="global"
         >
-          <KeymapWrapper handlers={{ blocksAction: jest.fn() }} scopePath="global.blocks.0" />
-          <KeymapWrapper handlers={{ blocksAction: jest.fn() }} scopePath="global.blocks.1" />
+          <KeymapWrapper scope="blocks">
+            <KeymapWrapper handlers={{ blocksAction: jest.fn() }} scope="0" />
+            <KeymapWrapper handlers={{ blocksAction: jest.fn() }} scope="1" />
+          </KeymapWrapper>
         </KeymapWrapper>
       </>
     );
