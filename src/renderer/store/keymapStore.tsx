@@ -101,6 +101,20 @@ const KeymapWrapper = (props: PropsWithChildren<KeymapWrapperProps>) => {
   return <ScopeContext.Provider value={newScope}>{props.children}</ScopeContext.Provider>;
 };
 
+const useActivateScope = () => {
+  const scope = useContext(ScopeContext);
+
+  if (!scope) {
+    throw new Error('Cannot use activate scope ot of provider');
+  }
+
+  const activate = (newScope: string) => {
+    activateScope(scope + '.' + newScope);
+  };
+
+  return { activate };
+};
+
 const getHandlersFromScope = (state: Scope, scopePath: string): Commands => {
   let result: Commands = {};
 
@@ -133,4 +147,4 @@ registerIpc(Channels.KEYPRESS, (event, shortcut: string) => {
   handlers[key[0]]();
 });
 
-export { keymapStore, KeymapWrapper, KeymapWrapperProps, activateScope };
+export { keymapStore, KeymapWrapper, KeymapWrapperProps, activateScope, useActivateScope };
