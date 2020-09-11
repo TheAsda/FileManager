@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
 import { useDirectoryManager } from '@fm/hooks';
-import { SplitPanels, ErrorBoundary, GoToPalette, Explorer, HotKeysWrapper } from '@fm/components';
+import { SplitPanels, ErrorBoundary, GoToPalette, Explorer } from '@fm/components';
 import {
   fileActionApi,
   settingsStore,
@@ -15,6 +15,7 @@ import {
   CommandsWrapper,
   pathsStore,
   addPath,
+  KeymapWrapper,
 } from '@fm/store';
 import { useStore } from 'effector-react';
 import { map } from 'lodash';
@@ -137,7 +138,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
       splitable={explorers.length < 2}
     >
       <CommandsWrapper commands={commands} scope="explorers">
-        <HotKeysWrapper handlers={hotkeys}>
+        <KeymapWrapper handlers={hotkeys} scope="explorerPanels">
           <SplitPanels minSize={200} onResize={onResize} splitType="horizontal">
             {map(explorers, (item, i) => {
               const explorer = item.getState();
@@ -163,7 +164,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
               );
             })}
           </SplitPanels>
-        </HotKeysWrapper>
+        </KeymapWrapper>
       </CommandsWrapper>
       <GoToPalette
         isOpened={isGotoPaletteOpen.isShown}

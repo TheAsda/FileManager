@@ -1,4 +1,4 @@
-import { KeyMap } from '@fm/common';
+import { KeyMap } from '@fm/common/interfaces/KeyMap';
 
 const DEFAULT_KEYMAP: KeyMap = {
   moveUp: ['up'],

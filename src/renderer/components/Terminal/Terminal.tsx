@@ -9,8 +9,7 @@ import { PathWrapper } from '../PathWrapper';
 import { noop } from 'lodash';
 import { TerminalCommands } from './terminalCommands';
 import ResizeObserver from 'rc-resize-observer';
-import { HotKeysWrapper } from '..';
-import { CommandsWrapper } from '@fm/store';
+import { CommandsWrapper, KeymapWrapper } from '@fm/store';
 
 interface TerminalProps {
   terminalManager: ITerminalManager;
@@ -128,7 +127,7 @@ class Terminal extends Component<TerminalProps, { path: string }> {
   render() {
     return (
       <CommandsWrapper commands={this.options} scope={`terminal ${this.props.index}`}>
-        <HotKeysWrapper handlers={this.handlers}>
+        <KeymapWrapper handlers={this.handlers} scope="">
           <PathWrapper
             closable={this.props.closable}
             onClose={this.props.onClose}
@@ -138,7 +137,7 @@ class Terminal extends Component<TerminalProps, { path: string }> {
               <div className="terminal" ref={this.containerRef} />
             </ResizeObserver>
           </PathWrapper>
-        </HotKeysWrapper>
+        </KeymapWrapper>
       </CommandsWrapper>
     );
   }

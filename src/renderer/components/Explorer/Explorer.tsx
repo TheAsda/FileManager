@@ -10,8 +10,7 @@ import { ExplorerCommands } from './explorerCommands';
 import { normalizePath, openWithDefaultApp } from 'filemancore';
 import { join } from 'path';
 import styled from 'styled-components';
-import { CommandsWrapper, ExplorerStore } from '@fm/store';
-import { HotKeysWrapper } from '@fm/components';
+import { CommandsWrapper, ExplorerStore, KeymapWrapper } from '@fm/store';
 
 const Container = styled.div<Theme>`
   height: 100%;
@@ -372,7 +371,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
           path={this.props.explorerState.path}
           refreshable
         >
-          <HotKeysWrapper handlers={this.handlers}>
+          <KeymapWrapper handlers={this.handlers} scope="">
             <Container {...this.props.theme}>
               {this.state.viewType === 'detail' ? (
                 <DetailView
@@ -386,7 +385,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
               ) : null}
               <StateLine count={this.state.directoryState.length} />
             </Container>
-          </HotKeysWrapper>
+          </KeymapWrapper>
         </PathWrapper>
       </CommandsWrapper>
     );

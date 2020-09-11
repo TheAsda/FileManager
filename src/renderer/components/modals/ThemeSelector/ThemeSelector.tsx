@@ -3,8 +3,7 @@ import { Commands, SelectPalette } from '../SelectPalette';
 import { remote, app } from 'electron';
 import { useDirectoryManager } from '@fm/hooks';
 import { reject, filter, endsWith, map } from 'lodash';
-import { useStore } from 'effector-react';
-import { CommandsWrapper, settingsStore, settingsApi } from '@fm/store';
+import { CommandsWrapper, settingsApi } from '@fm/store';
 import { silly } from 'electron-log';
 
 const themesFolderPath = (app || remote.app).getPath('userData') + '/themes';
@@ -22,7 +21,6 @@ const ThemeSelector = () => {
   };
 
   const [state, setState] = useState<string[]>([]);
-  const { theme } = useStore(settingsStore);
   const { directoryManager } = useDirectoryManager();
 
   useEffect(() => {
@@ -52,7 +50,6 @@ const ThemeSelector = () => {
         onClose={closeThemeSelector}
         onSelect={onSelect}
         options={state}
-        theme={theme}
       />
     </CommandsWrapper>
   );

@@ -3,8 +3,7 @@ import { useDirectoryManager } from '@fm/hooks';
 import { clamp } from 'lodash';
 import { FileInfo, Theme } from '@fm/common';
 import styled from 'styled-components';
-import { HotKeysWrapper } from '../common';
-import { settingsStore } from '@fm/store';
+import { KeymapWrapper, settingsStore } from '@fm/store';
 import { useStore } from 'effector-react';
 
 const Text = styled.pre<Theme & { fontSize: number }>`
@@ -42,11 +41,11 @@ const TextPreview = (props: TextPreviewProps) => {
   const text = directoryManager.readFileSync(props.item.path + props.item.name);
 
   return (
-    <HotKeysWrapper handlers={hotkeys}>
+    <KeymapWrapper handlers={hotkeys} scope="">
       <Text {...theme} fontSize={fontSize}>
         {text}
       </Text>
-    </HotKeysWrapper>
+    </KeymapWrapper>
   );
 };
 

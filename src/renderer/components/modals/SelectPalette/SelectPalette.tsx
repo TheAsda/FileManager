@@ -140,7 +140,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
         }}
         closeOnOverlayClick
       >
-        <KeymapWrapper handlers={this.handlers} scopePath="selectPalette">
+        <KeymapWrapper handlers={this.handlers} scope="selectPalette">
           <Header>
             <Search
               onChange={this.handleInput}

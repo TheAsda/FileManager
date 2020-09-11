@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { ErrorBoundary, SplitPanels, GoToPalette, Terminal, HotKeysWrapper } from '@fm/components';
+import { ErrorBoundary, SplitPanels, GoToPalette, Terminal } from '@fm/components';
 import {
   destroyTerminal,
   terminalsEventsStore,
@@ -9,6 +9,7 @@ import {
   spawnTerminal,
   terminalsStore,
   pathsStore,
+  KeymapWrapper,
 } from '@fm/store';
 import { useStore } from 'effector-react';
 import { map } from 'lodash';
@@ -65,7 +66,7 @@ const TerminalPanels = () => {
   return (
     <DefaultPanel onSplit={splitTerminal} splitable={terminals.length < 2}>
       {
-        <HotKeysWrapper handlers={hotkeys}>
+        <KeymapWrapper handlers={hotkeys} scope="terminalPanels">
           <SplitPanels className="terminal-panels" onResize={onResize} splitType="horizontal">
             {map(terminals, (item, i) => {
               const terminal = item.getState();
@@ -89,7 +90,7 @@ const TerminalPanels = () => {
                      text={2}
                    /> */}
           </SplitPanels>
-        </HotKeysWrapper>
+        </KeymapWrapper>
       }
       <GoToPalette
         isOpened={isGotoPaletteOpen.isShown}

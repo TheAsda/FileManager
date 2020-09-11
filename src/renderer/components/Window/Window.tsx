@@ -9,7 +9,6 @@ import {
   CommandPalette,
   Popup,
   PreviewPanel,
-  HotKeysWrapper,
 } from '@fm/components';
 import { remote } from 'electron';
 import {
@@ -22,7 +21,7 @@ import {
   resizePreview,
   commandsStore,
   CommandsWrapper,
-  keymapStore,
+  KeymapWrapper,
 } from '@fm/store';
 import { FileModal } from '../modals';
 import { useStore } from 'effector-react';
@@ -33,7 +32,6 @@ const Window = () => {
   const previewState = useStore(previewStore);
 
   const commands = useStore(commandsStore);
-  const keymap = useStore(keymapStore);
 
   const [isCommandPaletteOpen, setCommandPalette] = useState<boolean>(false);
   const openCommandPalette = () => {
@@ -98,51 +96,44 @@ const Window = () => {
   );
 
   return (
-    <HotKeysWrapper keyMap={keymap}>
-      <HotKeysWrapper handlers={hotkeys}>
-        <div className="window">
-          <CommandsWrapper commands={localCommands} scope="window">
-            <SplitPanels
-              initialSizes={sizes}
-              minSize={200}
-              onResize={onResize}
-              splitType="vertical"
-            >
-              {!explorersState.hidden && <ExplorerPanels onPreview={previewHandler} />}
-              {!previewState.hidden &&
-                (({ width }) => {
-                  return <PreviewPanel onHide={togglePreview} width={width} />;
-                })}
-              {!terminalsState.hidden && <TerminalPanels />}
-            </SplitPanels>
-          </CommandsWrapper>
-        </div>
-        <FileModal />
-        <CommandPalette
-          commands={reduce(
-            map(toPairs(commands), ([scope, commands]) => {
-              return reduce<[string, () => void], Commands>(
-                toPairs(commands),
-                (acc, [name, command]) => {
-                  acc[scope + ': ' + name] = command;
+    <KeymapWrapper handlers={hotkeys} scope="window">
+      <div className="window">
+        <CommandsWrapper commands={localCommands} scope="window">
+          <SplitPanels initialSizes={sizes} minSize={200} onResize={onResize} splitType="vertical">
+            {!explorersState.hidden && <ExplorerPanels onPreview={previewHandler} />}
+            {!previewState.hidden &&
+              (({ width }) => {
+                return <PreviewPanel onHide={togglePreview} width={width} />;
+              })}
+            {!terminalsState.hidden && <TerminalPanels />}
+          </SplitPanels>
+        </CommandsWrapper>
+      </div>
+      <FileModal />
+      <CommandPalette
+        commands={reduce(
+          map(toPairs(commands), ([scope, commands]) => {
+            return reduce<[string, () => void], Commands>(
+              toPairs(commands),
+              (acc, [name, command]) => {
+                acc[scope + ': ' + name] = command;
 
-                  return acc;
-                },
-                {}
-              );
-            }),
-            (acc, cur) => {
-              return merge(acc, cur);
-            },
-            {}
-          )}
-          isOpened={isCommandPaletteOpen}
-          onClose={closeCommandPalette}
-        />
-        {/* <ThemeSelector isOpened={isThemeSelectorOpened} onClose={closeThemeSelector} /> */}
-        <Popup />
-      </HotKeysWrapper>
-    </HotKeysWrapper>
+                return acc;
+              },
+              {}
+            );
+          }),
+          (acc, cur) => {
+            return merge(acc, cur);
+          },
+          {}
+        )}
+        isOpened={isCommandPaletteOpen}
+        onClose={closeCommandPalette}
+      />
+      {/* <ThemeSelector isOpened={isThemeSelectorOpened} onClose={closeThemeSelector} /> */}
+      <Popup />
+    </KeymapWrapper>
   );
 };
 
