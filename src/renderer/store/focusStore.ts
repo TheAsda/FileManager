@@ -92,7 +92,7 @@ focusStore.on(toggleGroup, (state) => {
 
   if (newGroupElement) {
     newGroupElement.element.focus();
-    
+
     if (newGroupElement.onFocus) {
       newGroupElement.onFocus();
     }

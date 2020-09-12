@@ -47,6 +47,8 @@ const createWindow = async (): Promise<BrowserWindow> => {
     titleBarStyle: 'hiddenInset',
   });
 
+  window.setMenu(null);
+
   window.on('ready-to-show', () => {
     window.show();
   });

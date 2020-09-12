@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { includes } from 'lodash';
 import { ignoredExtensions, imageExtensions } from './fileExtensions';
 import { extname } from 'path';
@@ -17,7 +17,7 @@ const Container = styled.div`
   flex-flow: column nowrap;
 `;
 
-const Preview = () => {
+const Preview = forwardRef<HTMLDivElement>((_, ref) => {
   const store = useStore(previewStore);
 
   if (store.file) {
@@ -26,7 +26,7 @@ const Preview = () => {
     if (!includes(ignoredExtensions, extension)) {
       if (includes(imageExtensions, extension)) {
         return (
-          <Container>
+          <Container ref={ref}>
             <PathWrapper path={store.file.path + store.file.name}>
               <ImagePreview item={store.file} />
             </PathWrapper>
@@ -34,7 +34,7 @@ const Preview = () => {
         );
       } else {
         return (
-          <Container>
+          <Container ref={ref}>
             <PathWrapper path={store.file.path + store.file.name}>
               <TextPreview item={store.file} />
             </PathWrapper>
@@ -43,18 +43,18 @@ const Preview = () => {
       }
     } else {
       return (
-        <Container>
+        <Container ref={ref}>
           <EmptyPreview text="Cannot display" />
         </Container>
       );
     }
   } else {
     return (
-      <Container>
+      <Container ref={ref}>
         <EmptyPreview text="Empty" />
       </Container>
     );
   }
-};
+});
 
 export { Preview };

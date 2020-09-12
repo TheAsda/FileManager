@@ -42,7 +42,7 @@ interface DetailViewProps {
 
 const DetailView = forwardRef<HTMLDivElement, DetailViewProps>((props, ref) => {
   const { theme } = useStore(settingsStore);
-  
+
   return (
     <Container {...theme}>
       <Header>
