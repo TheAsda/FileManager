@@ -126,7 +126,7 @@ const getHandlersFromScope = (state: Scope, scopePath: string): Commands => {
       acc += cur;
       const scopeHandlers = get(state, acc);
       result = merge(result, pickBy(scopeHandlers, isFunction));
-      return acc;
+      return acc + '.';
     },
     ''
   );

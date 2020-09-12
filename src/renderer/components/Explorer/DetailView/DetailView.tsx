@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { FileInfo, Theme } from '@fm/common';
 import { DetailViewItem, Row, Item } from './DetailViewItem';
 import { map } from 'lodash';
@@ -40,9 +40,9 @@ interface DetailViewProps {
   onEditEnd?: (name: string | null) => void;
 }
 
-const DetailView = (props: DetailViewProps) => {
+const DetailView = forwardRef<HTMLDivElement, DetailViewProps>((props, ref) => {
   const { theme } = useStore(settingsStore);
-
+  
   return (
     <Container {...theme}>
       <Header>
@@ -52,7 +52,7 @@ const DetailView = (props: DetailViewProps) => {
           <Item {...theme}>Creation Date</Item>
         </Row>
       </Header>
-      <Body>
+      <Body ref={ref}>
         {map(props.data, (item, i) => {
           return (
             <DetailViewItem
@@ -72,6 +72,6 @@ const DetailView = (props: DetailViewProps) => {
       </Body>
     </Container>
   );
-};
+});
 
 export { DetailView };

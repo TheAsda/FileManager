@@ -46,15 +46,18 @@ interface ExplorerProps {
   showHidden: boolean;
   index: number;
   theme: Theme;
+  onMount: (ref: HTMLElement) => void;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
   private options: ExplorerCommands;
   private handlers: Commands;
+  private containerRef: HTMLElement | null;
 
   constructor(props: ExplorerProps) {
     super(props);
 
+    this.containerRef = null;
     this.state = {
       selectedIndex: 0,
       viewType: 'detail',
@@ -94,6 +97,10 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
 
   componentDidMount() {
     this.onDirectoryChange();
+
+    if (this.containerRef) {
+      this.props.onMount(this.containerRef);
+    }
   }
 
   componentDidUpdate() {
@@ -371,7 +378,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
           path={this.props.explorerState.path}
           refreshable
         >
-          <KeymapWrapper handlers={this.handlers} scope="explorer">
+          <KeymapWrapper handlers={this.handlers} scope={`explorer.${this.props.index}`}>
             <Container {...this.props.theme}>
               {this.state.viewType === 'detail' ? (
                 <DetailView
@@ -380,6 +387,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
                   onEditEnd={this.onEditEnd}
                   onExit={this.exitDirectory}
                   onItemClick={this.onClick}
+                  ref={(ref) => (this.containerRef = ref)}
                   selectedIndex={this.state.selectedIndex}
                 />
               ) : null}

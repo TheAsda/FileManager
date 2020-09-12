@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { map, toPairs, reduce, merge } from 'lodash';
+import { map, toPairs, reduce, merge, includes } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
 import {
@@ -26,6 +26,7 @@ import {
 } from '@fm/store';
 import { FileModal } from '../modals';
 import { useStore } from 'effector-react';
+import { toggleElement, toggleGroup } from '@fm/store/focusStore';
 
 const Window = () => {
   const terminalsState = useStore(terminalsStateStore);
@@ -54,6 +55,8 @@ const Window = () => {
   const hotkeys = {
     togglePreview,
     openCommandPalette,
+    toggleFocusIndex: () => toggleElement(),
+    toggleFocusPanel: () => toggleGroup(),
   };
 
   const localCommands: Commands = useMemo(
@@ -98,6 +101,16 @@ const Window = () => {
 
   useEffect(() => {
     activateScope('window');
+    window.addEventListener(
+      'keydown',
+      function (e) {
+        // space and arrow keys
+        if (includes([32, 37, 38, 39, 40], e.keyCode)) {
+          e.preventDefault();
+        }
+      },
+      false
+    );
   }, []);
 
   return (

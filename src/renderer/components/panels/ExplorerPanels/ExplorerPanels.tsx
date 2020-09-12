@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
 import { useDirectoryManager } from '@fm/hooks';
@@ -16,9 +16,11 @@ import {
   pathsStore,
   addPath,
   KeymapWrapper,
+  useActivateScope,
 } from '@fm/store';
 import { useStore } from 'effector-react';
 import { map } from 'lodash';
+import { addElement, registerGroup } from '@fm/store/focusStore';
 
 interface ExplorerPanelsProps {
   onPreview?: (item: FileInfo) => void;
@@ -30,6 +32,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
   const explorers = useStore(explorersStore);
   const events = useStore(explorersEventsStore);
   const { directoryManager } = useDirectoryManager();
+  const { activate } = useActivateScope();
   const { list: paths } = useStore(pathsStore);
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
@@ -131,6 +134,18 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
     []
   );
 
+  useEffect(() => {
+    registerGroup('explorers');
+  }, []);
+
+  const onMount = (index: number) => (element: HTMLElement) => {
+    addElement({
+      element,
+      group: 'explorers',
+      onFocus: () => activate(`explorerPanels.explorer.${index}`),
+    });
+  };
+
   return (
     <DefaultPanel
       onHide={() => toggleExplorers()}
@@ -154,6 +169,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
                     onClose={onClose(i)}
                     onCopy={onCopy(i)}
                     onDirectoryChange={onDirectoryChange(i)}
+                    onMount={onMount(i)}
                     onMove={onMove(i)}
                     onPreview={props.onPreview}
                     openInTerminal={props.openInTerminal}
