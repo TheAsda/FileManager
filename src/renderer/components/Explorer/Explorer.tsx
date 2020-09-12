@@ -371,7 +371,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
           path={this.props.explorerState.path}
           refreshable
         >
-          <KeymapWrapper handlers={this.handlers} scope="">
+          <KeymapWrapper handlers={this.handlers} scope="explorer">
             <Container {...this.props.theme}>
               {this.state.viewType === 'detail' ? (
                 <DetailView

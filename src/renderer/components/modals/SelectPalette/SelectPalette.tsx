@@ -6,7 +6,7 @@ import { Modal } from 'react-responsive-modal';
 import { withTheme, ThemeProp } from '@fm/components/common';
 import Fuse from 'fuse.js';
 import styled from 'styled-components';
-import { KeymapWrapper } from '@fm/store/keymapStore';
+import { KeymapWrapper, activateScope } from '@fm/store/keymapStore';
 
 const Header = styled.div`
   border-bottom: 2px solid 5px;
@@ -60,7 +60,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
     });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: SelectPaletteProps) {
     if (!isEqual(this.props.options, this.state.allOptions)) {
       this.fuse.setCollection(this.props.options);
       this.setState((state) => ({
@@ -68,6 +68,10 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
         allOptions: this.props.options,
         options: this.props.options,
       }));
+    }
+
+    if (prevProps.isOpened === false && this.props.isOpened === true) {
+      activateScope('selectPalette');
     }
   }
 

@@ -127,7 +127,7 @@ class Terminal extends Component<TerminalProps, { path: string }> {
   render() {
     return (
       <CommandsWrapper commands={this.options} scope={`terminal ${this.props.index}`}>
-        <KeymapWrapper handlers={this.handlers} scope="">
+        <KeymapWrapper handlers={this.handlers} scope="terminal">
           <PathWrapper
             closable={this.props.closable}
             onClose={this.props.onClose}

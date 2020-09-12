@@ -41,7 +41,7 @@ const TextPreview = (props: TextPreviewProps) => {
   const text = directoryManager.readFileSync(props.item.path + props.item.name);
 
   return (
-    <KeymapWrapper handlers={hotkeys} scope="">
+    <KeymapWrapper handlers={hotkeys} scope="textPreview">
       <Text {...theme} fontSize={fontSize}>
         {text}
       </Text>

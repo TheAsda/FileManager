@@ -7,6 +7,7 @@ import {
   includes,
   isEmpty,
   isFunction,
+  keys,
   merge,
   pickBy,
   reduce,
@@ -140,7 +141,10 @@ registerIpc(Channels.KEYPRESS, (event, shortcut: string) => {
 
   const handlers = getHandlersFromScope(state.handlers, state.activeScope);
 
-  const key = find(toPairs(state.keymap), (item) => includes(item[1], shortcut));
+  const key = find(
+    toPairs(state.keymap),
+    (item) => includes(keys(handlers), item[0]) && includes(item[1], shortcut)
+  );
 
   if (!key || !handlers[key[0]]) {
     return;

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { map, toPairs, reduce, merge } from 'lodash';
 import './style.css';
 import { FileInfo, Commands } from '@fm/common';
@@ -22,6 +22,7 @@ import {
   commandsStore,
   CommandsWrapper,
   KeymapWrapper,
+  activateScope,
 } from '@fm/store';
 import { FileModal } from '../modals';
 import { useStore } from 'effector-react';
@@ -39,6 +40,7 @@ const Window = () => {
   };
 
   const closeCommandPalette = () => {
+    activateScope('window');
     setCommandPalette(false);
   };
 
@@ -66,7 +68,6 @@ const Window = () => {
   );
 
   const onResize = (value: number[]) => {
-    // console.log('onResize -> value', value);
     const hiddenState = [explorersState.hidden, previewState.hidden, previewState.hidden];
 
     const valueCopy = [...value];
@@ -95,21 +96,32 @@ const Window = () => {
     []
   );
 
+  useEffect(() => {
+    activateScope('window');
+  }, []);
+
   return (
-    <KeymapWrapper handlers={hotkeys} scope="window">
-      <div className="window">
-        <CommandsWrapper commands={localCommands} scope="window">
-          <SplitPanels initialSizes={sizes} minSize={200} onResize={onResize} splitType="vertical">
-            {!explorersState.hidden && <ExplorerPanels onPreview={previewHandler} />}
-            {!previewState.hidden &&
-              (({ width }) => {
-                return <PreviewPanel onHide={togglePreview} width={width} />;
-              })}
-            {!terminalsState.hidden && <TerminalPanels />}
-          </SplitPanels>
-        </CommandsWrapper>
-      </div>
-      <FileModal />
+    <>
+      <KeymapWrapper handlers={hotkeys} scope="window">
+        <div className="window">
+          <CommandsWrapper commands={localCommands} scope="window">
+            <SplitPanels
+              initialSizes={sizes}
+              minSize={200}
+              onResize={onResize}
+              splitType="vertical"
+            >
+              {!explorersState.hidden && <ExplorerPanels onPreview={previewHandler} />}
+              {!previewState.hidden &&
+                (({ width }) => {
+                  return <PreviewPanel onHide={togglePreview} width={width} />;
+                })}
+              {!terminalsState.hidden && <TerminalPanels />}
+            </SplitPanels>
+          </CommandsWrapper>
+        </div>
+        <FileModal />
+      </KeymapWrapper>
       <CommandPalette
         commands={reduce(
           map(toPairs(commands), ([scope, commands]) => {
@@ -133,7 +145,7 @@ const Window = () => {
       />
       {/* <ThemeSelector isOpened={isThemeSelectorOpened} onClose={closeThemeSelector} /> */}
       <Popup />
-    </KeymapWrapper>
+    </>
   );
 };
 
