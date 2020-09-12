@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
 import { ErrorBoundary, SplitPanels, GoToPalette, Terminal } from '@fm/components';
@@ -10,14 +10,17 @@ import {
   terminalsStore,
   pathsStore,
   KeymapWrapper,
+  useActivateScope,
 } from '@fm/store';
 import { useStore } from 'effector-react';
 import { map } from 'lodash';
+import { addElement, registerGroup } from '@fm/store/focusStore';
 
 const TerminalPanels = () => {
   const settings = useStore(settingsStore);
   const terminals = useStore(terminalsStore);
   const events = useStore(terminalsEventsStore);
+  const { activate } = useActivateScope();
   const [isGotoPaletteOpen, setGotoPalette] = useState<{
     isShown: boolean;
     panelIndex?: number;
@@ -63,6 +66,18 @@ const TerminalPanels = () => {
     }
   };
 
+  useEffect(() => {
+    registerGroup('terminals');
+  }, []);
+
+  const onMount = (index: number) => (element: HTMLElement) => {
+    addElement({
+      element,
+      group: 'explorers',
+      onFocus: () => activate(`terminalPanels.terminal.${index}`),
+    });
+  };
+
   return (
     <DefaultPanel onSplit={splitTerminal} splitable={terminals.length < 2}>
       {
@@ -80,6 +95,7 @@ const TerminalPanels = () => {
                     onExit={onClose(1)}
                     terminalManager={terminal.manager}
                     theme={settings.theme}
+                    onMount={onMount(i)}
                   />
                 </ErrorBoundary>
               );

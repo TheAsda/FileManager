@@ -20,6 +20,7 @@ interface TerminalProps {
   onReload?: () => void;
   theme: Theme;
   index: number;
+  onMount: (ref: HTMLElement) => void;
 }
 
 class Terminal extends Component<TerminalProps, { path: string }> {
@@ -59,6 +60,7 @@ class Terminal extends Component<TerminalProps, { path: string }> {
 
   componentDidMount() {
     if (this.containerRef.current !== null) {
+      this.props.onMount(this.containerRef.current);
       this.terminal.loadAddon(this.fitAddon);
       this.terminal.open(this.containerRef.current);
       this.terminal.attachCustomKeyEventHandler((event) => {
