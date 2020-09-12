@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { createEvent } from 'effector';
-import { createElement } from 'react';
 import { focusStore, registerGroup, addElement, toggleElement, toggleGroup } from '../focusStore';
 import { forEach } from 'lodash';
 
@@ -30,7 +29,7 @@ describe('focusStore', () => {
       element: container,
     });
 
-    expect(focusStore.getState().groups).toEqual({ test: [container] });
+    expect(focusStore.getState().groups).toEqual({ test: [{ element: container }] });
   });
 
   it('should do nothing if group does not exist', () => {
@@ -57,11 +56,11 @@ describe('focusStore', () => {
       element: container,
     });
 
-    expect(focusStore.getState().groups).toEqual({ test1: [container], test2: [] });
+    expect(focusStore.getState().groups).toEqual({ test1: [{ element: container }], test2: [] });
 
     registerGroup('test1');
 
-    expect(focusStore.getState().groups).toEqual({ test1: [container], test2: [] });
+    expect(focusStore.getState().groups).toEqual({ test1: [{ element: container }], test2: [] });
   });
 
   it('should toggle groups', () => {
@@ -116,5 +115,69 @@ describe('focusStore', () => {
     toggleElement();
 
     expect(focusStore.getState().activeElementIndex).toBe(0);
+  });
+
+  it('should invoke handler while toggling element', () => {
+    registerGroup('test');
+    const { getAllByText } = render(
+      <ul>
+        <li>test</li>
+        <li>test</li>
+        <li>test</li>
+      </ul>
+    );
+
+    const elements = getAllByText(/test/);
+    const handler = jest.fn();
+
+    forEach(elements, (e) => {
+      addElement({
+        element: e,
+        group: 'test',
+        onFocus: handler,
+      });
+    });
+
+    toggleElement();
+
+    expect(handler).toBeCalledTimes(1);
+
+    toggleElement();
+
+    expect(handler).toBeCalledTimes(2);
+
+    toggleElement();
+
+    expect(handler).toBeCalledTimes(3);
+  });
+
+  it('should invoke handler while toggling group', () => {
+    registerGroup('test1');
+    registerGroup('test2');
+
+    const { getAllByText } = render(
+      <ul>
+        <li>test</li>
+        <li>test</li>
+      </ul>
+    );
+
+    const elements = getAllByText(/test/);
+
+    const test1Handler = jest.fn();
+    addElement({ element: elements[0], group: 'test1', onFocus: test1Handler });
+
+    const test2Handler = jest.fn();
+    addElement({ element: elements[1], group: 'test2', onFocus: test2Handler });
+
+    toggleGroup();
+
+    expect(test1Handler).toBeCalledTimes(0);
+    expect(test2Handler).toBeCalledTimes(1);
+
+    toggleGroup();
+
+    expect(test1Handler).toBeCalledTimes(1);
+    expect(test2Handler).toBeCalledTimes(1);
   });
 });

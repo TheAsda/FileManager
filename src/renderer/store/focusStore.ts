@@ -2,8 +2,13 @@ import { createEvent, createStore } from 'effector';
 import { warn } from 'electron-log';
 import { findIndex, keys } from 'lodash';
 
+interface GroupElement {
+  element: HTMLElement;
+  onFocus?: () => void;
+}
+
 interface FocusGroups {
-  [name: string]: HTMLElement[];
+  [name: string]: GroupElement[];
 }
 
 interface FocusStore {
@@ -34,6 +39,7 @@ focusStore.on(registerGroup, (state, value) => {
 const addElement = createEvent<{
   group: string;
   element: HTMLElement;
+  onFocus?: () => void;
 }>();
 focusStore.on(addElement, (state, value) => {
   if (!state.groups[value.group]) {
@@ -45,7 +51,10 @@ focusStore.on(addElement, (state, value) => {
     ...state,
     groups: {
       ...state.groups,
-      [value.group]: [...state.groups[value.group], value.element],
+      [value.group]: [
+        ...state.groups[value.group],
+        { element: value.element, onFocus: value.onFocus },
+      ],
     },
   };
 });
@@ -54,7 +63,15 @@ const toggleElement = createEvent();
 focusStore.on(toggleElement, (state) => {
   const newIndex = (state.activeElementIndex + 1) % state.groups[state.activeGroup].length;
 
-  state.groups[state.activeGroup][newIndex].focus();
+  const newElement = state.groups[state.activeGroup][newIndex];
+
+  if (newElement) {
+    newElement.element.focus();
+
+    if (newElement.onFocus) {
+      newElement.onFocus();
+    }
+  }
 
   return {
     ...state,
@@ -69,14 +86,22 @@ focusStore.on(toggleGroup, (state) => {
   const activeGroupIndex = findIndex(groupNames, (item) => item === state.activeGroup);
   const newGroupIndex = (activeGroupIndex + 1) % groupNames.length;
 
-  const newGroup = groupNames[newGroupIndex];
+  const newGroupName = groupNames[newGroupIndex];
 
-  state.groups[newGroup][0].focus();
+  const newGroupElement = state.groups[newGroupName][0];
+
+  if (newGroupElement) {
+    newGroupElement.element.focus();
+    
+    if (newGroupElement.onFocus) {
+      newGroupElement.onFocus();
+    }
+  }
 
   return {
     ...state,
     activeElementIndex: 0,
-    activeGroup: newGroup,
+    activeGroup: newGroupName,
   };
 });
 
