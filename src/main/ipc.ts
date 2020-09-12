@@ -20,7 +20,7 @@ interface ISendIpc {
 }
 
 const sendIpc: ISendIpc = (channel: string, message?: unknown) => {
-  info(`Sending sync message to ${channel} channel`);
+  info(`Sending sync message to "${channel}" channel from main process`);
   getWindow().webContents.send(channel, message);
 };
 

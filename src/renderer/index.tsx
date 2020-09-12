@@ -3,6 +3,9 @@ import { App } from './App';
 import { render } from 'react-dom';
 import { init } from '@sentry/electron';
 import { configure } from 'react-hotkeys';
+import { transports } from 'electron-log';
+
+transports.console.level = 'silly';
 
 configure({
   ignoreTags: [],

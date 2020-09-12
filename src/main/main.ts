@@ -77,7 +77,7 @@ app.on('activate', async () => {
 app.on('ready', async () => {
   setWindow(await createWindow());
 
-  initKeyboardIpc()
+  initKeyboardIpc();
 
   getWindow().once('ready-to-show', () => {
     getWindow().show();

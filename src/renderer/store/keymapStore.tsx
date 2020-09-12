@@ -134,13 +134,15 @@ const getHandlersFromScope = (state: Scope, scopePath: string): Commands => {
 };
 
 registerIpc(Channels.KEYPRESS, (event, shortcut: string) => {
+  debug(shortcut);
+
   const state = keymapStore.getState();
 
   const handlers = getHandlersFromScope(state.handlers, state.activeScope);
 
   const key = find(toPairs(state.keymap), (item) => includes(item[1], shortcut));
 
-  if (!key) {
+  if (!key || !handlers[key[0]]) {
     return;
   }
 

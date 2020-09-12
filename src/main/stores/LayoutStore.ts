@@ -94,7 +94,6 @@ class LayoutStore implements ILayoutStore {
   }
 
   get(): Layout {
-    console.log('LayoutStore -> get -> this.store.store', this.store.store);
     if (isEmpty(this.store.store)) {
       const initialState: Layout = {
         window: {

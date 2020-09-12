@@ -15,7 +15,7 @@ interface ISendIpc {
 }
 
 const sendIpc: ISendIpc = <T>(channel: string, message?: unknown): T => {
-  info(`Sending sync message to ${channel} channel`);
+  info(`Sending sync message to "${channel}" channel from renderer process`);
   return ipcRenderer.sendSync(channel, message) as T;
 };
 
