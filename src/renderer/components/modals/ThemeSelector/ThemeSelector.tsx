@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Commands, SelectPalette } from '../SelectPalette';
 import { remote, app } from 'electron';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Commands, SelectPalette } from '../SelectPalette';
 import { useDirectoryManager } from '@fm/hooks';
 import { reject, filter, endsWith, map } from 'lodash';
 import { CommandsWrapper, settingsApi } from '@fm/store';
 import { silly } from 'electron-log';
 
-const themesFolderPath = (app || remote.app).getPath('userData') + '/themes';
+// const themesFolderPath = (app || remote.app).getPath('userData') + '/themes';
 
 const ThemeSelector = () => {
   const [isThemeSelectorOpened, setThemeSelectorState] = useState<boolean>(false);
@@ -25,13 +25,12 @@ const ThemeSelector = () => {
 
   useEffect(() => {
     if (isThemeSelectorOpened) {
-      directoryManager.listDirectory(themesFolderPath).then((items) => {
-        const options = filter(reject(items, ['name', '..']), (item) =>
-          endsWith(item.name, 'json')
-        );
-
-        setState(map(options, (item) => item.name.substr(0, item.name.lastIndexOf('.'))));
-      });
+      // directoryManager.listDirectory(themesFolderPath).then((items) => {
+      //   const options = filter(reject(items, ['name', '..']), (item) =>
+      //     endsWith(item.name, 'json')
+      //   );
+      //   setState(map(options, (item) => item.name.substr(0, item.name.lastIndexOf('.'))));
+      // });
     }
   }, [isThemeSelectorOpened]);
 
@@ -39,12 +38,15 @@ const ThemeSelector = () => {
     settingsApi.setTheme(theme);
   };
 
-  const commands: Commands = {
-    'Open theme selector': openThemeSelector,
-  };
+  const commands: Commands = useMemo(
+    () => ({
+      'Open theme selector': openThemeSelector,
+    }),
+    []
+  );
 
   return (
-    <CommandsWrapper commands={commands} scope="theme">
+    <CommandsWrapper commands={commands} scope="window">
       <SelectPalette
         isOpened={isThemeSelectorOpened}
         onClose={closeThemeSelector}

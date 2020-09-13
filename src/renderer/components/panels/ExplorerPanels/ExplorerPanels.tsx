@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { FileInfo } from '@fm/common';
 import { DefaultPanel } from '../DefaultPanel';
 import { useDirectoryManager } from '@fm/hooks';
-import { SplitPanels, ErrorBoundary, GoToPalette, Explorer } from '@fm/components';
+import { SplitPanels, ErrorBoundary, Explorer } from '@fm/components';
 import {
   fileActionApi,
   settingsStore,
@@ -17,10 +17,13 @@ import {
   addPath,
   KeymapWrapper,
   useActivateScope,
+  ExplorerStore,
 } from '@fm/store';
 import { useStore } from 'effector-react';
 import { map } from 'lodash';
 import { addElement, registerGroup } from '@fm/store/focusStore';
+import { SelectPalette } from '@fm/components/modals';
+import { Store } from 'effector';
 
 interface ExplorerPanelsProps {
   onPreview?: (item: FileInfo) => void;
@@ -142,7 +145,7 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
     addElement({
       element,
       group: 'explorers',
-      onFocus: () => activate(`explorerPanels.explorer.${index}`),
+      onFocus: () => (element.focus(), activate(`explorerPanels.explorer.${index}`)),
     });
   };
 
@@ -156,33 +159,37 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
         <KeymapWrapper handlers={hotkeys} scope="explorerPanels">
           <SplitPanels minSize={200} onResize={onResize} splitType="horizontal">
             {map(explorers, (item, i) => {
-              const explorer = item.getState();
-
               return (
-                <ErrorBoundary key={item.sid ?? i}>
-                  <Explorer
-                    autoPreview={settings.autoPreview}
-                    closable={explorers.length > 1}
-                    directoryManager={directoryManager}
-                    explorerState={explorer}
-                    index={i}
-                    onClose={onClose(i)}
-                    onCopy={onCopy(i)}
-                    onDirectoryChange={onDirectoryChange(i)}
-                    onMount={onMount(i)}
-                    onMove={onMove(i)}
-                    onPreview={props.onPreview}
-                    openInTerminal={props.openInTerminal}
-                    showHidden={settings.showHidden}
-                    theme={settings.theme}
-                  />
-                </ErrorBoundary>
+                <WithExplorer store={item}>
+                  {(explorer) => {
+                    return (
+                      <ErrorBoundary key={item.sid ?? i}>
+                        <Explorer
+                          autoPreview={settings.autoPreview}
+                          closable={explorers.length > 1}
+                          directoryManager={directoryManager}
+                          explorerState={explorer}
+                          index={i}
+                          onClose={onClose(i)}
+                          onCopy={onCopy(i)}
+                          onDirectoryChange={onDirectoryChange(i)}
+                          onMount={onMount(i)}
+                          onMove={onMove(i)}
+                          onPreview={props.onPreview}
+                          openInTerminal={props.openInTerminal}
+                          showHidden={settings.showHidden}
+                          theme={settings.theme}
+                        />
+                      </ErrorBoundary>
+                    );
+                  }}
+                </WithExplorer>
               );
             })}
           </SplitPanels>
         </KeymapWrapper>
       </CommandsWrapper>
-      <GoToPalette
+      <SelectPalette
         isOpened={isGotoPaletteOpen.isShown}
         onClose={closeGotoPalette}
         onSelect={onGotoSelect}
@@ -190,6 +197,15 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
       />
     </DefaultPanel>
   );
+};
+
+const WithExplorer = (props: {
+  children: (store: ExplorerStore) => JSX.Element;
+  store: Store<ExplorerStore>;
+}) => {
+  const explorer = useStore(props.store);
+
+  return props.children(explorer);
 };
 
 export { ExplorerPanels, ExplorerPanelsProps };

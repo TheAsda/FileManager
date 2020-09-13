@@ -7,8 +7,8 @@ import autobind from 'autobind-decorator';
 import { PathWrapper } from '../PathWrapper';
 import { Commands } from '../modals';
 import { ExplorerCommands } from './explorerCommands';
-import { normalizePath, openWithDefaultApp } from 'filemancore';
-import { join } from 'path';
+import { openWithDefaultApp } from 'filemancore';
+import { join, normalize } from 'path';
 import styled from 'styled-components';
 import { CommandsWrapper, ExplorerStore, KeymapWrapper } from '@fm/store';
 
@@ -201,19 +201,17 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
     // this.props.explorerManager.setPath(
     //   normalizePath(join(this.selectedItem.path, this.selectedItem.name))
     // );
+    const newPath = normalize(join(this.selectedItem.path, this.selectedItem.name));
 
-    this.props.onDirectoryChange &&
-      this.props.onDirectoryChange(
-        normalizePath(join(this.selectedItem.path, this.selectedItem.name))
-      );
+    this.props.onDirectoryChange && this.props.onDirectoryChange(newPath);
     this.onDirectoryChange();
   }
 
   @autobind
   exitDirectory() {
+    const newPath = normalize(join(this.selectedItem.path, '..'));
     // this.props.explorerManager.setPath(normalizePath(join(this.selectedItem.path, '..')));
-    this.props.onDirectoryChange &&
-      this.props.onDirectoryChange(normalizePath(join(this.selectedItem.path, '..')));
+    this.props.onDirectoryChange && this.props.onDirectoryChange(newPath);
     this.onDirectoryChange();
   }
 

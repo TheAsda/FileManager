@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './style.css';
 import { DefaultPanel } from '../DefaultPanel';
-import { ErrorBoundary, SplitPanels, GoToPalette, Terminal } from '@fm/components';
+import { ErrorBoundary, SplitPanels, Terminal } from '@fm/components';
 import {
   destroyTerminal,
   terminalsEventsStore,
@@ -15,6 +15,7 @@ import {
 import { useStore } from 'effector-react';
 import { map } from 'lodash';
 import { addElement, registerGroup } from '@fm/store/focusStore';
+import { SelectPalette } from '@fm/components/modals';
 
 const TerminalPanels = () => {
   const settings = useStore(settingsStore);
@@ -73,7 +74,7 @@ const TerminalPanels = () => {
   const onMount = (index: number) => (element: HTMLElement) => {
     addElement({
       element,
-      group: 'explorers',
+      group: 'terminals',
       onFocus: () => activate(`terminalPanels.terminal.${index}`),
     });
   };
@@ -93,9 +94,9 @@ const TerminalPanels = () => {
                     index={i}
                     onClose={onClose(1)}
                     onExit={onClose(1)}
+                    onMount={onMount(i)}
                     terminalManager={terminal.manager}
                     theme={settings.theme}
-                    onMount={onMount(i)}
                   />
                 </ErrorBoundary>
               );
@@ -108,7 +109,7 @@ const TerminalPanels = () => {
           </SplitPanels>
         </KeymapWrapper>
       }
-      <GoToPalette
+      <SelectPalette
         isOpened={isGotoPaletteOpen.isShown}
         onClose={closeGotoPalette}
         onSelect={onGotoSelect}

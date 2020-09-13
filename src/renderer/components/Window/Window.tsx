@@ -10,6 +10,7 @@ import {
   Popup,
   PreviewPanel,
 } from '@fm/components';
+import { ThemeSelector } from '@fm/components/modals/ThemeSelector';
 import { remote } from 'electron';
 import {
   setPreviewFile,
@@ -156,7 +157,7 @@ const Window = () => {
         isOpened={isCommandPaletteOpen}
         onClose={closeCommandPalette}
       />
-      {/* <ThemeSelector isOpened={isThemeSelectorOpened} onClose={closeThemeSelector} /> */}
+      <ThemeSelector />
       <Popup />
     </>
   );

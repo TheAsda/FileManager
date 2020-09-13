@@ -61,6 +61,13 @@ class Terminal extends Component<TerminalProps, { path: string }> {
   componentDidMount() {
     if (this.containerRef.current !== null) {
       this.props.onMount(this.containerRef.current);
+      this.containerRef.current.addEventListener('focus', () => {
+        console.log('terminal focus');
+        this.terminal.focus();
+      });
+      this.containerRef.current.addEventListener('focusout', () => {
+        this.terminal.blur();
+      });
       this.terminal.loadAddon(this.fitAddon);
       this.terminal.open(this.containerRef.current);
       this.terminal.attachCustomKeyEventHandler((event) => {
@@ -128,7 +135,7 @@ class Terminal extends Component<TerminalProps, { path: string }> {
 
   render() {
     return (
-      <CommandsWrapper commands={this.options} scope={`terminal ${this.props.index}`}>
+      <CommandsWrapper commands={this.options} scope={`terminal.${this.props.index}`}>
         <KeymapWrapper handlers={this.handlers} scope="terminal">
           <PathWrapper
             closable={this.props.closable}
