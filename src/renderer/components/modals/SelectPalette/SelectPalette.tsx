@@ -1,28 +1,29 @@
-import React, { Component } from 'react';
+import { ThemeProp, withTheme } from '@fm/components/common';
+import { activateScope, KeymapWrapper } from '@fm/store/keymapStore';
 import autobind from 'autobind-decorator';
-import { clamp, map, includes, isEqual, indexOf } from 'lodash';
-import { SelectPaletteItem } from './SelectPaletteItem';
-import { Modal } from 'react-responsive-modal';
-import { withTheme, ThemeProp } from '@fm/components/common';
 import Fuse from 'fuse.js';
-import styled from 'styled-components';
-import { KeymapWrapper, activateScope } from '@fm/store/keymapStore';
+import { clamp, includes, indexOf, isEqual, map } from 'lodash';
+import React, { Component } from 'react';
+import { Modal } from 'react-responsive-modal';
+import { styled } from 'styletron-react';
 
-const Header = styled.div`
-  border-bottom: 2px solid 5px;
-  padding-bottom: 5px;
-  margin-bottom: 5px;
-`;
+import { SelectPaletteItem } from './SelectPaletteItem';
 
-const Search = styled.input`
-  width: 100%;
-  outline: none;
-`;
+const Header = styled('div', {
+  borderBottom: '2px solid 5px',
+  paddingBottom: '5px',
+  marginBottom: '5px',
+});
 
-const ListBox = styled.ul`
-  margin: 0;
-  padding: 0;
-`;
+const Search = styled('input', {
+  width: '100%',
+  outline: 'none',
+});
+
+const ListBox = styled('ul', {
+  margin: 0,
+  padding: 0,
+});
 
 interface SelectPaletteProps extends ThemeProp {
   options: string[];
