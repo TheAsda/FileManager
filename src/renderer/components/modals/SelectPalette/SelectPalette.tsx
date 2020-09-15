@@ -1,5 +1,5 @@
-import { ThemeProp, withTheme } from '@fm/components/common';
 import { activateScope, KeymapWrapper } from '@fm/store/keymapStore';
+import { settingsStore } from '@fm/store/settingsStore';
 import autobind from 'autobind-decorator';
 import Fuse from 'fuse.js';
 import { clamp, includes, indexOf, isEqual, map } from 'lodash';
@@ -25,7 +25,7 @@ const ListBox = styled('ul', {
   padding: 0,
 });
 
-interface SelectPaletteProps extends ThemeProp {
+interface SelectPaletteProps {
   options: string[];
   inputValue?: string;
   onSelect: (selectedItem: string) => void;
@@ -130,6 +130,7 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
   }
 
   render() {
+    const { theme } = settingsStore.getState();
     return (
       <Modal
         onClose={this.props.onClose}
@@ -138,8 +139,8 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
         styles={{
           modal: {
             padding: '10px',
-            color: this.props.theme['palette.textColor'],
-            backgroundColor: this.props.theme['palette.backgroundColor'],
+            color: theme['palette.textColor'],
+            backgroundColor: theme['palette.backgroundColor'],
             width: '80%',
           },
         }}
@@ -187,6 +188,4 @@ class SelectPalette extends Component<SelectPaletteProps, SelectPaletteState> {
   }
 }
 
-const ThemedSelectPalette = withTheme(SelectPalette);
-
-export { ThemedSelectPalette as SelectPalette, SelectPaletteProps };
+export { SelectPalette, SelectPaletteProps };

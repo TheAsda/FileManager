@@ -1,6 +1,9 @@
-import { Channels, DEFAULT_THEME, Theme } from '@fm/common';
+import { Channels } from '@fm/common/Channels';
+import { Theme } from '@fm/common/interfaces/Theme';
+import { DEFAULT_THEME } from '@fm/common/settings/theme';
 import { createApi, createEffect, createStore, forward } from 'effector';
 import { info } from 'electron-log';
+
 import { sendIpc } from './ipc';
 
 interface SettingsStore {

@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import { SelectPalette } from '../SelectPalette';
-import { render, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { map, times } from 'lodash';
-import { mocked } from 'ts-jest/utils';
-import { ipcRenderer } from 'electron';
 import { DEFAULT_THEME } from '@fm/common';
+import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ipcRenderer } from 'electron';
+import { map, times } from 'lodash';
+import React from 'react';
+import { Client } from 'styletron-engine-atomic';
+import { Provider } from 'styletron-react';
+import { mocked } from 'ts-jest/utils';
+
+import { SelectPalette } from '../SelectPalette';
 
 jest.mock('electron', () => ({
   ipcRenderer: {
@@ -67,16 +70,16 @@ describe('Select palette', () => {
 
   describe('options', () => {
     it('should render items with options and first item selected', () => {
-      const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
+      const container = render(<SelectPalette {...props} isOpened={true} options={options} />, {
+        wrapper: ({ children }) => <Provider value={new Client()}>{children}</Provider>,
+      });
 
       expect(container.getAllByRole('listitem')).toHaveLength(options.length);
-
       const renderedOptions = container.getAllByRole('listitem');
       const renderedOptionsContext = map(renderedOptions, 'textContent');
       expect(renderedOptionsContext).toEqual(options);
-      expect(renderedOptions[0]).toHaveStyleRule(
-        'background-color',
-        DEFAULT_THEME['palette.selectedColor']
+      expect(renderedOptions[0]).toHaveStyle(
+        `background-color: ${DEFAULT_THEME['palette.selectedColor']}`
       );
     });
 
@@ -128,7 +131,11 @@ describe('Select palette', () => {
 
   describe('keys', () => {
     it('should select next option on moveDown', () => {
-      const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
+      const container = render(
+        <Provider value={new Client()}>
+          <SelectPalette {...props} isOpened={true} options={options} />
+        </Provider>
+      );
 
       const mockedOn = mocked(ipcRenderer.on);
 
@@ -139,21 +146,23 @@ describe('Select palette', () => {
 
       const renderedOptions = container.getAllByRole('listitem');
       times(options.length, (i) => {
-        expect(renderedOptions[i]).toHaveStyleRule(
-          'background-color',
-          DEFAULT_THEME['palette.selectedColor']
+        expect(renderedOptions[i]).toHaveStyle(
+          `background-color: ${DEFAULT_THEME['palette.selectedColor']}`
         );
         keypressHandler(fakeEvent, 'key2');
       });
 
-      expect(renderedOptions[options.length - 1]).toHaveStyleRule(
-        'background-color',
-        DEFAULT_THEME['palette.selectedColor']
+      expect(renderedOptions[options.length - 1]).toHaveStyle(
+        `background-color: ${DEFAULT_THEME['palette.selectedColor']}`
       );
     });
 
     it('should select previous option on moveUp', () => {
-      const container = render(<SelectPalette {...props} isOpened={true} options={options} />);
+      const container = render(
+        <Provider value={new Client()}>
+          <SelectPalette {...props} isOpened={true} options={options} />
+        </Provider>
+      );
 
       const mockedOn = mocked(ipcRenderer.on);
 
@@ -168,21 +177,23 @@ describe('Select palette', () => {
 
       const renderedOptions = container.getAllByRole('listitem');
       times(options.length, (i) => {
-        expect(renderedOptions[options.length - i - 1]).toHaveStyleRule(
-          'background-color',
-          DEFAULT_THEME['palette.selectedColor']
+        expect(renderedOptions[options.length - i - 1]).toHaveStyle(
+          `background-color: ${DEFAULT_THEME['palette.selectedColor']}`
         );
         keypressHandler(fakeEvent, 'key3');
       });
 
-      expect(renderedOptions[0]).toHaveStyleRule(
-        'background-color',
-        DEFAULT_THEME['palette.selectedColor']
+      expect(renderedOptions[0]).toHaveStyle(
+        `background-color: ${DEFAULT_THEME['palette.selectedColor']}`
       );
     });
 
     it('should close on close key', () => {
-      render(<SelectPalette {...props} isOpened={true} options={options} />);
+      render(
+        <Provider value={new Client()}>
+          <SelectPalette {...props} isOpened={true} options={options} />
+        </Provider>
+      );
 
       const mockedOn = mocked(ipcRenderer.on);
 
