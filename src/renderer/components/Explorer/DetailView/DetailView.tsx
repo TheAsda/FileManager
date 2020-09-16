@@ -1,33 +1,55 @@
-import React, { forwardRef } from 'react';
-import { FileInfo, Theme } from '@fm/common';
-import { DetailViewItem, Row, Item } from './DetailViewItem';
+import { FileInfo } from '@fm/common/interfaces/FileInfo';
+import { styled } from '@fm/components/common/styled';
 import { map } from 'lodash';
-import styled from 'styled-components';
-import { settingsStore } from '@fm/store';
-import { useStore } from 'effector-react';
+import React, { forwardRef } from 'react';
 
-const Container = styled.div<Theme>`
-  width: 100%;
-  height: 100%;
-  text-align: left;
-  padding: 0 0.5rem;
-  display: flex;
-  flex-flow: column nowrap;
-  background-color: ${(props) => props['explorer.backgroundColor']};
-`;
+import { DetailViewItem, Item, Row } from './DetailViewItem';
 
-const Header = styled.div`
-  display: flex;
-  flex-flow: column nowrap;
-  font-weight: bold;
-`;
+const Container = styled('div', ({ $theme }) => ({
+  width: '100%',
+  height: '100%',
+  textAlign: 'left',
+  padding: '0 0 0.5rem',
+  display: 'flex',
+  flexFlow: 'column nowrap',
+  backgroundColor: $theme['explorer.backgroundColor'],
+}));
 
-const Body = styled.div`
-  flex: 1;
-  display: flex;
-  flex-flow: column nowrap;
-  overflow: auto;
-`;
+// const Container = styled.div<Theme>`
+//   width: 100%;
+//   height: 100%;
+//   text-align: left;
+//   padding: 0 0.5rem;
+//   display: flex;
+//   flex-flow: column nowrap;
+//   background-color: ${(props) => props['explorer.backgroundColor']};
+// `;
+
+const Header = styled('div', {
+  display: 'flex',
+  flexFlow: 'column nowrap',
+  fontWeight: 'bold',
+});
+
+// const Header = styled.div`
+//   display: flex;
+//   flex-flow: column nowrap;
+//   font-weight: bold;
+// `;
+
+const Body = styled('div', {
+  flex: 1,
+  display: 'flex',
+  flexFlow: 'column nowrap',
+  overflow: 'auto',
+});
+
+// const Body = styled.div`
+//   flex: 1;
+//   display: flex;
+//   flex-flow: column nowrap;
+//   overflow: auto;
+// `;
 
 interface DetailViewProps {
   data: FileInfo[];
@@ -41,15 +63,13 @@ interface DetailViewProps {
 }
 
 const DetailView = forwardRef<HTMLDivElement, DetailViewProps>((props, ref) => {
-  const { theme } = useStore(settingsStore);
-
   return (
-    <Container {...theme}>
+    <Container>
       <Header>
-        <Row {...theme} noninteractive>
-          <Item {...theme}>Name</Item>
-          <Item {...theme}>Size</Item>
-          <Item {...theme}>Creation Date</Item>
+        <Row noninteractive>
+          <Item>Name</Item>
+          <Item>Size</Item>
+          <Item>Creation Date</Item>
         </Row>
       </Header>
       <Body ref={ref}>

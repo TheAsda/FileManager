@@ -1,60 +1,62 @@
-import React, { useEffect, useRef } from 'react';
+import { FolderIcon } from '@fm/components/common/FolderIcon';
+import { styled } from '@fm/components/common/styled';
+import { merge } from 'lodash';
 import { extname } from 'path';
-import { FileIcon, defaultStyles, DefaultExtensionType } from 'react-file-icon';
-import { FolderIcon } from '@fm/components';
-import styled from 'styled-components';
-import { Theme } from '@fm/common';
-import { settingsStore } from '@fm/store';
-import { useStore } from 'effector-react';
+import React, { useEffect, useRef } from 'react';
+import { DefaultExtensionType, defaultStyles, FileIcon } from 'react-file-icon';
+import { StyleObject, withStyleDeep } from 'styletron-react';
 
-const Row = styled.div<Theme & { selected?: boolean; noninteractive?: boolean }>`
-  width: 100%;
-  display: flex;
-  grid-template-rows: 100%;
-  grid-template-columns: 50% 20% 30%;
-  align-items: center;
+const Row = styled<'div', { selected?: boolean; noninteractive?: boolean }>(
+  'div',
+  ({ $theme, noninteractive, selected }) => {
+    let interactiveStyles: StyleObject = {};
 
-  background-color: ${(props) =>
-    props.selected ? props['explorer.selectedColor'] : props['explorer.backgroundColor']};
+    if (!noninteractive) {
+      interactiveStyles = {
+        cursor: 'pointer',
+        ':hover': {
+          backgroundColor: $theme['explorer.hoverColor'],
+        },
+      };
+    }
 
-  ${(props) =>
-    !props.noninteractive
-      ? `
-      cursor: pointer;
-      &:hover {
-        background-color: ${props['explorer.hoverColor']};
-      }`
-      : ''}
-`;
+    return merge(
+      {
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: selected
+          ? $theme['explorer.selectedColor']
+          : $theme['explorer.backgroundColor'],
+      },
+      interactiveStyles
+    );
+  }
+);
 
-const Item = styled.div<Theme>`
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  gap: 10px;
-  margin: 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`;
+const Item = styled('div', {
+  width: '100%',
+  height: '100%',
+  alignItems: 'center',
+  gap: '10px',
+  margin: '5px',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+});
 
-const Name = styled(Item)`
-  display: grid;
-  grid-template-columns: ${(props) =>
-    `${props['explorer.fontSize']}px calc(100% - ${props['explorer.fontSize']}px)`};
-  grid-template-rows: 100%;
-`;
+const Name = withStyleDeep(Item, { display: 'flex', flexFlow: 'row nowrap' });
 
-const Text = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`;
+const Text = styled('div', {
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+});
 
-const Icon = styled.div<Theme>`
-  width: ${(props) => props['explorer.fontSize']}px;
-  height: ${(props) => props['explorer.fontSize']}px;
-`;
+const Icon = styled('div', ({ $theme }) => ({
+  width: `${$theme['explorer.fontSize']}px`,
+  height: `${$theme['explorer.fontSize']}px`,
+}));
 
 interface DetailViewItemProps {
   name: string;
@@ -80,7 +82,6 @@ const getIcon = (isFolder: boolean, file: string) => {
 };
 
 const DetailViewItem = (props: DetailViewItemProps) => {
-  const { theme } = useStore(settingsStore);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyboard = (event: KeyboardEvent) => {
@@ -106,7 +107,6 @@ const DetailViewItem = (props: DetailViewItemProps) => {
 
   return (
     <Row
-      {...theme}
       onClick={props.onClick}
       onDoubleClick={props.onDoubleClick}
       ref={(ref) =>
@@ -118,20 +118,20 @@ const DetailViewItem = (props: DetailViewItemProps) => {
       }
       selected={props.selected}
     >
-      <Name {...theme}>
+      <Name>
         {props.editable ? (
           <input defaultValue={props.name} ref={inputRef} autoFocus />
         ) : (
           <>
             {props.showIcon !== false && (
-              <Icon {...theme}>{getIcon(props.isFolder ?? false, props.name)}</Icon>
+              <Icon>{getIcon(props.isFolder ?? false, props.name)}</Icon>
             )}
             <Text>{props.name}</Text>
           </>
         )}
       </Name>
-      <Item {...theme}>{props.size}</Item>
-      <Item {...theme}>{props.created?.toLocaleString()}</Item>
+      <Item>{props.size}</Item>
+      <Item>{props.created?.toLocaleString()}</Item>
     </Row>
   );
 };
