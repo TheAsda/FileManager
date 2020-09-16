@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import './style.css';
-import { DefaultPanel } from '../DefaultPanel';
 import { ErrorBoundary, SplitPanels, Terminal } from '@fm/components';
+import { SelectPalette } from '@fm/components/modals';
 import {
   destroyTerminal,
-  terminalsEventsStore,
+  KeymapWrapper,
+  pathsStore,
   settingsStore,
   spawnTerminal,
+  terminalsEventsStore,
   terminalsStore,
-  pathsStore,
-  KeymapWrapper,
   useActivateScope,
 } from '@fm/store';
+import { addElement, registerGroup } from '@fm/store/focusStore';
 import { useStore } from 'effector-react';
 import { map } from 'lodash';
-import { addElement, registerGroup } from '@fm/store/focusStore';
-import { SelectPalette } from '@fm/components/modals';
+import React, { useEffect, useState } from 'react';
+
+import { DefaultPanel } from '../DefaultPanel';
 
 const TerminalPanels = () => {
   const settings = useStore(settingsStore);
