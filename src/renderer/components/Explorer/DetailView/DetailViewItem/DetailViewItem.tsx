@@ -110,7 +110,7 @@ const DetailViewItem = (props: DetailViewItemProps) => {
       data-testid="row"
       onClick={props.onClick}
       onDoubleClick={props.onDoubleClick}
-      $ref={rowRef}
+      ref={rowRef}
       selected={props.selected}
     >
       <Name>
