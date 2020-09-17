@@ -3,7 +3,7 @@ import { styled } from '@fm/components/common/styled';
 import { KeymapWrapper } from '@fm/store/keymapStore';
 import { merge } from 'lodash';
 import { extname } from 'path';
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { DefaultExtensionType, defaultStyles, FileIcon } from 'react-file-icon';
 import { StyleObject, withStyleDeep } from 'styletron-react';
 
@@ -95,29 +95,9 @@ const DetailViewItem = (props: DetailViewItemProps) => {
     props.onEditEnd && props.onEditEnd(null);
   };
 
-  // const handleKeyboard = (event: KeyboardEvent) => {
-  //   if (event.key === 'Enter' && inputRef.current) {
-  //     props.onEditEnd && props.onEditEnd(inputRef.current.value);
-  //   }
-
-  //   if (event.key === 'Escape') {
-  //     props.onEditEnd && props.onEditEnd(null);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (props.editable) {
-  //     document.addEventListener('keydown', handleKeyboard);
-  //     return () => {
-  //       document.removeEventListener('keydown', handleKeyboard);
-  //     };
-  //   } else {
-  //     document.removeEventListener('keydown', handleKeyboard);
-  //   }
-  // }, [props.editable]);
-
   return (
     <Row
+      data-testid="row"
       onClick={props.onClick}
       onDoubleClick={props.onDoubleClick}
       ref={(ref) =>
@@ -138,7 +118,7 @@ const DetailViewItem = (props: DetailViewItemProps) => {
             }}
             scope="input"
           >
-            <input defaultValue={props.name} ref={inputRef} autoFocus />
+            <input data-testid="name-input" defaultValue={props.name} ref={inputRef} autoFocus />
           </KeymapWrapper>
         ) : (
           <>
