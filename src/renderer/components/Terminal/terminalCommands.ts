@@ -1,4 +1,4 @@
-import { Commands } from '@fm/components';
+import { Commands } from '@fm/common/interfaces/Commands';
 
 interface TerminalCommands extends Commands {
   'Close panel': () => void;

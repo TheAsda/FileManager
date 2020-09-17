@@ -1,29 +1,30 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import { FileInfo } from '@fm/common';
-import { DefaultPanel } from '../DefaultPanel';
+import { ErrorBoundary, Explorer, SplitPanels } from '@fm/components';
+import { SelectPalette } from '@fm/components/modals';
 import { useDirectoryManager } from '@fm/hooks';
-import { SplitPanels, ErrorBoundary, Explorer } from '@fm/components';
 import {
-  fileActionApi,
-  settingsStore,
-  explorersStore,
-  spawnExplorer,
-  explorersEventsStore,
-  destroyExplorer,
-  settingsApi,
-  toggleExplorers,
-  CommandsWrapper,
-  pathsStore,
   addPath,
-  KeymapWrapper,
-  useActivateScope,
+  CommandsWrapper,
+  destroyExplorer,
+  explorersEventsStore,
+  explorersStore,
   ExplorerStore,
+  fileActionApi,
+  KeymapWrapper,
+  pathsStore,
+  settingsApi,
+  settingsStore,
+  spawnExplorer,
+  toggleExplorers,
+  useActivateScope,
 } from '@fm/store';
+import { addElement, registerGroup } from '@fm/store/focusStore';
+import { Store } from 'effector';
 import { useStore } from 'effector-react';
 import { map } from 'lodash';
-import { addElement, registerGroup } from '@fm/store/focusStore';
-import { SelectPalette } from '@fm/components/modals';
-import { Store } from 'effector';
+import React, { useEffect, useMemo, useState } from 'react';
+
+import { DefaultPanel } from '../DefaultPanel';
 
 interface ExplorerPanelsProps {
   onPreview?: (item: FileInfo) => void;
@@ -160,10 +161,10 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
           <SplitPanels minSize={200} onResize={onResize} splitType="horizontal">
             {map(explorers, (item, i) => {
               return (
-                <WithExplorer store={item}>
+                <WithExplorer key={item.sid ?? i} store={item}>
                   {(explorer) => {
                     return (
-                      <ErrorBoundary key={item.sid ?? i}>
+                      <ErrorBoundary>
                         <Explorer
                           autoPreview={settings.autoPreview}
                           closable={explorers.length > 1}
@@ -178,7 +179,6 @@ const ExplorerPanels = (props: ExplorerPanelsProps) => {
                           onPreview={props.onPreview}
                           openInTerminal={props.openInTerminal}
                           showHidden={settings.showHidden}
-                          theme={settings.theme}
                         />
                       </ErrorBoundary>
                     );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { keys } from 'lodash';
-import { Commands, SelectPalette } from '../SelectPalette';
+import { SelectPalette } from '../SelectPalette';
+import { Commands } from '@fm/common/interfaces/Commands';
 
 interface CommandPaletteProps {
   isOpened: boolean;

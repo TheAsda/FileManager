@@ -1,9 +1,9 @@
-import React, { PropsWithChildren, useEffect } from 'react';
 import { Commands } from '@fm/common';
 import { createApi, createStore } from 'effector';
+import { useStore } from 'effector-react';
 import { warn } from 'electron-log';
 import { includes, isEqual, keys, omit } from 'lodash';
-import { useStore } from 'effector-react';
+import React, { PropsWithChildren, useEffect } from 'react';
 
 interface CommandsStore {
   [scope: string]: Commands;

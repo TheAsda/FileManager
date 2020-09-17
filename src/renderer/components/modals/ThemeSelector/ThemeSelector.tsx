@@ -1,10 +1,10 @@
-import { remote, app } from 'electron';
-import React, { useState, useEffect, useMemo } from 'react';
-import { Commands, SelectPalette } from '../SelectPalette';
+import { Commands } from '@fm/common/interfaces/Commands';
 import { useDirectoryManager } from '@fm/hooks';
-import { reject, filter, endsWith, map } from 'lodash';
 import { CommandsWrapper, settingsApi } from '@fm/store';
 import { silly } from 'electron-log';
+import React, { useEffect, useMemo, useState } from 'react';
+
+import { SelectPalette } from '../SelectPalette';
 
 // const themesFolderPath = (app || remote.app).getPath('userData') + '/themes';
 

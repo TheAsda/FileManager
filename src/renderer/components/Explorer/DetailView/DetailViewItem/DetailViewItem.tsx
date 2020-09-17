@@ -3,7 +3,7 @@ import { styled } from '@fm/components/common/styled';
 import { KeymapWrapper } from '@fm/store/keymapStore';
 import { merge } from 'lodash';
 import { extname } from 'path';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { DefaultExtensionType, defaultStyles, FileIcon } from 'react-file-icon';
 import { StyleObject, withStyleDeep } from 'styletron-react';
 
@@ -84,6 +84,7 @@ const getIcon = (isFolder: boolean, file: string) => {
 
 const DetailViewItem = (props: DetailViewItemProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
 
   const onEnter = () => {
     if (inputRef.current) {
@@ -95,18 +96,21 @@ const DetailViewItem = (props: DetailViewItemProps) => {
     props.onEditEnd && props.onEditEnd(null);
   };
 
+  useEffect(() => {
+    if (props.selected && rowRef.current) {
+      rowRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }, [props.selected]);
+
   return (
     <Row
       data-testid="row"
       onClick={props.onClick}
       onDoubleClick={props.onDoubleClick}
-      ref={(ref) =>
-        props.selected &&
-        ref?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-        })
-      }
+      $ref={rowRef}
       selected={props.selected}
     >
       <Name>

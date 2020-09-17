@@ -1,5 +1,5 @@
 import { createEvent, createStore } from 'effector';
-import { warn } from 'electron-log';
+import { debug, warn } from 'electron-log';
 import { findIndex, keys } from 'lodash';
 
 interface GroupElement {
@@ -18,6 +18,9 @@ interface FocusStore {
 }
 
 const focusStore = createStore<FocusStore>({ groups: {}, activeElementIndex: 0, activeGroup: '' });
+focusStore.watch((state) => {
+  debug(state);
+});
 
 const registerGroup = createEvent<string>();
 focusStore.on(registerGroup, (state, value) => {

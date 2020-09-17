@@ -1,27 +1,42 @@
-import { FileInfo, IDirectoryManager, Theme } from '@fm/common';
-import React, { Component } from 'react';
-import { clamp, filter, concat, sortBy } from 'lodash';
-import { DetailView } from './DetailView';
-import { StateLine } from './StateLine';
+import { Commands } from '@fm/common/interfaces/Commands';
+import { FileInfo } from '@fm/common/interfaces/FileInfo';
+import { IDirectoryManager } from '@fm/common/managers/DirectoryManager';
+import { styled } from '@fm/components/common/styled';
+import { CommandsWrapper } from '@fm/store/commandsStore';
+import { ExplorerStore } from '@fm/store/explorersStore';
+import { KeymapWrapper } from '@fm/store/keymapStore';
 import autobind from 'autobind-decorator';
-import { PathWrapper } from '../PathWrapper';
-import { Commands } from '../modals';
-import { ExplorerCommands } from './explorerCommands';
 import { openWithDefaultApp } from 'filemancore';
+import { clamp, concat, filter, sortBy } from 'lodash';
 import { join, normalize } from 'path';
-import styled from 'styled-components';
-import { CommandsWrapper, ExplorerStore, KeymapWrapper } from '@fm/store';
+import React, { Component, createRef, RefObject } from 'react';
 
-const Container = styled.div<Theme>`
-  height: 100%;
-  width: 100%;
-  background-color: ${(props) => props['explorer.backgroundColor']};
-  color: ${(props) => props['explorer.textColor']};
-  display: grid;
-  grid-template-rows: calc(100% - 20px) 20px;
-  font-size: ${(props) => props['explorer.fontSize']};
-  font-family: ${(props) => props['explorer.fontFamily']};
-`;
+import { PathWrapper } from '../PathWrapper';
+import { DetailView } from './DetailView';
+import { ExplorerCommands } from './explorerCommands';
+import { StateLine } from './StateLine';
+
+const Container = styled('div', ({ $theme }) => ({
+  height: '100%',
+  width: '100%',
+  backgroundColor: $theme['preview.backgroundColor'],
+  color: $theme['explorer.textColor'],
+  display: 'grid',
+  gridTemplateRows: 'calc(100% - 20px) 20px',
+  fontSize: $theme['explorer.fontSize'],
+  fontFamily: $theme['explorer.fontFamily'],
+}));
+
+// const Container = styled.div<Theme>`
+//   height: 100%;
+//   width: 100%;
+//   background-color: ${(props) => props['explorer.backgroundColor']};
+//   color: ${(props) => props['explorer.textColor']};
+//   display: grid;
+//   grid-template-rows: calc(100% - 20px) 20px;
+//   font-size: ${(props) => props['explorer.fontSize']};
+//   font-family: ${(props) => props['explorer.fontFamily']};
+// `;
 
 interface ExplorerState {
   currentPath: string;
@@ -45,19 +60,18 @@ interface ExplorerProps {
   autoPreview: boolean;
   showHidden: boolean;
   index: number;
-  theme: Theme;
   onMount: (ref: HTMLElement) => void;
 }
 
 class Explorer extends Component<ExplorerProps, ExplorerState> {
   private options: ExplorerCommands;
   private handlers: Commands;
-  private containerRef: HTMLElement | null;
+  private containerRef: RefObject<HTMLDivElement>;
 
   constructor(props: ExplorerProps) {
     super(props);
 
-    this.containerRef = null;
+    this.containerRef = createRef<HTMLDivElement>();
     this.state = {
       selectedIndex: 0,
       viewType: 'detail',
@@ -98,8 +112,8 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
   componentDidMount() {
     this.onDirectoryChange();
 
-    if (this.containerRef) {
-      this.props.onMount(this.containerRef);
+    if (this.containerRef.current) {
+      this.props.onMount(this.containerRef.current);
     }
   }
 
@@ -377,7 +391,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
           refreshable
         >
           <KeymapWrapper handlers={this.handlers} scope={`explorer.${this.props.index}`}>
-            <Container {...this.props.theme}>
+            <Container $ref={this.containerRef}>
               {this.state.viewType === 'detail' ? (
                 <DetailView
                   data={this.state.directoryState}
@@ -385,7 +399,6 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
                   onEditEnd={this.onEditEnd}
                   onExit={this.exitDirectory}
                   onItemClick={this.onClick}
-                  ref={(ref) => (this.containerRef = ref)}
                   selectedIndex={this.state.selectedIndex}
                 />
               ) : null}

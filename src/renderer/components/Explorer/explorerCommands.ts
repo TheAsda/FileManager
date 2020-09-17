@@ -1,4 +1,4 @@
-import { Commands } from '@fm/components';
+import { Commands } from '@fm/common/interfaces/Commands';
 
 interface ExplorerCommands extends Commands {
   'New file': () => void;
