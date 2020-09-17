@@ -1,15 +1,26 @@
-import React, { Component, RefObject, createRef } from 'react';
-import { FitAddon } from 'xterm-addon-fit';
-import { ITerminalManager, Commands, Theme } from '@fm/common';
-import { Terminal as XTerm } from 'xterm';
 import 'xterm/css/xterm.css';
-import './style.css';
+
+import { Commands } from '@fm/common/interfaces/Commands';
+import { Theme } from '@fm/common/interfaces/Theme';
+import { ITerminalManager } from '@fm/common/managers/TerminalManager';
+import { styled } from '@fm/components/common/styled';
+import { PathWrapper } from '@fm/components/PathWrapper';
+import { CommandsWrapper } from '@fm/store/commandsStore';
+import { KeymapWrapper } from '@fm/store/keymapStore';
 import autobind from 'autobind-decorator';
-import { PathWrapper } from '../PathWrapper';
 import { noop } from 'lodash';
-import { TerminalCommands } from './terminalCommands';
 import ResizeObserver from 'rc-resize-observer';
-import { CommandsWrapper, KeymapWrapper } from '@fm/store';
+import React, { Component, createRef, RefObject } from 'react';
+import { Terminal as XTerm } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
+
+import { TerminalCommands } from './terminalCommands';
+
+const TerminalContainer = styled('div', {
+  height: '100%',
+  width: '100%',
+  overflowX: 'hidden',
+});
 
 interface TerminalProps {
   terminalManager: ITerminalManager;
@@ -143,7 +154,7 @@ class Terminal extends Component<TerminalProps, { path: string }> {
             path={this.state.path}
           >
             <ResizeObserver onResize={this.resize}>
-              <div className="terminal" ref={this.containerRef} />
+              <TerminalContainer ref={this.containerRef} />
             </ResizeObserver>
           </PathWrapper>
         </KeymapWrapper>
