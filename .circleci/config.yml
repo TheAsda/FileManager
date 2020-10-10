@@ -29,6 +29,7 @@ jobs:
     working_directory: ~/windows
 
     steps:
+      - run: apt install python make g++
       - install-validate
       - test
       - run: yarn build:win
