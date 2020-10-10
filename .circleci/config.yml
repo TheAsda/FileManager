@@ -6,6 +6,9 @@ commands:
       - checkout
       - run: yarn
       - run: yarn validate
+  test:
+    steps:
+     - run: yarn test
   create-artifact:
     parameters:
       path:
@@ -27,6 +30,7 @@ jobs:
 
     steps:
       - install-validate
+      - test
       - run: yarn build:win
       - create-artifact:
           path: ~/windows/build/
@@ -40,6 +44,7 @@ jobs:
 
     steps:
       - install-validate
+      - test
       - run: yarn build:linux
       - create-artifact:
           path: ~/linux/build/
