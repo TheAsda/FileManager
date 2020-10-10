@@ -29,7 +29,6 @@ jobs:
     working_directory: ~/windows
 
     steps:
-      - run: apt install python make g++
       - install-validate
       - test
       - run: yarn build:win
@@ -39,7 +38,7 @@ jobs:
 
   build_linux:
     docker:
-      - image: desirableobjects/circleci:node-gyp
+      - image: electronuserland/builder
 
     working_directory: ~/linux
 
