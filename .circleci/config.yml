@@ -38,7 +38,7 @@ jobs:
 
   build_linux:
     docker:
-      - image: electronuserland/builder
+      - image: desirableobjects/circleci:node-gyp
 
     working_directory: ~/linux
 
