@@ -3,7 +3,6 @@ export * from './panels';
 export * from './modals';
 export * from './SplitPanels';
 export * from './ErrorBoundary';
-export * from './common';
 export * from './Explorer';
 export * from './Terminal';
 export * from './PathWrapper';

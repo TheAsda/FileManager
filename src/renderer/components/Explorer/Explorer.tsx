@@ -27,17 +27,6 @@ const Container = styled('div', ({ $theme }) => ({
   fontFamily: $theme['explorer.fontFamily'],
 }));
 
-// const Container = styled.div<Theme>`
-//   height: 100%;
-//   width: 100%;
-//   background-color: ${(props) => props['explorer.backgroundColor']};
-//   color: ${(props) => props['explorer.textColor']};
-//   display: grid;
-//   grid-template-rows: calc(100% - 20px) 20px;
-//   font-size: ${(props) => props['explorer.fontSize']};
-//   font-family: ${(props) => props['explorer.fontFamily']};
-// `;
-
 interface ExplorerState {
   currentPath: string;
   selectedIndex: number;
@@ -390,7 +379,7 @@ class Explorer extends Component<ExplorerProps, ExplorerState> {
           path={this.props.explorerState.path}
           refreshable
         >
-          <KeymapWrapper handlers={this.handlers} scope={`explorer.${this.props.index}`}>
+          <KeymapWrapper handlers={this.handlers} scope={['explorer', this.props.index]}>
             <Container $ref={this.containerRef}>
               {this.state.viewType === 'detail' ? (
                 <DetailView

@@ -1,12 +1,14 @@
-import React, { createContext, PropsWithChildren, useContext, useEffect } from 'react';
+import React, { createContext, Key, PropsWithChildren, useContext, useEffect } from 'react';
 import { Commands, KeyMap } from '@fm/common/interfaces';
 import { createEffect, createEvent, createStore } from 'effector';
 import {
   find,
   get,
   includes,
+  isArray,
   isEmpty,
   isFunction,
+  join,
   keys,
   merge,
   pickBy,
@@ -83,14 +85,16 @@ keymapStore.on(activateScope, (state, value) => {
 const ScopeContext = createContext<string | null>(null);
 
 interface KeymapWrapperProps {
-  scope: string;
+  scope: Key | Key[];
   handlers?: Commands;
 }
 
 const KeymapWrapper = (props: PropsWithChildren<KeymapWrapperProps>) => {
   const scope = useContext(ScopeContext);
 
-  const newScope = scope ? scope + '.' + props.scope : props.scope;
+  const propsScopeString = isArray(props.scope) ? join(props.scope, '.') : props.scope.toString();
+
+  const newScope = scope ? scope + '.' + propsScopeString : propsScopeString;
 
   useEffect(() => {
     setScope({
